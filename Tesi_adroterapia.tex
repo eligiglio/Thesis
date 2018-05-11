@@ -155,8 +155,10 @@ At present about forty-five proton therapy centres are in operation or under con
 In Europe, the interest in hadrontherapy has been growing rapidly and the first dual ion (carbon and protons) clinical facility in Heidelberg, Germany started treating patients at the end of 2009. Some more such facilities are now in operation, for example: CNAO in Pavia, MIT in Marburg, and MedAustron in Wiener Neustadt are treating patients.
 Globally there is a huge momentum in particle therapy, especially treatment with protons. By 2020 it is expected there will be almost 100 centres around the world, with over 30 of these in Europe.
 
+This work will focus on proton therapy only. 
+
 \section{Charged Particle Therapy}
-I will explain the way this treatment works starting from the physical structure of a hadrontherapy center. The core of it is the accelerator. Some centres use a \emph{Cyclotron}, smaller and less expensive than a \emph{Synchrotron}, which allows to accelerate protons to energies sufficient for the therapies but, because of its limits, this cannot be used for light ions therapy. In order to accelerate Carbon or Helium ions to energies around some hundreds of MeV per nucleon, there is the need of a \emph{Synchrotron}.  The most modern centres use a circular accelerator, usually around tens of meters of length. After the acceleration, the particles are sent directly to the rooms where the patient is, called \emph{gantries}. Inside these rooms, the patient is lied down on a bed which is able to rotate in order that the beam can hit the patient with different angles. The standard gantry has a system that allows to cover a $360^\circ$ angle on the horizontal plane. But there are some others that cover the full $4\pi$ angle, for example the one at the Heidelberg Ion-Beam Therapy Center (HIT) in figure \ref{fig:HIT}.
+I will explain the way this treatment works starting from the physical structure of a hadrontherapy center. The core of it is the accelerator. Some centres use a \emph{Cyclotron}, smaller and less expensive than a \emph{Synchrotron}, which allows to accelerate protons to energies sufficient for the therapies but, because of its limits, this cannot be used for light ions therapy. In order to accelerate Carbon or Helium ions to energies around some hundreds of MeV per nucleon, there is the need of a \emph{Synchrotron}. The most modern centres use a circular accelerator, usually around tens of meters of length. Mean while the patient is lied down on a bed which is able to rotate in order that the beam can hit the patient with different angles. The standard gantry has a system that allows the cot (on which the patient lays down) to cover a $360^\circ$ angle on the horizontal plane and eventually of small angles on the azimuthal plane. But there are some others that cover the full $4\pi$ angle, for example the one at the Heidelberg Ion-Beam Therapy Center (HIT) in figure \ref{fig:HIT}. The gantry at HIT is a gigantic steel construction. It is 25 meters long, 13 meters in diameter and weighs 670 tons (the weight of a AirBus a380 fully charged is around 577 tons), of which 600 tons can be rotated with precision under a millimetre. 
 \begin{figure}[t]
 {\includegraphics[width=.45\textwidth]{Images/gantryHITout2c}}
 {\includegraphics[width=.45\textwidth]{Images/gantryHITout}}\\
@@ -164,22 +166,26 @@ I will explain the way this treatment works starting from the physical structure
 \caption{The 25-meter-long $360^\circ$ rotating gantry at HIT, from the inside and the outside.}
 \label{fig:HIT}
 \end{figure}
-Every facility has usually more than one gantry and, despite its dimensions, the precision is of the order of the millimiter.
 
-So in the case of a center based on Synchrotron, the path of the particle starts in the initializer, then it is accelerated and transferred inside the main ring where particles are futhermore accelerated and divided in bunches. After the part of acceleration, the Synchrotron can be used as a storage ring where all the bunches, of fixed energy and intesity, wait for the extraction. Extracted particles will fly inside a vacuum tube from the ring to the gantry. During this flight, there is a part of beam diagnostic, where intensity, position and dimention of the beam is analysed to detect and avoid abnormalities. Using \emph{Active Beam Scanning} (of which I will talk in \ref{activeScanning} ), shape and direction are adjusted with the used 
-
-The most common gantry employs a motorized cot (on which the patient lays down) able to rotate of $360^\circ$ on the horizontal plane and eventually of small angles on the azimuthal plane. In this cases, the 
-
+So in the case of a center based on Synchrotron, the path of the particle starts in the initializer, then it is accelerated and transferred inside the main ring where particles are futhermore accelerated and divided in bunches. After the part of acceleration, the Synchrotron can be used as a storage ring where all the bunches, of fixed energy and intesity, wait for the extraction. Extracted particles will fly inside a vacuum tube from the ring to the gantry. During this flight, there is a part of beam diagnostic, where intensity, position and dimention of the beam is analysed to detect and avoid abnormalities. Using \emph{Active Beam Scanning} (of which I will talk in section \ref{activeScanning} ), shape and direction are adjusted respectevely with the use of lead collimators and two magnets deflecting the beams on the plane perpendicular to the flight direction. After the last step, the beam exits the machine and hit the patient.
 
 \section{Interaction of charged particles with matter}
-The range of energies used in hadron therapy is between $\sim30$ and $\sim200\,MeV$ per nucleon. In this range, the main dominant effects are the coulomb scattering and the ionization of the medium.
-The coulomb scattering is the deviation of the trajectory of the particles due to the electric field of the nuclei in the medium. The most commonly used approximation for the scattering angles due to multiple coulomb scattering is the Rossi-Greisen Gaussian approximation. They derived the root mean square (rms) of the multiple Coulomb scattering angle $\theta_s^{Rossi^2}\,dx$ in terms of the radiation length $L_{rad}$ ($g\,cm^{-2}$) in an infinitesimal layer of scattering material $dx$ (given as a fraction of the total range $R_0$ of the particles)
-\[
-\theta_s^{Rossi^2}\,dx = \bigg( \frac{E_s}{p\beta c}z \bigg)^2\,\frac{\rho}{L_{rad}}\,dx
-\]
-where $E_s=19.9\,MeV$ is a constant, $p$ is the momentum of the particle, $\beta c$ its velocity, $z$ its charge and $\rho$ the density of the target material. (move to multiple coulomb scattering in lateral direction??)
+Many effects, involving beam particles and patient tissue, must be taken in account during a treatment.
+The range of energies used in hadron therapy is between $\sim30$ and $\sim200\,MeV$ per nucleon. In this range, the main dominant effects are the coulomb scattering and the ionization of the medium. Radiative and density effects can be neglected.
 
-Ionization 
+\subsection{Multiple Coulomb Scattering in lateral direction}
+Coulomb scattering is the deviation of the trajectory of the particles due to the electric field of the nuclei in the medium and it is the major responsible for the broadening of the beam inside matter. Protons are heavy enough to be compared with the mass of the atoms, they have much greater momentum than target nuclei, so, the outgoing angle in their trajectory is usually very small as is the energy loss, per scattering. It becomes simple to consider the mean value of the outcoming angles (supposing the energy constant) and this is the reason why, in literature, can be found many references to \emph{multiple Coulomb scattering}. Considering the average of multiple scattering symplifies formulas and reduces sensibly computation time in Monte Carlo simulations.
+The most commonly used approximations for the scattering angles due to multiple coulomb scattering come from the Rossi-Greisen Gaussian approximation. They derived the root mean square (rms) of the multiple Coulomb scattering angle $\theta_s^{Rossi^2}\,dx$ in terms of the radiation length $L_{rad}$ ($g\,cm^{-2}$) in an infinitesimal layer of scattering material $dx$ (given as a fraction of the total range $R_0$ of the particles)
+\begin{equation}
+\theta_s^{Rossi^2}\,dx = \bigg( \frac{E_s}{p\beta c}z \bigg)^2\,\frac{\rho}{L_{rad}}\,dx
+\label{eq:ross}
+\end{equation}
+where $E_s=19.9\,MeV$ is a constant, $p$ is the momentum of the particle, $\beta c$ its velocity, $z$ its charge and $\rho$ the density of the target material.
+The representation of the differential scattering angle given in equation \ref{eq:ross} can be in error by more than $30\%$, so many scientist afforted this problem. The most notable ones are: Highland's introducing in 1974 a correction term by fitting the Bethe-Bloch form of Molière theory then revised by Lynch and Dahl; and the newer Schneider's (et al.) correction to Rossi-Greisen formula, well explained in \cite{schn:mcs}. This kind of formula are implemented in Monte Carlo based softwares that calculate the complete path of the single particle. The result is a dose depotion profile that can be nicely fitted with a sum of two gaussians. In sofware using databases (i.e. algorithms that reconstruct the dose deposition considering the beam as single object), lateral spread is represented as a double gaussian. Most of this parametrizations are based on the work of Parodi (et al.) in \cite{par:latspr}, who fitted the lateral profile of Monte Carlo simulated beams and extracted an analytical form of it.
+
+\subsection{Ionization} 
+
+
 
 
 \subsection{Bethe Bloch}
@@ -216,7 +222,6 @@ bragg peak
 
 
 \subsection{Fragmentation}
-\subsection{Multiple Coulomb Scattering in lateral direction}
 
 \section{Particle treatments in clinical context}
 
@@ -646,7 +651,7 @@ Med. Phys. 24, 2024-33 (1997)
 
 \bibitem{bort:SOBP}
 Bortfeld T. and Schlegel W. -
-\emph{An analytic approximation of depth–dose distributions for therapeutic proton beams}
+\emph{An analytic approximation of depth–dose distributions for therapeutic proton beams} -
 Phys. Med. Biol. 41, 1331–9 (1996)
 
 \bibitem{ferr:fluka}
@@ -656,13 +661,25 @@ CERN-2005-10, INFN/TC\_05/11, SLAC-R-773 (2005)
 
 \bibitem{jett:SOBP}
 Jette D. and Chen W. - 
-\emph{Creating a spread-out Bragg peak in proton beams}
+\emph{Creating a spread-out Bragg peak in proton beams} -
 Phys. Med. Biol. 56, N131–N138 (2011)
 
 \bibitem{low:gamma}
-Low D. A. , Harms W. B., Mutic S. and Purdy J. A. -
+Low D. A., Harms W. B., Mutic S. and Purdy J. A. -
 \emph{A technique for the quantitative evaluation of dose distributions} -
 Med. Phys. 25, 5 (1998)
+
+\bibitem{par:latspr}
+Parodi K., Mairani A., Sommerer F. -
+\emph{Monte Carlo-based parametrization of the lateral dose spread for clinical treatment planning of scanned proton and carbon ion beams} -
+Journal of Radiation Research 54, i91–i96 (2013)
+
+\bibitem{schn:mcs}
+Schneider U., Besserer J., Pemler P. - 
+\emph{On small angle multiple Coulomb scattering of protons in the Gaussian approximation} - 
+Z. Med. Phys. 11,  110- 118 (2001)
+
+
 
 %% aggiungere history of hadrontherapy dell'amaldi e del degiovanni
 
