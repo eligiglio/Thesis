@@ -171,19 +171,72 @@ So in the case of a center based on Synchrotron, the path of the particle starts
 
 \section{Interaction of charged particles with matter}
 Many effects, involving beam particles and patient tissue, must be taken in account during a treatment.
-The range of energies used in hadron therapy is between $\sim30$ and $\sim200\,MeV$ per nucleon. In this range, the main dominant effects are the coulomb scattering and the ionization of the medium. Radiative and density effects can be neglected.
+Protons lose their energy to matter primarily through electromagnetic interactions with atomic electrons. Protons have a mass which is large compared to the mass of the electrons, hence they lose only a small fraction of their energy in a single interaction (at most $4 m/M = 0.0022\%$, where $m$ is the electron mass and $M$ is the proton mass) and they are deflected by only small angles in each interaction.
+In general, the proton interactions with matter can be divided into three categories: interactions with the individual electrons of atoms; interactions with the nucleus; and interactions with the atoms as a whole. The latter occurs only at very low energies and it is beyond the aim of this work. Nuclear interactions include inelastic scattering, Coulomb scattering and nuclear reactions. Eventhough, in this work, I will explain on interactions with electrons of atoms and nuclei, since at therapy energies, these processes dominate.  
+The range of energies used in hadron therapy is between $\sim30$ and $\sim200\,MeV$ per nucleon. 
+In this energy range, where the residual range of the protons in tissue is between $1\,cm$ and approximately $35\,cm$, interactions with electrons are dominant. Even at these energies, however, one cannot completely ignore the effects
+of nuclear interactions. For tissue-equivalent material, the probability that protons will undergo a nuclear interaction while traversing a path length segment of $1\,g/cm^{2}$ is of the order of $1\%$. At a depth of $20\,cm$, approximately 1 in 4 of the protons will have suffered a nuclear interaction\footnote{Source: Clinical Proton Dosimetry - part 1, ICRU Report 59 (1998)}. 
 
 \subsection{Multiple Coulomb Scattering in lateral direction}
-Coulomb scattering is the deviation of the trajectory of the particles due to the electric field of the nuclei in the medium and it is the major responsible for the broadening of the beam inside matter. Protons are heavy enough to be compared with the mass of the atoms, they have much greater momentum than target nuclei, so, the outgoing angle in their trajectory is usually very small as is the energy loss, per scattering. It becomes simple to consider the mean value of the outcoming angles (supposing the energy constant) and this is the reason why, in literature, can be found many references to \emph{multiple Coulomb scattering}. Considering the average of multiple scattering symplifies formulas and reduces sensibly computation time in Monte Carlo simulations.
-The most commonly used approximations for the scattering angles due to multiple coulomb scattering come from the Rossi-Greisen Gaussian approximation. They derived the root mean square (rms) of the multiple Coulomb scattering angle $\theta_s^{Rossi^2}\,dx$ in terms of the radiation length $L_{rad}$ ($g\,cm^{-2}$) in an infinitesimal layer of scattering material $dx$ (given as a fraction of the total range $R_0$ of the particles)
-\begin{equation}
-\theta_s^{Rossi^2}\,dx = \bigg( \frac{E_s}{p\beta c}z \bigg)^2\,\frac{\rho}{L_{rad}}\,dx
-\label{eq:ross}
-\end{equation}
-where $E_s=19.9\,MeV$ is a constant, $p$ is the momentum of the particle, $\beta c$ its velocity, $z$ its charge and $\rho$ the density of the target material.
-The representation of the differential scattering angle given in equation \ref{eq:ross} can be in error by more than $30\%$, so many scientist afforted this problem. The most notable ones are: Highland's introducing in 1974 a correction term by fitting the Bethe-Bloch form of Molière theory then revised by Lynch and Dahl; and the newer Schneider's (et al.) correction to Rossi-Greisen formula, well explained in \cite{schn:mcs}. This kind of formula are implemented in Monte Carlo based softwares that calculate the complete path of the single particle. The result is a dose depotion profile that can be nicely fitted with a sum of two gaussians. In sofware using databases (i.e. algorithms that reconstruct the dose deposition considering the beam as single object), lateral spread is represented as a double gaussian. Most of this parametrizations are based on the work of Parodi (et al.) in \cite{par:latspr}, who fitted the lateral profile of Monte Carlo simulated beams and extracted an analytical form of it.
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\textwidth]{Images/sigmaParodi}
+\caption{Examples of the values of $\sigma_{1,2}$ and $w$ in relation to the relative depth, at the low (left) and high (right) beam energy}
+\label{fig:sigPar}
+\end{figure}
+\begin{figure}[!t]
+\includegraphics[width=.9\textwidth]{Images/latSig}
+\caption{Example of the spread of proton and $^{12}$C ion beams in the nozzle, air gap and water for a typical treatment beamline (U. Weber, GSI Darmstadt)}
+\label{fig:latSig1}
+\end{figure}
+Coulomb scattering is the deviation of the trajectory of the particles due to the electric field of the nuclei in the medium and it is the major responsible for the broadening of the beam inside matter. Protons are heavy enough to be compared with the mass of the atoms, they have much greater momentum than target nuclei, so, the outgoing angle in their trajectory is usually very small as is the energy loss, per scattering. It becomes simple to consider the mean value of the outcoming angles (supposing the energy constant) and this is the reason why, in literature, can be found many references to \emph{multiple Coulomb scattering}. Considering the average of multiple scattering allows gaussian approximation and reduces sensibly computation time in Monte Carlo simulations.
+The lateral spread of proton or ion beams passing through an absorber is mainly caused by Coulomb scattering and is well described by the Molière-Theory \cite{mol:mcs}. For small angles the higher-order terms in Molière's solution can be neglected and the angular distribution can be approximated by a Gaussian function (Highland \cite{high:mcs}) with a standard deviation 
+\[
+\sigma_\theta [rad]= \frac{14.1\,MeV}{\beta pc}\, Z_p\, \sqrt{d/L_{rad}} \cdot \bigg[ 1 + \frac{1}{9}\,\log_{10} (d/L_{rad} )\bigg]
+\]
+Where the absorber material is characterized by the thickness $d$ and the radiation length $L_{rad}$. 
+A modern correction proposed by Schneider (et al.) and a comparison with Highland's method, can be found in \cite{schn:mcs}. This formulas are implemented in Monte Carlo based softwares that calculate the complete path of the single particle. The result is a dose depotion profile that can be nicely fitted with a sum of two gaussians.
+In sofware using databases (i.e. algorithms that reconstruct the dose deposition considering the beam as single object, introduced in section \ref{sec:pen}), lateral spread is represented as a double gaussian. Most of this parametrizations are based on the work of Parodi (et al.) in \cite{par:latspr}, who fitted the lateral profile of Monte Carlo simulated beams and extracted an analytical form of it
+\[
+D(E,z_{eq},r) = n\cdot \bigg(  \frac{1-w}{2\pi\sigma_1^2}\,e^{r^2\,/\,2\sigma_1^2} + \frac{w}{2\pi\sigma_2^2}\,e^{r^2\,/\,2\sigma_2^2} \bigg)
+\]
+where the weight $w$, $\sigma_{1,2}$ and $n$, functions of the energy $E$ and the water equivalent depth $z_{eq}$, are fitting constants. Their relation with relative depth (i.e. depth normalized to bragg peak position) is shown in figure \ref{fig:sigPar}
 
-\subsection{Ionization} 
+%\begin{figure}[!ht]
+%     \subfloat[First sub-figure\label{subfig-1:dummy}]{%
+%       \includegraphics[width=.5\textwidth]{Images/latSig}
+%     }
+%     \hfill
+%     \subfloat[First sub-figure\label{subfig-2:dummy}]{%
+%       \includegraphics[width=.5\textwidth]{Images/sigmaParodi}
+%     }
+%     \caption{Dummy figure}
+%     \label{fig:dummy}
+%   \end{figure}
+Between machine and patient, in air, all the scattering effects can be neglected and the main responsible of beam broadening is the natural divergence of the beam, leading to a linear treand, as can be seen in figure \ref{fig:latSig1}. Instead inside matter, the dominant effect is coulomb scattering, so the broadening becomes faster expecially as the particle loses energy.
+
+
+\textbf{ask Mark if about graphics}
+
+\textbf{is the second one plausible? why?}
+
+
+\subsection{Ionization}
+In addition to the interactions with nuclei fields, incoming protons interact with atoms, transmitting some of their energy to the surrounding electrons. If that energy is sufficient, the atom is ionized and electron is free to move inside the medium, consuming his remaining energy. These secondary electrons have a large range of energies and some of those can have enough energy to provoke further secondary ionization. Such electrons are usually referred as $\delta$-rays.
+Ionization is the effect causing the death (complete loss of the proliferation capacity) of the cells during radiation therapy.
+%%%%%%%%% add RBE
+
+
+
+The higher biological effectiveness of ion beams can be explained by the microscopic structure of particle tracks and their interaction with the DNA molecule. As discussed above, the interaction of energetic ions with the tissue is governed by inelastic collisions with the atomic electrons. Since the ion/electron mass ratio is very large, the ions are moving on practically straight trajectories through the tissue.
+%%%%% add DNA chain fracture
+
+Delta-electrons are emitted mainly in forward direction and those emitted at larger angles have comparatively low energies and short ranges (due to the collision kinematics). The local dose inside these particle ``tracks'' decreases extremely steeply ($\sim1/r^2$) with the radial distance $r$. 
+%%%%%%%%%%add secondary particles paths
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\textbf{Parlarne con Elisabetta perchè ho qualche dubbio}
 
 
 
@@ -303,6 +356,7 @@ Add something..... %%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%da riscrivere ultima parte. scrivere i nomi delle sigle o aggiungi le sigle quando citi i nomi precedentemente. questo anche nella parte successiva,
 
 \subsection{Pencil Beam} 
+\label{sec:pen}
 Pencil beam algorithms are based on IMRT. This means that the incident particle beam is divided by trajectory and energy in \emph{bunches} that should be of the order of the centimetre narrow and as monochromatical as possible. Every bunch is elaborated separately, using precomputed Monte Carlo simulations. In fact, the software is provided with a database of precomputed dose depositions in water at all the possible energies that can be provided by the accelerator (calculated with Geant4????). 
 In the first step, once the energy of the bunch is fixed, the software calculates the so called \emph{radiation depth} and estimates the range of the particles inside the target. So, starting from a CT (or a tridimensional matrix giving the density of the target), it estimates the water-equivalent distance that can be covered by a particle at the given energy. 
 This is used to rescale the precomputed dose in water into the dose deposited in the CT field. Then, the result is stored and later summed up with all the successive computations. 
@@ -659,6 +713,11 @@ Ferrari A., Sala P.R., Fassò A. and Ranft J. -
 \emph{FLUKA: a multi-particle transport code} -
 CERN-2005-10, INFN/TC\_05/11, SLAC-R-773 (2005)
 
+\bibitem{high:mcs}
+Highland V.L. -
+\emph{Some practical remarks on multiple scattering} -
+Nucl. Instr. Meth. Phys. Res. 129, 497–499 (1975)
+
 \bibitem{jett:SOBP}
 Jette D. and Chen W. - 
 \emph{Creating a spread-out Bragg peak in proton beams} -
@@ -668,6 +727,11 @@ Phys. Med. Biol. 56, N131–N138 (2011)
 Low D. A., Harms W. B., Mutic S. and Purdy J. A. -
 \emph{A technique for the quantitative evaluation of dose distributions} -
 Med. Phys. 25, 5 (1998)
+
+\bibitem{mol:mcs}
+Molière G. -
+\emph{Theorie der Streuung schneller geladener Teilchen II, Mehrfach- und Vielfachstreuung} - 
+Z. Naturforsch. 3a, 78–97 (1948)
 
 \bibitem{par:latspr}
 Parodi K., Mairani A., Sommerer F. -
