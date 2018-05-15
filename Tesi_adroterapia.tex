@@ -216,23 +216,49 @@ where the weight $w$, $\sigma_{1,2}$ and $n$, functions of the energy $E$ and th
 Between machine and patient, in air, all the scattering effects can be neglected and the main responsible of beam broadening is the natural divergence of the beam, leading to a linear treand, as can be seen in figure \ref{fig:latSig1}. Instead inside matter, the dominant effect is coulomb scattering, so the broadening becomes faster expecially as the particle loses energy.
 
 
-\textbf{ask Mark if about graphics}
+\textbf{ask Mark about graphics}
 
 \textbf{is the second one plausible? why?}
 
 
 \subsection{Ionization}
-In addition to the interactions with nuclei fields, incoming protons interact with atoms, transmitting some of their energy to the surrounding electrons. If that energy is sufficient, the atom is ionized and electron is free to move inside the medium, consuming his remaining energy. These secondary electrons have a large range of energies and some of those can have enough energy to provoke further secondary ionization. Such electrons are usually referred as $\delta$-rays.
-Ionization is the effect causing the death (complete loss of the proliferation capacity) of the cells during radiation therapy.
-%%%%%%%%% add RBE
-
-
-
+\begin{figure}[!t]
+     \subfloat[DNA possible deformations and breaks\label{fig:dna}]{%
+       \includegraphics[width=.57\textwidth]{Images/DNA}
+     }
+     \hfill
+     \subfloat[CHO cells Survival ratio realted with Dose, for $X$-rays and $^{12}$C ions\label{fig:surv}]{%
+       \includegraphics[width=.41\textwidth]{Images/survival}
+     }
+\caption{DNA structure and survival ratio}
+   \end{figure}
+In addition to the interactions with nuclei fields, incoming protons interact with atoms, transmitting some of their energy to the surrounding electrons. If that energy is sufficient, the atom is ionized and electron is free to move inside the medium, consuming his remaining energy in further scatterings or Bremsstrahlung. These secondary electrons have a large range of energies and some of those can have enough energy to provoke further secondary ionization. Such electrons are usually referred as $\delta$-rays \footnote{Antiquated definition due to hystorical reasons. At the beginning, $\delta$-rays where not recognised as electrons} or knock-on electrons.
+Ionization is the effect causing the death (complete loss of the proliferation capacity) of the cells during radiation therapy and  the main reason is DNA fragmentation. As shown in figure \ref{fig:dna}, through ionizing radiation, DNA chain can brake in multiple parts. Cells are provided with enzymes, called \emph{ligase}\footnote{There is a complete description of this phenomenon and the correlated risks, on the wiki page: \url{https://en.wikipedia.org/wiki/DNA_repair}}, that facilitates the joining of DNA strands together by catalyzing the formation of a phosphodiester bond but if deposided dose is over some threshold (that depends on the biology of the cell), correct repair is impossible and the cell is fated to die or become a cancerous one.
+Weyrather (et al.) in \cite{weyr:rbe}, treat the dose effect curve for $X$-rays and $^{12}$C ions on Chinese Hamster cells (CHO), for different energies. The analytical form of the \emph{survival ratio} can be written as
+\[
+S = e^{-\alpha D + \beta D^2}
+\]
+Where $S$ is the survival fraction, $D$ is Dose and $\alpha$, $\beta$ are fit constants.
+Their results and the caratteristic slope of this function is in figure \ref{fig:surv}.
+The ratio $\alpha/\beta$ is therefore a measure for the repair capacity of the cells and takes typical values of $1\div3\, Gy$ for cells with high repair potential and close to $10\, Gy$ for repair-deficient cells.
+As a measure for the effectiveness the factor RBE (\emph{Relative Biological Effectiveness}) was introduced as the ratio between $X$-ray dose and ion dose which are required to produce the same effect
+\[
+RBE = \frac{D_X}{D_{ion}}\Bigg|_{isoeffect}
+\]
+As can be seen from figure \ref{fig:surv}, at $10\%$ survival level, the RBE values for $^{12}$C ions increase from $1.6$ at $266\,MeV/u$ to $3.7$ at $11\,MeV/u$ and decrease again  
+\begin{wrapfigure}{r}{.5\textwidth}
+\centering
+{\includegraphics[width=.5\textwidth]{Images/secondary}}
+\caption{Monte-Carlo simulations showing individual tracks of $\delta$-electrons produced by energetic protons and $^{12}C$ ions penetrating tissue}
+\label{fig:secondary}
+\end{wrapfigure}
+\noindent to $2.1$ in the $2.4\,MeV/u$ case. The reason is very simple actually. At low energies, dose deposition is higher than at high energies, this is better explained in section \ref{sec:sobp}.
+Surprisingly, at still lower ion energies RBE does not further increase but decreases again. This can be
+explained by two different effects: if the dose deposited by a single ion is much higher than necessary to kill the cell, the energy is wasted and leads to a saturation effect (``overkill''); or at very low energy, the fluences required for doses of a few $Gy$ become very small and a certain fraction of the cells may not be hit at all, thus again decreasing the effectiveness.
 The higher biological effectiveness of ion beams can be explained by the microscopic structure of particle tracks and their interaction with the DNA molecule. As discussed above, the interaction of energetic ions with the tissue is governed by inelastic collisions with the atomic electrons. Since the ion/electron mass ratio is very large, the ions are moving on practically straight trajectories through the tissue.
-%%%%% add DNA chain fracture
+Delta-electrons are emitted mainly in forward direction and those emitted at larger angles have comparatively low energies and short ranges (due to the collision kinematics). The local dose inside these particle ``tracks'' decreases extremely steeply ($\sim1/r^2$) with the radial distance $r$. In figure \ref{fig:secondary} (from Kr\"amer \cite{Kram:track}), we can see an explicative image showing the secondary particle production for protons and Carbon ions.
+Concluding this section, we can say that RBE is an important value for heavy ion therapy but not for protons whose differences between RBE and Dose are neglectable.
 
-Delta-electrons are emitted mainly in forward direction and those emitted at larger angles have comparatively low energies and short ranges (due to the collision kinematics). The local dose inside these particle ``tracks'' decreases extremely steeply ($\sim1/r^2$) with the radial distance $r$. 
-%%%%%%%%%%add secondary particles paths
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%
@@ -258,23 +284,44 @@ In figure \ref{fig:BB}, we show a plot of the Bethe-Bloch as a function of $\bet
 \label{fig:BB}
 \end{figure}
 
-The Bethe-Bloch formula works approximately only for $\beta\gamma\ge 0.1$, taking into account all the different effects to which the flying particle is subject. The proton therapy works is between the energy interval $\sim30$ and $\sim200\,MeV$. This imply an initial factor $0.25<\beta\gamma<0.6$ (add calculation ?? ) for both protons and ions. So, our attention is focus on the first part of the curve where there is a behaviour proportional to $1/\beta^2$.
+The Bethe-Bloch formula works approximately only for $\beta\gamma\ge 0.1$, taking into account all the different effects to which the flying particle is subject. The proton therapy works is between the energy interval $\sim30$ and $\sim200\,MeV$. This imply an initial factor $0.25<\beta\gamma<0.6$ for both protons and ions. So, our attention is focus on the first part of the curve where there is a behaviour proportional to $1/\beta^2$, at the left of the maximum.
+Dr. Thomas Bortfeld, in \cite{bort:bragg}, shows a semi-empirical method to estimate the range of a proton in water. He states that range in water, in relation with initial energy can be calculated as
+\[
+R_0 = \alpha E_0^p
+\]
+where $E_0$ is the initial energy and $\alpha$,$p$ are fitting parameters. Obviously, this relation works only in a certain energy range and in the article is stated to be between $10$ and $250\,MeV$, coherent with our energy range.
 
-Dr. Thomas Bortfeld, in \cite{bort:bragg}, shows a semi-empirical method to estimate the range of a proton in water. (aggiungere calcolo)
-
-$\,$\\
-
-intervallo di energia
-
-approssimazioni di bethe bloch 
-
-range calculation (Esercizi Bonati)
-bragg peak
-
-
+While photons lose energy exponentially with distance, meaning a larger dose deposition near the surface of the target, protons have a completely different dose deposition function in relation with depth.
+In figure \ref{fig:bragg}, we can see the relation between energy loss and path lenght, or Bragg curve. The first most notable thing is the peak in the last part of the path. Soon we can notice the advantage of using protons instead of photons. In the cases of tumors located far from the surface we are allowed to hit the target with less damages to healthy tissues and we are not forced to shoot the particles from many angles, as is usually done in radiotherapy.
+Bragg curve has not a proper analytical function\footnote{Could be obtained by a sum of $n$ gaussian with $n\geq 10$ with minimum error, see Bangert (et al.) \cite{bang:apm}} due to the irregular behaviour of Bethe-Bloch at low energies. So Bragg peak is the reason why hadron therapy is faster and less dangerous for patients than photons radiotherapy. 
+In figure \ref{fig:SOPB}, in the next chapter, we have a superposition of a sum of bragg peaks and an exponential energy loss by a photon. Later in this work, I will introduce it.
 
 
 \subsection{Fragmentation}
+\begin{figure}[!t]
+     \subfloat[Bragg curve simulated for $\alpha$ particle in air\label{fig:bragg}]{%
+       \includegraphics[width=.47\textwidth]{Images/bragg}
+     }
+     \hfill
+\hspace{2mm}
+     \subfloat[Example of a Bragg curve of $330\,MeV/u$ $^{12}$C ions in water and calculated contributions of primary ions, secondary and tertiary nuclear fragments\label{fig:tail}]{%
+       \includegraphics[width=.48\textwidth]{Images/tail}
+     }
+\caption{Bragg peak examples}
+   \end{figure}
+So far, I talked about all the interactions involving charged particle in matter. I only avoided nuclear reaction because they are almost irrelevant for protons but this is not true for heavy ions.
+
+\begin{figure}[!ht]
+{\includegraphics[width=\textwidth]{Images/frag}}
+\caption{Illustration of the Abrasion-ablation model}
+\label{fig:frag}
+\end{figure}
+
+At energies of several hundred $MeV/u$ which are required for radiotherapy the most frequent nuclear interactions are peripheral collisions where the beam particles loose one or several nucleons. These reactions are well described by the so-called abrasion-ablation model according to \cite{serb:nucRea} as illustrated in figure \ref{fig:frag}.
+The total reaction cross sections at high energies ($>100\,MeV/u$) can be well described by semi-empirical geometrical models and are almost constant over a wide energy range. Typical values (for water target) are about $350\, mb$ for $200\,MeV$ protons and $1400\,mb$ for $380\,MeV/u$ $^{12}$C ions. These values correspond to mean free path lengths in water of about 85 cm for protons and 21 cm for 12C ions. This means that e.g. at a depth of $10\,cm$ in water about $11\%$ of the initial proton flux was lost by nuclear reactions, while this number is much higher ($38\%$) for $^{12}$C ions.
+The projectile-fragments continue travelling with nearly the same velocity and direction. These nuclear reactions lead to an attenuation of the primary beam flux and a build-up of lower-Z fragments with increasing penetration depth.
+As a consequence of nuclear fragmentation a rather complex radiation field is produced and leads to significant alterations which can also be observed in the shape of the Bragg curves. Since the range of the particles (at same velocity) scales with $A/Z^2$ and therefore lower-charge fragments have a correspondingly longer range, the depth-dose profile of heavy-ion beams shows a characteristic fragment tail beyond the Bragg peak, in figure \ref{fig:tail}.
+In the tail behind the Bragg peak first heavier fragments like B, Be, Li-ions contribute most of the dose, while the long range tail is caused essentially by protons and $\alpha$-particles. Of course, these fragmentation effects get more important with increasing depth due to the loss of primary ions and increasing production of fragments.
 
 \section{Particle treatments in clinical context}
 
@@ -319,6 +366,7 @@ This is precisely what MatRad does.
 
 
 \subsection{Spread Out Bragg Peak}
+\label{sec:sobp}
 
 A strictly mono-energetic proton beam is unsuitable for cancer treatment because of its longitudinally narrow Bragg peak. It is rather necessary to \emph{spread out} the Bragg peak in order to provide a uniform dose within the target volume. This can be provided by a suitably weighted energy distribution of the incident beam. 
 By varying the energy and the intensity of the monochromatic beam without changing the flight direction, we can overlap the effect of every bunch in the same cylindric volume inside the target and, summing 
@@ -693,6 +741,11 @@ In the following pages, I will show a series of images where it is shown a slice
 
 \begin{thebibliography}{99}
 
+\bibitem{bang:apm}
+Bangert M., Hennig P., Oelfke U. -
+\emph{Analytical probabilistic modeling for radiation therapy treatment planning} - 
+Phys. Med. Biol. 58 5401–5419 (2013)
+
 \bibitem{boeh:fluka}
 Böhlen T.T., Cerutti F., Chin M.P.W., Fassò A., Ferrari  A., Ortega P.G., Mairani A., Sala P.R., Smirnov G. and Vlachoudis V. -
 \emph{The FLUKA Code: Developments and Challenges for High Energy and Medical Applications} -
@@ -723,6 +776,11 @@ Jette D. and Chen W. -
 \emph{Creating a spread-out Bragg peak in proton beams} -
 Phys. Med. Biol. 56, N131–N138 (2011)
 
+\bibitem{Kram:track}
+Krämer M. - 
+\emph{Calculations of heavy-ion track structure} - 
+Nucl. Instr. Meth. Phys. Res. B 105, 14–20 (1995)
+
 \bibitem{low:gamma}
 Low D. A., Harms W. B., Mutic S. and Purdy J. A. -
 \emph{A technique for the quantitative evaluation of dose distributions} -
@@ -742,6 +800,17 @@ Journal of Radiation Research 54, i91–i96 (2013)
 Schneider U., Besserer J., Pemler P. - 
 \emph{On small angle multiple Coulomb scattering of protons in the Gaussian approximation} - 
 Z. Med. Phys. 11,  110- 118 (2001)
+
+\bibitem{serb:nucRea}
+Serber R. - 
+\emph{Nuclear reactions at high energies} -
+Phys. Rev. 72(11), 1114–1115 (1947)
+
+\bibitem{weyr:rbe}
+Weyrather W.K., Ritter S., Scholz M., Kraft G. - 
+\emph{RBE for carbon track-segment irradiation in cell lines of differing repair} -
+capacity. Int. J. Radiat. Biol. 75, 1357–1364 (1999)
+
 
 
 
