@@ -73,7 +73,7 @@
   \title{Research on the dosimetric accuracy of Fine Sampling  for radiation therapy treatment planning}
   \author{Giuseppe \textsc{Pezzano}}
   \email{gpp.pezzano@gmail.com}
-  \date{May 2018}
+  \date{19 July 2018}
   \location{Pisa}
   \blurb{Università di Pisa\\
   Dipartimento di Fisica Enrico Fermi\\
@@ -81,7 +81,7 @@
   Deutsches Krebsforschungszentrum\\
   DKFZ Heidelberg\\
   ~\\
-  internal supervisors:\\
+  internal supervisor:\\
   \large{Prof. Alberto Del Guerra}\\
   ~\\
   supervisor:\\
@@ -264,6 +264,11 @@ Concluding this section, we can say that RBE is an important value for heavy ion
 %%%%%%%%%%%%%%%%%%%%%%%%
 \textbf{Parlarne con Elisabetta perchè ho qualche dubbio}
 
+\begin{figure}[!h]
+\includegraphics[width=\textwidth]{Images/rbe12c}
+\caption{Example of Radio-Biological Effect against Physical Dose, for $^{12}$C}
+\label{fig:rbe12c}
+\end{figure}
 
 
 
@@ -322,10 +327,53 @@ The total reaction cross sections at high energies ($>100\,MeV/u$) can be well d
 The projectile-fragments continue travelling with nearly the same velocity and direction. These nuclear reactions lead to an attenuation of the primary beam flux and a build-up of lower-Z fragments with increasing penetration depth.
 As a consequence of nuclear fragmentation a rather complex radiation field is produced and leads to significant alterations which can also be observed in the shape of the Bragg curves. Since the range of the particles (at same velocity) scales with $A/Z^2$ and therefore lower-charge fragments have a correspondingly longer range, the depth-dose profile of heavy-ion beams shows a characteristic fragment tail beyond the Bragg peak, in figure \ref{fig:tail}.
 In the tail behind the Bragg peak first heavier fragments like B, Be, Li-ions contribute most of the dose, while the long range tail is caused essentially by protons and $\alpha$-particles. Of course, these fragmentation effects get more important with increasing depth due to the loss of primary ions and increasing production of fragments.
+%%% serve una frase conclusiva
 
 \section{Particle treatments in clinical context}
+Before the patient enters the gantry-room, where the real treatment takes place, there are several steps of diagnostics and verification, necessary for the patient health and for the success of the operation.
 
-\section{Motivation and Scope of this work}
+The first step of treatment planning for any radiation therapy modality is to define and delineate the target volume on the basis of modern imaging techniques. $X$-ray Comupted tomography (CT) provides quantitative information about the anatomical structures by recording photon attenuation images with a typical pixel resolution of $1\,mm$ and slice thickness of $3\,mm$. Native CT data (without contrast agents) are essential for calculating the particle range and dose deposited in tissue and have to be recorded under the same conditions and with the eventual same fixation aids (e.g. head mask, in passive beam delivery systems, further explained in section \ref{activeScanning}) as used later in the treatment. Magnetic resonance imaging (MRI) and Positron-Emission-Tomography (PET) are often applied in combination with CT to allow for a better definition of the target volume and organs at risk.
+Several steps of preparation are needed before the treatment can start:
+%%% would be worth to do it in flowchart?
+\begin{itemize}
+\item Diagnostic: definition and delineation of the target volume (CT, MRI, PET)
+\item transformation of patient CT-data to water-equivalent path-length of ions
+\item Treatment planning:
+	\begin{itemize}
+	\item find best beam entrance ports
+	\item optimization of absorbed dose based on physical model
+	\item (for heavy ions) biological optimization and RBE calculation
+	\end{itemize}
+\item Eventual verification of planned dose distribution in water phantom
+\item Patient positioning in gantry-room and further verification through $X$-rays
+\item Irradiation
+\end{itemize}
+To calculate the dose deposition including the exact position of the Bragg peak in heterogeneous tissue, the relationship between CT numbers (given in Hounsfield units) and stopping power has to be established. The concept of water-equivalent path length is used to relate the traversal of an ion through a given CT voxel to the corresponding ion path length in water.
+There are many sources of uncertainty in all these steps.
+Modern 3D CT, just like RMN and PET, have a resolution of the order of $1\,mm$, at worst on two axis. The goal of particle therapy hardware is to reach at least the same resolution. In fact, energy and direction of the beam, representing Bragg peak position (in ideal conditions), are very accurate on all the axis, [\textbf{numerical values}].
+Patient positioning errors are mostly compensated by the last verifications, in loco.
+%But there is still a problem of beam divergence that force the standard deviation of the profile of the beam to be several millimetres large also at small energies. [\textbf{numerical values}].
+We can say that, apart from planning, the largest uncertainty is given by diagnostic.
+State of the art dose calculation softwares should at least keep the resolution smaller than the error in diagnostic. This is possible with Monte Carlo based softwares and it is under investigation and study for pencil beam algorithms. The reasons why, will be processed accurately in the next chapter.
+
+%%% non so che scrivere, non mi piace
+
+
+\section{Motivation and Scope of this work} 
+Nowadays in radiation onchology, the main challenges are to speed up the preparation steps needed for the therapy and increase accuracy. Because of the long time lost in this routine, biggest world centers can treat, in average, only few hundred people per year. And poor accuracy means more risks for the patient.
+A key role is played by softwares, used either for diagnostic, planning and verification.
+The part on which I focused my work on is the treatment planning. In fact, I will investigate the most common methods used for particle dose calculation and I will implement one, Fine Sampling Beam algorithm, in an already existent software, MatRad. 
+Usign Monte Carlo simulated Dose and HIT fullfield experimental data as reference models, I will compare mine with already existent softwares, with the goal of overcoming accuracy of pencil beam algorithm, keeping short the computation time.  
+%Furthermore
+
+Providing scientists and doctors with strongest instruments to plan patient treatments precisely in the shortest possible time, will make Particle Radiotherapy faster, more accessible and cheaper.
+
+
+
+
+
+
+
 
 
 \chapter{Material and Methods} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -340,7 +388,8 @@ The Intensity Modulated Therapy is a kind of treatment that uses some bunches of
 \end{wrapfigure}
 \noindent largest part of their energy in a specific target area (i.e. the tumor volume).
 
-\subsection{Active scanning and other techniques}\label{activeScanning}
+\subsection{Active scanning and other techniques}
+\label{activeScanning}
 There are two main methods to modulate the energy of the beam in order to adapt the range to the clinical purpose. The first one is called passive scanning technique and concerns the use of a collimator (as the one shown in figure \ref{fig:collimator}) and a bolus. The collimators are usually made of metal such as Copper or Aluminium. Their role is to stop the part of the beam not targeting the interested area. A bolus is a plastic model (usually 3D printed) whose aim is to modulate the intensity of the radiation over the tumor volume. Both the collimator and the bolus have to be built for every direction of the beam and for every patient, increasing the costs and the time consumption. 
 Then, because it's difficult to obtain a monochromatic and homogeneous photons beam of a chosen energy, they are more used in radiation therapy than in hadrontherapy.
 The most modern centres use automated leaf collimators reducing sensibly the treatment time\footnote{The NCI Hospital uploaded a very interesting video about the IMRT using collimators. This can be found at the address: \url{https://www.youtube.com/watch?v=eZS6DVGBx0k}}. 
@@ -390,10 +439,12 @@ This is based on a close power-law relationship between the range $R$ of protons
 \section{Dose Calculation}
 Nowadays there are three main ways to evaluate dose deposition inside matter. These methods can be divided in two categories: the one that simulate the path of the single particle such as Monte Carlo simulations and the methods simulating the dose deposition of the whole bunch of particles at once, such as APM and the pencil beam models.
 
+%% add  something 
+
 %solo questo????
 
 \subsection{Monte Carlo}
-The Monte Carlo simulations calculate the dose deposited by single particles approximating their path and evaluating randomly the outcome for every scattering. In reality, in order to speed up this method, the modern software simulate only a certain percentage of the particles and assemble a certain number of successive scattering in a single and more complex one. In spite of Monte Carlo simulations are highly expensive in terms of time, they ensure very accurate simulations. This is the reason why we choose it as our "gold standard" in the single pencil beam case, whose we do not have any real measurement.
+The Monte Carlo simulations calculate the dose deposited by single particles approximating their path and evaluating randomly the outcome for every scattering. In reality, in order to speed up this method, the modern software simulate only a certain percentage of the particles and assemble a certain number of successive scattering in a single and more complex one. In spite of Monte Carlo simulations are highly expensive in terms of time, they ensure very accurate simulations. This is the reason why we choose it as our ``gold standard'' in the single pencil beam case, whose we do not have any real measurement.
 The Monte Carlo simulations used in this project were produced by \emph{FLUKA}\footnote{More info about Fluka at \url{http://www.fluka.org/fluka.php}}. It is able to simulate with high accuracy the interaction and the propagation in matter of about 60 different particles. It is extensively used at CERN for all the beam-machine interactions, the radio protection calculations and the facility design of some forthcoming projects. 
 Outside CERN, among various applications worldwide, FLUKA serves as a core tool for the HIT and CNAO hadron-therapy facilities in Europe and it is supported also by \emph{INFN}.
 Another promising technique in hadrontherapy for in-vivo monitoring relies on the detection of prompt photons emitted following nuclear interactions by the beam particles. FLUKA capabilities in this aspect have been recently enhanced.
@@ -413,7 +464,7 @@ This is used to rescale the precomputed dose in water into the dose deposited in
 Syngo\footnote{Syngo online user manual: \url{http://dei-s2.dei.uminho.pt/outraslic/lebiom/seim/VA40_P10_Software.pdf}} is a professional software produced by Siemens that is based on Pencil beam model. Syngo is used in many radiotherapy centers such as HIT in Heidelberg and has been used in this work for being compared with MatRad\footnote{Software and more information can be found at: \url{http://e0404.github.io/matRad/}}, which is its opensource ``twin" developed and maintained by DKFZ Cancer Research Center Heidelberg. 
 These are the fastest and the more robust software we had access to, but they have limits in the precision. In fact, they are affected by difficulty of accurately describing the dose around high gradient zones, especially near bones and air bubbles.
 
-
+%%% add software workflow for this and next chapter
 
 
 
