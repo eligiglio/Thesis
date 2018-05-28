@@ -6,7 +6,11 @@
 \usepackage{eso-pic}
 \usepackage{wrapfig}
 \usepackage{lineno}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows}
 \linenumbers
+
+\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black, fill=red!30]
 
 
 \newcommand\AlCentroPagina[1]{%
@@ -296,13 +300,6 @@ R_0 = \alpha E_0^p
 \]
 where $E_0$ is the initial energy and $\alpha$,$p$ are fitting parameters. Obviously, this relation works only in a certain energy range and in the article is stated to be between $10$ and $250\,MeV$, coherent with our energy range.
 
-While photons lose energy exponentially with distance, meaning a larger dose deposition near the surface of the target, protons have a completely different dose deposition function in relation with depth.
-In figure \ref{fig:bragg}, we can see the relation between energy loss and path lenght, or Bragg curve. The first most notable thing is the peak in the last part of the path. Soon we can notice the advantage of using protons instead of photons. In the cases of tumors located far from the surface we are allowed to hit the target with less damages to healthy tissues and we are not forced to shoot the particles from many angles, as is usually done in radiotherapy.
-Bragg curve has not a proper analytical function\footnote{Could be obtained by a sum of $n$ gaussian with $n\geq 10$ with minimum error, see Bangert (et al.) \cite{bang:apm}} due to the irregular behaviour of Bethe-Bloch at low energies. So Bragg peak is the reason why hadron therapy is faster and less dangerous for patients than photons radiotherapy. 
-In figure \ref{fig:SOPB}, in the next chapter, we have a superposition of a sum of bragg peaks and an exponential energy loss by a photon. Later in this work, I will introduce it.
-
-
-\subsection{Fragmentation}
 \begin{figure}[!t]
      \subfloat[Bragg curve simulated for $\alpha$ particle in air\label{fig:bragg}]{%
        \includegraphics[width=.47\textwidth]{Images/bragg}
@@ -314,9 +311,16 @@ In figure \ref{fig:SOPB}, in the next chapter, we have a superposition of a sum 
      }
 \caption{Bragg peak examples}
    \end{figure}
+While photons lose energy exponentially with distance, meaning a larger dose deposition near the surface of the target, protons have a completely different dose deposition function in relation with depth.
+In figure \ref{fig:bragg}, we can see the relation between energy loss and path lenght, or Bragg curve. The first most notable thing is the peak in the last part of the path. Soon we can notice the advantage of using protons instead of photons. In the cases of tumors located far from the surface we are allowed to hit the target with less damages to healthy tissues and we are not forced to shoot the particles from many angles, as is usually done in radiotherapy.
+Bragg curve has not a proper analytical function\footnote{Could be obtained by a sum of $n$ gaussian with $n\geq 10$ with minimum error, see Bangert (et al.) \cite{bang:apm}} due to the irregular behaviour of Bethe-Bloch at low energies. So Bragg peak is the reason why hadron therapy is faster and less dangerous for patients than photons radiotherapy. 
+In figure \ref{fig:SOPB}, in the next chapter, we have a superposition of a sum of bragg peaks and an exponential energy loss by a photon. Later in this work, I will introduce it.
+
+
+\subsection{Fragmentation}
 So far, I talked about all the interactions involving charged particle in matter. I only avoided nuclear reaction because they are almost irrelevant for protons but this is not true for heavy ions.
 
-\begin{figure}[!ht]
+\begin{figure}[!h]
 {\includegraphics[width=\textwidth]{Images/frag}}
 \caption{Illustration of the Abrasion-ablation model}
 \label{fig:frag}
@@ -376,60 +380,83 @@ Providing scientists and doctors with strongest instruments to plan patient trea
 
 
 
-\chapter{Material and Methods} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Material and Methods} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Intensity Modulated Particle Therapy}
-%%%%%%%%%%spiegare meglio questa parte!non � chiara. ad esempio spiega meglio che fa il bolus, che cos'� e come viene utilizzato, e come sono fatti gli automatized leaf collimators e che hanno di diverso rispetto agli altri. migliora il filo logico delle frasi!
-The Intensity Modulated Therapy is a kind of treatment that uses some bunches of charged particles or photons, whose intensity is modulated in order to release the
+% The Intensity Modulated Therapy is a kind of treatment that uses some bunches of charged particles or photons, whose intensity is modulated in order to release the largest part of their energy in a specific target area (i.e. the tumor volume).
+
+Particle beams provided by cyclotron or synchrotron accelerators are typically narrow, pencil-like beams centred at the axis of the beam tube. An 
 \begin{wrapfigure}{l}{.5\textwidth}
 {\includegraphics[width=0.5\textwidth]{Images/collimator}}
-\caption{Multileaf collimator for the shaping of the radiation beam}
+\caption{Multileaf Collimator for the shaping of the radiation beam}
 \label{fig:collimator}
+\vspace{-10mm}
 \end{wrapfigure}
-\noindent largest part of their energy in a specific target area (i.e. the tumor volume).
+\noindent important task which is performed by the so-called beam delivery system is to distribute the beam over the planned target volume (PTV) accurately and homogeneously with the desired dose distribution.
+Two different basic strategies were followed which in their extreme forms are represented by the fully passive systems with fixed beam modulation or the fully active beam scanning techniques.
 
-\subsection{Active scanning and other techniques}
-\label{activeScanning}
-There are two main methods to modulate the energy of the beam in order to adapt the range to the clinical purpose. The first one is called passive scanning technique and concerns the use of a collimator (as the one shown in figure \ref{fig:collimator}) and a bolus. The collimators are usually made of metal such as Copper or Aluminium. Their role is to stop the part of the beam not targeting the interested area. A bolus is a plastic model (usually 3D printed) whose aim is to modulate the intensity of the radiation over the tumor volume. Both the collimator and the bolus have to be built for every direction of the beam and for every patient, increasing the costs and the time consumption. 
-Then, because it's difficult to obtain a monochromatic and homogeneous photons beam of a chosen energy, they are more used in radiation therapy than in hadrontherapy.
+
+\subsection{Passive systems}
+In the first case, the particle beam
+is adapted in three dimensions to the target volume only by passive non-variable
+field shaping elements.
+The principle of a fully passive system is shown in figure \ref{fig:passive}. The initially narrow beam delivered by the accelerator is first broadened by a scattering device, normally a double-scattering system which generates a flat transversal profile in a most efficient way. 
+The pristine Bragg peak is spread out by a range modulator in order to cover the entire length of the target volume. The whole spread-out Bragg peak (SOBP) can be shifted in depth by absorber plates (range shifter). 
+The following two devices are patient specific and need to be precisely fabricated (increasing the costs and the time consumption): the collimator (figure \ref{fig:collimator}) cuts out the field area defined by the largest target contour as seen in beam’s eye view, preventing particles outside the field to pass through. 
+The range compensator adjusts the distal depth pattern, taking into account also the complex tissue composition. A major limitation of the fully passive modulation system is the fixed width of the SOBP, which may result in significant dose deposition outside the target volume, e.g. in the proximal part when the particle range is adjusted to the distal contours (in figure \ref{fig:passive}).
+
+
+Then, because it is difficult to obtain a monochromatic and homogeneous photons beam of a chosen energy, they are more used in radiation therapy than in hadrontherapy.
 The most modern centres use automated leaf collimators reducing sensibly the treatment time\footnote{The NCI Hospital uploaded a very interesting video about the IMRT using collimators. This can be found at the address: \url{https://www.youtube.com/watch?v=eZS6DVGBx0k}}. 
-\begin{wrapfigure}{l}{.5\textwidth}
-{\includegraphics[width=0.5\textwidth]{Images/passiveandactive}}
-\caption{Comparison between passive and active beam scanning}
-\label{fig:actandpas}
-\end{wrapfigure}
+%\begin{wrapfigure}{l}{.5\textwidth}
+%{\includegraphics[width=0.5\textwidth]{Images/passiveandactive}}
+%\caption{Comparison between passive and active beam scanning}
+%\label{fig:actandpas}
+%\end{wrapfigure}
+\begin{figure}[t]
+{\includegraphics[width=\textwidth]{Images/passive}}
+\caption{Example of complete Passive system}
+\label{fig:passive}
+\end{figure}
 
-In charged particle therapy, the use of collimators is also usually avoided because of the coulomb scattering that can direct some particles towards sensible zones, causing serious damages to the patient.%c'� un salto logico alla frase sucessiva che confonde. aggiungi qualcosa che introduca meglio l'argomento nuovo dello scanning
-In order to use the advantages of the proton therapy, active scanning treatment methods have been developed.
-This is the most used method (especially in hadrontherapy) and consists in modulating the energy from the accelerator and the beam trajectory by magnetic scanners sit between the accelerator and the patient. A magnetic field is induced in two subsequent areas on the bunch path slightly bending the particle beams on two axis. 
-Heidelberg HIT centre is able to send beams at $N$ different energies...(to be continued)
-%%%%%%%%%%%%%
+In charged particle therapy, the use of collimators is also usually avoided because of Coulomb scattering that can direct some particles towards sensible zones, causing serious damages to the patient.
 
-Compared to the passive scattering techniques using a small number of broad fields, many (up to tens of thousands) narrow proton beams are used for irradiation in the active scanning. The intensity modulated proton therapy is an active scanning technique using the approach of inverse treatment planning. Each spot is weighted in a computer-based optimisation procedure to find the optimal solution for the prescribed dose in the target volume and for sparing the critical organs as much as possible.
-This is precisely what MatRad does.
+\section{Active Scanning Techniques}
+\label{activeScanning}
+In the early 1990s a new beam delivery technique was developed almost in parallel at PSI (Switzerland) and at GSI (Germany). Both the spot scanning system (PSI) and the raster scanning system (GSI) represent fully active techniques in the sense that no passive elements are used in order to adapt the dose deposition optimally to the target volume. The basic principle of the raster scanning system is shown in figure \ref{fig:active}.
+In contrast to the passive systems there is no scattering device, but the fine pencil-like beam is moved in horizontal and vertical direction by fast magnetic deflection magnets. The treatment dose is delivered slice by slice, each slice corresponding to constant beam energy.
+When the desired dose in one voxel is reached, the beam is moved to the next voxel-line. After completion of one slice the synchrotron beam extraction is instantly interrupted and the beam energy for the next slice is selected and delivered with the next synchrotron pulse. The scanning control system is linked with the accelerator control system and requests the appropriate beam parameters for each slice irradiation during execution of the treatment plan. 
+With this system it is possible to adapt the dose distribution to any complex shape of the target volume, individually for each patient and without any patient-specific hardware.
+
+\begin{figure}[t]
+{\includegraphics[width=\textwidth]{Images/active}}
+\caption{Example of Active Scanning Technique}
+\label{fig:active}
+\end{figure}
+
+Compared to the passive scattering techniques using a small number of broad fields, many (up to tens of thousands) narrow proton beams are used for irradiation in the active scanning. Each spot is weighted in a computer-based optimisation procedure to find the optimal solution for the prescribed dose in the target volume and for sparing the critical organs as much as possible.
+This is precisely what a Dose calculation software does.
 %%%%%%% add all the different energies in a table??
-%%%%%%% add how the initial sigma changes as function of the energy?? maybe in the next chapter??
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%NON HO CAPITO NIENTE DI QUESTO PARAGRAFO!
-
 
 
 
 \subsection{Spread Out Bragg Peak}
 \label{sec:sobp}
 
-A strictly mono-energetic proton beam is unsuitable for cancer treatment because of its longitudinally narrow Bragg peak. It is rather necessary to \emph{spread out} the Bragg peak in order to provide a uniform dose within the target volume. This can be provided by a suitably weighted energy distribution of the incident beam. 
-By varying the energy and the intensity of the monochromatic beam without changing the flight direction, we can overlap the effect of every bunch in the same cylindric volume inside the target and, summing 
+A strictly mono-energetic proton beam is unsuitable for cancer treatment because of its longitudinally narrow Bragg peak. 
+It is rather necessary to \emph{spread out} the Bragg peak in order to provide a uniform dose within the target volume. As shown in figure  \ref{fig:sobp}, the flat-top SOBP function has been obtained summing the contribution of many single bragg peaks. This can be provided by a suitably weighted energy distribution of the incident beam. 
+By varying the energy and the intensity of the monochromatic beam without changing the flight direction, we can overlap the effect
 \begin{wrapfigure}{r}{.5\textwidth}
 {\includegraphics[width=0.5\textwidth]{Images/SOBP}}
 \caption{Comparison between protons Spread Out Bragg Peak and photons energy loss in matter}
-\label{fig:SOPB}
+\label{fig:sobp}
 \end{wrapfigure}
-\noindent their contribution with the correct weights, we are able to obtain a constant value of dose deposited in the whole target area.
+\noindent of every bunch in the same cylindric volume inside the target and, summing their contribution with the correct weights, we are able to obtain a constant value of dose deposited in the whole target area.
 
 
-The problem of producing a spread-out Bragg peak (SOBP) through a weighted collection of mono-energetic proton beams has been studied by various investigators, in particular by Bortfeld and Schlegell in \cite{bort:SOBP} have developed a simple analytical way for determining the weights of proton beams with various initial energies required to create an SOBP for a proton beam. Jette and Chen (\cite{jett:SOBP}) improved this method, finding a more precise one. %Bortfeld e Schlegell gli investigatopi che trovano le tope
+The problem of producing a spread-out Bragg peak (SOBP) through a weighted collection of mono-energetic proton beams has been studied by various investigators, in particular by Bortfeld and Schlegell in \cite{bort:SOBP}. They have developed a simple analytical way for determining the weights of proton beams with various initial energies required to create an SOBP for a proton beam. Jette and Chen (\cite{jett:SOBP}) improved this method, finding a more precise one. %Bortfeld e Schlegell gli investigatopi che trovano le tope
 %% add calculation??
-This is based on a close power-law relationship between the range $R$ of protons and their energy $E$:
+
 
 %%%%%%%%%%%%%NON HO CAPITO!spiega meglio
 
@@ -437,6 +464,7 @@ This is based on a close power-law relationship between the range $R$ of protons
 
 
 \section{Dose Calculation}
+Dose Calculation is the very core of the treatment planning. 
 Nowadays there are three main ways to evaluate dose deposition inside matter. These methods can be divided in two categories: the one that simulate the path of the single particle such as Monte Carlo simulations and the methods simulating the dose deposition of the whole bunch of particles at once, such as APM and the pencil beam models.
 
 %% add  something 
@@ -444,20 +472,20 @@ Nowadays there are three main ways to evaluate dose deposition inside matter. Th
 %solo questo????
 
 \subsection{Monte Carlo}
-The Monte Carlo simulations calculate the dose deposited by single particles approximating their path and evaluating randomly the outcome for every scattering. In reality, in order to speed up this method, the modern software simulate only a certain percentage of the particles and assemble a certain number of successive scattering in a single and more complex one. In spite of Monte Carlo simulations are highly expensive in terms of time, they ensure very accurate simulations. This is the reason why we choose it as our ``gold standard'' in the single pencil beam case, whose we do not have any real measurement.
+The Monte Carlo simulations calculate the dose deposited by single particles approximating their path and evaluating randomly the outcome for every scattering. In reality, in order to speed up this method, the modern software simulate only a part of the particles and assemble a certain number of successive scattering in a single and more complex one. In spite of Monte Carlo simulations are highly expensive in terms of time, they ensure very accurate simulations. This is the reason why we choose it as our ``gold standard'' in the single pencil beam case, whose we do not have any real measurement.
 The Monte Carlo simulations used in this project were produced by \emph{FLUKA}\footnote{More info about Fluka at \url{http://www.fluka.org/fluka.php}}. It is able to simulate with high accuracy the interaction and the propagation in matter of about 60 different particles. It is extensively used at CERN for all the beam-machine interactions, the radio protection calculations and the facility design of some forthcoming projects. 
 Outside CERN, among various applications worldwide, FLUKA serves as a core tool for the HIT and CNAO hadron-therapy facilities in Europe and it is supported also by \emph{INFN}.
 Another promising technique in hadrontherapy for in-vivo monitoring relies on the detection of prompt photons emitted following nuclear interactions by the beam particles. FLUKA capabilities in this aspect have been recently enhanced.
 The main publication on innovations and the state of the art of this software is made by B\"ohlen \emph{et al.} \cite{boeh:fluka} where they show the latest improvements.
 Furthermore, a complete and very exhaustive guide\footnote{It can be found at \url{http://cds.cern.ch/record/898301?ln=it}} for the FLUKA world, possibilities and configurations, for experts and none, has been made from Ferrari \emph{et al.} \cite{ferr:fluka}.
 
-Add something..... %%%%%%%%%%%
+%Add something..... %%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%da riscrivere ultima parte. scrivere i nomi delle sigle o aggiungi le sigle quando citi i nomi precedentemente. questo anche nella parte successiva,
 
 \subsection{Pencil Beam} 
 \label{sec:pen}
-Pencil beam algorithms are based on IMRT. This means that the incident particle beam is divided by trajectory and energy in \emph{bunches} that should be of the order of the centimetre narrow and as monochromatical as possible. Every bunch is elaborated separately, using precomputed Monte Carlo simulations. In fact, the software is provided with a database of precomputed dose depositions in water at all the possible energies that can be provided by the accelerator (calculated with Geant4????). 
-In the first step, once the energy of the bunch is fixed, the software calculates the so called \emph{radiation depth} and estimates the range of the particles inside the target. So, starting from a CT (or a tridimensional matrix giving the density of the target), it estimates the water-equivalent distance that can be covered by a particle at the given energy. 
+Pencil beam algorithms are based on IMRT. This means that the incident particle beam is divided by trajectory and energy in \emph{bunches} that should be of the order of the centimetre narrow and as monochromatical as possible. Every bunch is elaborated separately, using precomputed Monte Carlo simulations. In fact, the software is provided with a database of precomputed dose depositions in water at all the possible energies that can be provided by the accelerator. In a standard Pencil beam algorithm, before starting, the operator imports the CT (included with the \emph{cst} \textbf{anagram??}), defines the direction of the beam and prescribes the Dose deposition limits for every area, this is the preparation.
+Then in the first step, once for every direction of the beam, the software calculates the so called \emph{radiation depth} and estimates the range of the particles inside the target, through the \emph{Ray Tracing}. So, starting from a CT (or a tridimensional matrix giving the density of the target), it estimates the water-equivalent distance that can be covered by a particle at the given energy. 
 This is used to rescale the precomputed dose in water into the dose deposited in the CT field. Then, the result is stored and later summed up with all the successive computations. 
 %aggiungere qualcosa!spiega meglio
 \subsubsection{Syngo and MatRad}
@@ -466,7 +494,18 @@ These are the fastest and the more robust software we had access to, but they ha
 
 %%% add software workflow for this and next chapter
 
+\newpage
+\begin{tikzpicture}[node distance=2cm]
 
+\node (start) [startstop] {Preparation};
+
+
+
+
+
+
+\end{tikzpicture}
+\newpage
 
 
 
