@@ -10,7 +10,10 @@
 \usetikzlibrary{shapes.geometric, arrows}
 \linenumbers
 
+\tikzstyle{arrow} = [thick,->,>=stealth]
 \tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black, fill=red!30]
+\tikzstyle{process} = [rectangle, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=orange!30]
+\tikzstyle{decision} = [diamond, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=green!30]
 
 
 \newcommand\AlCentroPagina[1]{%
@@ -338,7 +341,6 @@ Before the patient enters the gantry-room, where the real treatment takes place,
 
 The first step of treatment planning for any radiation therapy modality is to define and delineate the target volume on the basis of modern imaging techniques. $X$-ray Comupted tomography (CT) provides quantitative information about the anatomical structures by recording photon attenuation images with a typical pixel resolution of $1\,mm$ and slice thickness of $3\,mm$. Native CT data (without contrast agents) are essential for calculating the particle range and dose deposited in tissue and have to be recorded under the same conditions and with the eventual same fixation aids (e.g. head mask, in passive beam delivery systems, further explained in section \ref{activeScanning}) as used later in the treatment. Magnetic resonance imaging (MRI) and Positron-Emission-Tomography (PET) are often applied in combination with CT to allow for a better definition of the target volume and organs at risk.
 Several steps of preparation are needed before the treatment can start:
-%%% would be worth to do it in flowchart?
 \begin{itemize}
 \item Diagnostic: definition and delineation of the target volume (CT, MRI, PET)
 \item transformation of patient CT-data to water-equivalent path-length of ions
@@ -484,34 +486,120 @@ Furthermore, a complete and very exhaustive guide\footnote{It can be found at \u
 
 \subsection{Pencil Beam} 
 \label{sec:pen}
-Pencil beam algorithms are based on IMRT. This means that the incident particle beam is divided by trajectory and energy in \emph{bunches} that should be of the order of the centimetre narrow and as monochromatical as possible. Every bunch is elaborated separately, using precomputed Monte Carlo simulations. In fact, the software is provided with a database of precomputed dose depositions in water at all the possible energies that can be provided by the accelerator. In a standard Pencil beam algorithm, before starting, the operator imports the CT (included with the \emph{cst} \textbf{anagram??}), defines the direction of the beam and prescribes the Dose deposition limits for every area, this is the preparation.
-Then in the first step, once for every direction of the beam, the software calculates the so called \emph{radiation depth} and estimates the range of the particles inside the target, through the \emph{Ray Tracing}. So, starting from a CT (or a tridimensional matrix giving the density of the target), it estimates the water-equivalent distance that can be covered by a particle at the given energy. 
-This is used to rescale the precomputed dose in water into the dose deposited in the CT field. Then, the result is stored and later summed up with all the successive computations. 
-%aggiungere qualcosa!spiega meglio
+Pencil beam algorithms are based on \emph{Ray Tracing}\footnote{On Schaffner (et al.) \cite{schaf:pba}, there is a comparison between ray casting algorithm, other methods and Monte Carlo simulations}. This method consists in calculating the attenuation undergone by the particles on a straight line inside the target. It is simply based on the calculation of the path of straight lines (parallel to the beam) inside the tomography of the target. For each voxel (threedimensional pixel), based on the distance traveled and the electron density of that voxel, the water equivalent distance can be calculated. In other words, the distance that should travel a particle in order to undergo the same attenuation.
+This is needed because the algorithm works with the help of precomputed Monte Carlo simulations in water, at all the possible energies that can be provided by the accelerator. In a standard Pencil beam algorithm, before starting, the operator imports the CT (included with the \emph{cst} \textbf{anagram??}), defines the direction of the beam and prescribes the Dose deposition limits for every area, deciding the treatment plan.
+Then in the first step, once for every direction of the beam, the software calculates the so called \emph{radiation depth} and estimates the range of the particles inside the target, through the ray casting. So, starting from a CT (or a tridimensional matrix giving the density of the target), it estimates the water-equivalent distance that can be covered by a particle at the given energy, inside that particular CT. 
+The next step is to calculate lateral spread of the beam depending on the direction of the ray, this also allows to highlight the volume covered by the radiation and restrict operations only to that area, in order to save computation time. 
+The information got in the previous steps is used in the last part of the software, in order to calculate dose.
+This is the core of the software. First, knowing the energy of the beam, the software finds the corresponding precomputed bragg peak stored in the look-up tables, then it adapts the bragg peak in longitudinal and lateral direction, on the basis of the morphology of the target. 
+This process is repeated for every beam energy and direction, otherwise called bixel.
+Calculated Dose is then stored in a sparse matrix and then summed over the loop with the previous ones.
+In figure \ref{tikz:pba}, can be found a flowchart reassuming the basic steps.
+
+A standard pencil beam algorithm does not take in account the possibility of protons changing direction of flight inside the target, so it rescales the range of penetration based only on the stopping power seen from a straight line. This causes problems of steep Dose gradients in some cases. This and all the other issues will be treated in chapter \ref{chap:res}
+
 \subsubsection{Syngo and MatRad}
 Syngo\footnote{Syngo online user manual: \url{http://dei-s2.dei.uminho.pt/outraslic/lebiom/seim/VA40_P10_Software.pdf}} is a professional software produced by Siemens that is based on Pencil beam model. Syngo is used in many radiotherapy centers such as HIT in Heidelberg and has been used in this work for being compared with MatRad\footnote{Software and more information can be found at: \url{http://e0404.github.io/matRad/}}, which is its opensource ``twin" developed and maintained by DKFZ Cancer Research Center Heidelberg. 
 These are the fastest and the more robust software we had access to, but they have limits in the precision. In fact, they are affected by difficulty of accurately describing the dose around high gradient zones, especially near bones and air bubbles.
 
-%%% add software workflow for this and next chapter
-
 \newpage
-\begin{tikzpicture}[node distance=2cm]
+\begin{figure}[!h]
+\centering
+\begin{tikzpicture}[node distance=1.5cm, xshift=5cm]
 
-\node (start) [startstop] {Preparation};
+\node (start) [startstop, xshift=-5cm] {Import and Plan};
+
+\node (rt) [process, below of=start] {Ray Tracing};
+\node (loopray) [decision, below of=rt, yshift=-1.3cm] {For each Ray};
+\node (geo) [process, below of=loopray, yshift=-1.3cm] {Calculate lateral spread};
+\node (loopbixel) [decision, below of=geo, yshift=-1.3cm] {For each Bixel};
+\node (calcdose) [process, below of=loopbixel, yshift=-1.3cm] {Calculate Dose};
+\node (store) [process, below of=calcdose] {Sum Dose};
+
+\node (end) [startstop, below of=store, xshift=-5.5cm, yshift=-2cm] {Export Dose};
+
+\node[coordinate] (r_store) [right of=store, xshift=2cm] {};
+\node[coordinate] (r_loopbixel)   [right of=loopbixel, xshift=2cm] {};
+\node[coordinate] (l_loopbixel)   [left of=loopbixel, xshift=-2cm] {};
+\node[coordinate] (ls_store)   [left of=store, xshift=-2cm, yshift=-2cm] {};
+\node[coordinate] (rs_store)   [right of=store, xshift=4cm, yshift=-2cm] {};
+\node[coordinate] (r_loopray)   [right of=loopray, xshift=4cm] {};
+\node[coordinate] (l_loopray)   [left of=loopray, xshift=-4cm] {};
 
 
 
-
-
+\draw [arrow] (start) -- (rt);
+\draw [arrow] (rt) -- (loopray);
+\draw [arrow] (loopray) -- (geo);
+\draw [arrow] (geo) -- (loopbixel);
+\draw [arrow] (loopbixel) -- (calcdose);
+\draw [arrow] (calcdose) -- (store);
+\draw[arrow] (store) -- (r_store) -- node[midway, left]{} (r_loopbixel) -- (loopbixel) ;
+\draw[arrow] (loopbixel) -- (l_loopbixel) -- (l_loopbixel) -- (ls_store) -- (rs_store) -- (r_loopray) -- (loopray);
+\draw[arrow] (loopray) -- (l_loopray) -- (end);
+%\draw [arrow] (loopray) |- (end);
 
 \end{tikzpicture}
+\caption{Pencil beam algorithm flowchart. This is repeated for every direction of irradiation}
+\label{tikz:pba}
+\end{figure}
 \newpage
+
+\subsection{Fine Sampling Pencil Beam}
+A modified version of pencil beam algorithms consists in the \emph{Fine Sampling}\footnote{Soukup (et al.) \cite{souk:pba}, describes the overall methods behind the Fine Sampling Pencil Beam and shows some of the results}. The main difference is that fine sampling, as the name suggests, does not calculate the Dose for the whole bixel in one step but divides the bixel in smaller sub-beams and repeats the Dose calculation for all of them. The radiation depth used for rescaling of longitudinal distance is calculated only for the central axis of the single sub-beam. 
+I would like to focus the attention of the reader on this point. The bixel does not take in account the general morphology of the target but only the one corresponding to the voxels crossed by the central axis of the bixel, in other words, it does not take in account inhomogeneities near the beam axis if they are not on the axis. I will show in details this issue in the next chapter.
+In order to compensate this deficiency, a large number of sub-beams should be used. 
+As can be easy to forecast, the higher is the number of sub-beams the higher is the accuracy of the simulation. All the sub-beams are located on a square grid at regular distance to one another. Knowing the gaussian (or double gaussian) lateral profile of the beam, a gaussian weight would be the optimal one.
+
+So, in my software, I implemented a fuction that calculates the weights for each single sub-beam, minimizing the error between the lateral spread function of the single bixel and the lateral spread function of the sum of gaussians.
+
+
+%\begin{figure}[!h]
+%\centering
+%\begin{tikzpicture}[node distance=1.5cm, xshift=5cm]
+%
+%\node (start) [startstop, xshift=-5cm] {Import and Plan};
+%
+%\node (rt) [process, below of=start] {Ray Tracing};
+%\node (loopray) [decision, below of=rt, yshift=-1.3cm] {For every Ray};
+%\node (geo) [process, below of=loopray, yshift=-1.3cm] {Calc lateral distances};
+%\node (loopbixel) [decision, below of=geo, yshift=-1.3cm] {For every Bixel};
+%\node (calcdose) [process, below of=loopbixel, yshift=-1.3cm] {Calculate Dose};
+%\node (store) [process, below of=calcdose] {Store Dose};
+%
+%\node (end) [startstop, below of=store, xshift=-5.5cm, yshift=-2cm] {Export Dose};
+%
+%\node[coordinate] (r_store) [right of=store, xshift=2cm] {};
+%\node[coordinate] (r_loopbixel)   [right of=loopbixel, xshift=2cm] {};
+%\node[coordinate] (l_loopbixel)   [left of=loopbixel, xshift=-2cm] {};
+%\node[coordinate] (ls_store)   [left of=store, xshift=-2cm, yshift=-2cm] {};
+%\node[coordinate] (rs_store)   [right of=store, xshift=4cm, yshift=-2cm] {};
+%\node[coordinate] (r_loopray)   [right of=loopray, xshift=4cm] {};
+%\node[coordinate] (l_loopray)   [left of=loopray, xshift=-4cm] {};
+%
+%
+%
+%\draw [arrow] (start) -- (rt);
+%\draw [arrow] (rt) -- (loopray);
+%\draw [arrow] (loopray) -- (geo);
+%\draw [arrow] (geo) -- (loopbixel);
+%\draw [arrow] (loopbixel) -- (calcdose);
+%\draw [arrow] (calcdose) -- (store);
+%\draw[->] (store) -- (r_store) -- node[midway, left]{} (r_loopbixel) -- (loopbixel) ;
+%\draw[->] (loopbixel) -- (l_loopbixel) -- (l_loopbixel) -- (ls_store) -- (rs_store) -- (r_loopray) -- (loopray);
+%\draw[->] (loopray) -- (l_loopray) -- (end);
+%%\draw [arrow] (loopray) |- (end);
+%
+%\end{tikzpicture}
+%\caption{Pencil beam algorithm flowchart}
+%\label{tikz:pba}
+%\end{figure}
+%\newpage
 
 
 
 
 %b\footnote{Siemens link to Syngo page: \url{https://www.healthcare.siemens.it/medical-imaging-it}}
-\subsection{Fine Sampling Pencil Beam}
 
 \section{Phantom Data}
 \begin{figure}[h]
@@ -557,7 +645,7 @@ In order to avoid this issue, I used the method shown in Low \emph{et al.} \cite
 
 
 \chapter{Results} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+\label{chap:res}
 
 
 
@@ -886,6 +974,11 @@ Parodi K., Mairani A., Sommerer F. -
 \emph{Monte Carlo-based parametrization of the lateral dose spread for clinical treatment planning of scanned proton and carbon ion beams} -
 Journal of Radiation Research 54, i91–i96 (2013)
 
+\bibitem{schaf:pba}
+Schaffner B., Pedroni E. and Lomax A. -
+\emph{Dose calculation models for proton treatment planning using a dynamic beam delivery system: an attempt to include density heterogeneity effects in the analytical dose calculation} - 
+Phys. Med. Biol. 44, 27–41 (1999)
+
 \bibitem{schn:mcs}
 Schneider U., Besserer J., Pemler P. - 
 \emph{On small angle multiple Coulomb scattering of protons in the Gaussian approximation} - 
@@ -896,11 +989,15 @@ Serber R. -
 \emph{Nuclear reactions at high energies} -
 Phys. Rev. 72(11), 1114–1115 (1947)
 
+\bibitem{souk:pba}
+Soukup M., Fippel M. and Alber M. -
+\emph{A pencil beam algorithm for intensity modulated proton therapy derived from Monte Carlo simulations} -
+Phys. Med. Biol. 50, 5089–5104 (2005)
+
 \bibitem{weyr:rbe}
 Weyrather W.K., Ritter S., Scholz M., Kraft G. - 
 \emph{RBE for carbon track-segment irradiation in cell lines of differing repair} -
 capacity. Int. J. Radiat. Biol. 75, 1357–1364 (1999)
-
 
 
 
