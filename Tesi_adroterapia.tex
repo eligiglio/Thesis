@@ -487,7 +487,9 @@ Furthermore, a complete and very exhaustive guide\footnote{It can be found at \u
 \subsection{Pencil Beam} 
 \label{sec:pen}
 Pencil beam algorithms are based on \emph{Ray Tracing}\footnote{On Schaffner (et al.) \cite{schaf:pba}, there is a comparison between ray casting algorithm, other methods and Monte Carlo simulations}. This method consists in calculating the attenuation undergone by the particles on a straight line inside the target. It is simply based on the calculation of the path of straight lines (parallel to the beam) inside the tomography of the target. For each voxel (threedimensional pixel), based on the distance traveled and the electron density of that voxel, the water equivalent distance can be calculated. In other words, the distance that should travel a particle in order to undergo the same attenuation.
-This is needed because the algorithm works with the help of precomputed Monte Carlo simulations in water, at all the possible energies that can be provided by the accelerator. In a standard Pencil beam algorithm, before starting, the operator imports the CT (included with the \emph{cst} \textbf{anagram??}), defines the direction of the beam and prescribes the Dose deposition limits for every area, deciding the treatment plan.
+This is needed because the algorithm works with the help of precomputed Monte Carlo simulations in water, at all the possible energies that can be provided by the accelerator. 
+
+In a standard Pencil beam algorithm, before starting, the operator imports the CT (included with the \emph{cst} \textbf{anagram??}), defines the direction of the beam and prescribes the Dose deposition limits for every area, deciding the treatment plan.
 Then in the first step, once for every direction of the beam, the software calculates the so called \emph{radiation depth} and estimates the range of the particles inside the target, through the ray casting. So, starting from a CT (or a tridimensional matrix giving the density of the target), it estimates the water-equivalent distance that can be covered by a particle at the given energy, inside that particular CT. 
 The next step is to calculate lateral spread of the beam depending on the direction of the ray, this also allows to highlight the volume covered by the radiation and restrict operations only to that area, in order to save computation time. 
 The information got in the previous steps is used in the last part of the software, in order to calculate dose.
@@ -546,12 +548,18 @@ These are the fastest and the more robust software we had access to, but they ha
 \newpage
 
 \subsection{Fine Sampling Pencil Beam}
-A modified version of pencil beam algorithms consists in the \emph{Fine Sampling}\footnote{Soukup (et al.) \cite{souk:pba}, describes the overall methods behind the Fine Sampling Pencil Beam and shows some of the results}. The main difference is that fine sampling, as the name suggests, does not calculate the Dose for the whole bixel in one step but divides the bixel in smaller sub-beams and repeats the Dose calculation for all of them. The radiation depth used for rescaling of longitudinal distance is calculated only for the central axis of the single sub-beam. 
-I would like to focus the attention of the reader on this point. The bixel does not take in account the general morphology of the target but only the one corresponding to the voxels crossed by the central axis of the bixel, in other words, it does not take in account inhomogeneities near the beam axis if they are not on the axis. I will show in details this issue in the next chapter.
+A modified version of pencil beam algorithms consists in the \emph{Fine Sampling}\footnote{Soukup (et al.) \cite{souk:pba}, describes the overall methods behind the Fine Sampling Pencil Beam and shows some of the results}.
+The main difference is that fine sampling, as the name suggests, does not calculate the Dose for the whole bixel in one step but divides the bixel in smaller sub-beams and repeats the Dose calculation for all of them. 
+Even the code is very similar, the two main introductions are a function that calculates the weights of the sub-components and one that projects the radiation depth of the central axis on the other voxels of the CT, radially.
+Radiation depth, used for rescaling of longitudinal distance, is calculated only for the central axis of the single sub-beam (e.g. the bragg peak is not deformed, it is only scaled on the direction of the beam). I would like to focus the attention of the reader on this point. The bixel does not take in account the general morphology of the target but only the one corresponding to the voxels crossed by the central axis of the ray, in other words, it does not take in account inhomogeneities near the beam axis if they are not on the axis. I will show in details this issue in the next chapter. 
 In order to compensate this deficiency, a large number of sub-beams should be used. 
 As can be easy to forecast, the higher is the number of sub-beams the higher is the accuracy of the simulation. All the sub-beams are located on a square grid at regular distance to one another. Knowing the gaussian (or double gaussian) lateral profile of the beam, a gaussian weight would be the optimal one.
 
-So, in my software, I implemented a fuction that calculates the weights for each single sub-beam, minimizing the error between the lateral spread function of the single bixel and the lateral spread function of the sum of gaussians.
+So, in my software, I implemented a fuction that calculates the weights for each single sub-beam, minimizing the difference between the lateral spread function of the single bixel and the lateral spread function of the sum.
+%%% add figures:
+%%%		- sub-gaussians
+%%%		- grid
+Apart for the weights, there is a function that allows the projection 
 
 
 %\begin{figure}[!h]
