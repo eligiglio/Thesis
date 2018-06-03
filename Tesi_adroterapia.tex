@@ -469,6 +469,7 @@ The problem of producing a spread-out Bragg peak (SOBP) through a weighted colle
 Dose Calculation is the very core of the treatment planning. 
 Nowadays there are three main ways to evaluate dose deposition inside matter. These methods can be divided in two categories: the one that simulate the path of the single particle such as Monte Carlo simulations and the methods simulating the dose deposition of the whole bunch of particles at once, such as APM and the pencil beam models.
 
+
 %% add  something 
 
 %solo questo????
@@ -486,19 +487,17 @@ Furthermore, a complete and very exhaustive guide\footnote{It can be found at \u
 
 \subsection{Pencil Beam} 
 \label{sec:pen}
-Pencil beam algorithms are based on \emph{Ray Tracing}\footnote{On Schaffner (et al.) \cite{schaf:pba}, there is a comparison between ray casting algorithm, other methods and Monte Carlo simulations}. This method consists in calculating the attenuation undergone by the particles on a straight line inside the target. It is simply based on the calculation of the path of straight lines (parallel to the beam) inside the tomography of the target. For each voxel (threedimensional pixel), based on the distance traveled and the electron density of that voxel, the water equivalent distance can be calculated. In other words, the distance that should travel a particle in order to undergo the same attenuation.
-This is needed because the algorithm works with the help of precomputed Monte Carlo simulations in water, at all the possible energies that can be provided by the accelerator. 
+The Pencil beam algorithms are based on a method called \emph{Ray Tracing}\footnote{On Schaffner (et al.) \cite{schaf:pba}, there is a comparison between ray casting algorithm, other methods and Monte Carlo simulations}. This method consists in calculating the energy loss of the particles along a straight line inside the tomography of the target. For doing this, the method calculates the path of straight lines being parallel to the beam. For each three-dimensional pixel, i.e. \emph{voxel}, it is possible to calculate the \emph{water equivalent distance} based on the distance traveled by the particles and the electron density of that voxel, i.e. the distance that a particle should travel in order to undergo the same attenuation as in the voxel. The calculation of the \emph{water equivalent distance} is done because the algorithm works with the help of pre-computed Monte Carlo simulations considering particles at all the possible energies that can be provided by the accelerator, in a water environment. 
 
-In a standard Pencil beam algorithm, before starting, the operator imports the CT (included with the \emph{cst} \textbf{anagram??}), defines the direction of the beam and prescribes the Dose deposition limits for every area, deciding the treatment plan.
-Then in the first step, once for every direction of the beam, the software calculates the so called \emph{radiation depth} and estimates the range of the particles inside the target, through the ray casting. So, starting from a CT (or a tridimensional matrix giving the density of the target), it estimates the water-equivalent distance that can be covered by a particle at the given energy, inside that particular CT. 
-The next step is to calculate lateral spread of the beam depending on the direction of the ray, this also allows to highlight the volume covered by the radiation and restrict operations only to that area, in order to save computation time. 
-The information got in the previous steps is used in the last part of the software, in order to calculate dose.
-This is the core of the software. First, knowing the energy of the beam, the software finds the corresponding precomputed bragg peak stored in the look-up tables, then it adapts the bragg peak in longitudinal and lateral direction, on the basis of the morphology of the target. 
-This process is repeated for every beam energy and direction, otherwise called bixel.
-Calculated Dose is then stored in a sparse matrix and then summed over the loop with the previous ones.
-In figure \ref{tikz:pba}, can be found a flowchart reassuming the basic steps.
+A standard Pencil beam algorithm consists of different steps structured as follows. First of all, the operator imports the CT (included with the \emph{cst} \textbf{anagram??}), defines the direction of the beam and prescribes the limits of the Dose deposition for every area, defining the treatment plan.
+Then, the first step of the algorithm occurs when the software calculates the \emph{radiation depth} and estimates the range of the particles inside the target by ray casting, once for every direction of the beam. So, starting from a CT or from a tridimensional matrix giving the electron density of the target, it estimates the water equivalent distance that can be covered by a particle at the given energy inside that particular CT. 
+The second step is to calculate the lateral spread of the beam depending on the direction of the ray. This also allows to highlight the volume covered by the radiation and restrict the operations to that area in order to save computation time. 
+Then, the information provided by these two steps is used in the following part of the software in order to calculate the dose. Therefore, this part represents the core of the software. By knowing the energy of the beam, it finds the corresponding pre-computed Bragg peak stored in the look-up tables. Then, it adapts the Bragg peak in both longitudinal and lateral direction, depending on the morphology of the target. 
+The full process is repeated for every \emph{bixel}, i.e. for every beam energy and for every direction. In order to get the final dose, the software makes a loop over all the bixels whose steps have the aim to calculate the corresponding value of the dose and store it in a sparse matrix. The final dose is then the result of the sequential sum of the doses calculated for every bixel.
+The figure \ref{tikz:pba} shows a flowchart reassuming the main steps of the algorithm.
 
-A standard pencil beam algorithm does not take in account the possibility of protons changing direction of flight inside the target, so it rescales the range of penetration based only on the stopping power seen from a straight line. This causes problems of steep Dose gradients in some cases. This and all the other issues will be treated in chapter \ref{chap:res}
+A standard pencil beam algorithm does not take into account the possibility for the protons to change direction of flight inside the target. So, the algorithm rescales the range of penetration based only on the stopping power along a straight line. In some cases, this leads to steep Dose gradients. This issue and others will be treated in chapter \ref{chap:res}.
+
 
 \subsubsection{Syngo and MatRad}
 Syngo\footnote{Syngo online user manual: \url{http://dei-s2.dei.uminho.pt/outraslic/lebiom/seim/VA40_P10_Software.pdf}} is a professional software produced by Siemens that is based on Pencil beam model. Syngo is used in many radiotherapy centers such as HIT in Heidelberg and has been used in this work for being compared with MatRad\footnote{Software and more information can be found at: \url{http://e0404.github.io/matRad/}}, which is its opensource ``twin" developed and maintained by DKFZ Cancer Research Center Heidelberg. 
@@ -550,16 +549,60 @@ These are the fastest and the more robust software we had access to, but they ha
 \subsection{Fine Sampling Pencil Beam}
 A modified version of pencil beam algorithms consists in the \emph{Fine Sampling}\footnote{Soukup (et al.) \cite{souk:pba}, describes the overall methods behind the Fine Sampling Pencil Beam and shows some of the results}.
 The main difference is that fine sampling, as the name suggests, does not calculate the Dose for the whole bixel in one step but divides the bixel in smaller sub-beams and repeats the Dose calculation for all of them. 
-Even the code is very similar, the two main introductions are a function that calculates the weights of the sub-components and one that projects the radiation depth of the central axis on the other voxels of the CT, radially.
-Radiation depth, used for rescaling of longitudinal distance, is calculated only for the central axis of the single sub-beam (e.g. the bragg peak is not deformed, it is only scaled on the direction of the beam). I would like to focus the attention of the reader on this point. The bixel does not take in account the general morphology of the target but only the one corresponding to the voxels crossed by the central axis of the ray, in other words, it does not take in account inhomogeneities near the beam axis if they are not on the axis. I will show in details this issue in the next chapter. 
-In order to compensate this deficiency, a large number of sub-beams should be used. 
-As can be easy to forecast, the higher is the number of sub-beams the higher is the accuracy of the simulation. All the sub-beams are located on a square grid at regular distance to one another. Knowing the gaussian (or double gaussian) lateral profile of the beam, a gaussian weight would be the optimal one.
+\begin{figure}[t]
+{\includegraphics[width=.5\textwidth]{Images/FurtherSigmaAnalysis2_01}}
+{\includegraphics[width=.5\textwidth]{Images/FurtherSigmaAnalysis2_02}}
+\caption{$\gamma$-index value (compared with MC) and maximum percentage error, variating $\sigma_{sub}$, for the inhomogeneous phantom. The red line means the gamma index value of MatRad simulation.}
+\label{fig:sigsub}
+\end{figure}
 
-So, in my software, I implemented a fuction that calculates the weights for each single sub-beam, minimizing the difference between the lateral spread function of the single bixel and the lateral spread function of the sum.
+The first part of the code is very similar. But before running the loop over the bixels, we need to assign a weight to the sub-components. These are arranged on a square grid at regular distance one to another, covering $3\,\sigma$ of the lateral spread of the beam profile. 
+We should have that the gaussian profile of the beam (with standard deviation $\sigma$) and the profile given by the sum of the components (with standard deviation $\sigma_{sub}$) shuold be equal
+\[
+\frac{1}{\sqrt{2 \pi}\sigma}e^{(x^2+y^2)/2\sigma} = \sum_{i=1}^N \frac{w_i}{\sqrt{2 \pi}\sigma_{sub}}e^{[(x-\mu_{xi})^2+(y-\mu_{yi})^2]/2\sigma_{sub}}
+\]
+Where $N$ is the number of sub-components, $\mu_{xi}$ and $\mu_{yi}$ are the spacing of the grid and $w_i$ are the weights of each component.
+Obviously a component near to the center should give a higher contribute than a component further away and they do not have the same impact on the Dose. So I imposed the weights to be gaussian shaped and I used a function that finds the correct weights, minimizing the square of the difference between the \textbf{suddette} functions.
+In formula
+\[
+\sum^M_{j=1}\, \bigg|\frac{1}{\sqrt{2\pi}\sigma}e^{(x_j^2+y_j^2)/2\sigma}\, - \sum^N_{i=1} \,\frac{W}{\sqrt{2\pi}\Sigma}e^{(x_j^2+y_j^2)/2\Sigma} \,\frac{1}{\sqrt{2\pi}\sigma_{sub}}e^{[(x_j-\mu_{xi})^2+(y_j-\mu_{yi})^2]/2\sigma_{sub}} \bigg|^2
+\]
+Where $M$ is the number of points on which the minimization run, $W$ and $\Sigma$ are the parameters of the minimization.
+The value of $\sigma_{sub}$ has been chosen on the basis of the accuracy of simulations (evaluated with $\gamma$-index test, compared with Monte Carlo simulations) and the maximum error (on the difference between gaussian profile and sum of gaussians). I run simulations on all the configuration, with $\sigma_{sub}/\sigma$ variating from 0.1 to 0.8. I figure \ref{fig:sigsub}, you can see the results for one of the cases. The results are very similar for every phantom and from these we obtained that the most suitable value for our purposes is $\sigma_{sub}/\sigma=0.25$ because it has the highest gamma-index between the values with a error smaller than $1\%$.
+\begin{figure}[t]
+{\includegraphics[width=.5\textwidth]{Images/gaugrid_2}}
+{\includegraphics[width=.5\textwidth]{Images/gausurf_plus}}
+\caption{Gaussian lateral profile with highlighted position of the sub-components (left). Gaussian profile of sub-components (right)}
+\label{fig:gaugrid}
+\end{figure}
+
+%%% adjust sigma figures: -xlabel;  -repeat calculations;  -
+
+%%%% da fare:
+%%%%		- ricalcolare gamma index e computation time per numero di sub-components
+%%%%		- ricalcolare gamma index e max percentage error per sigma
+%%%%		- aggiungere grafici ottenuti
+%%%%		- infornare a 180° per un'ora
+
+%%% add sigma further analysis
+
+The other introduction in the code is a function that projects the radiation depth on the central axis of every sub-component. In other words, a new ray tracing for the smaller sub-beams.
+Then Radiation depth, used for rescaling of longitudinal distance, is recalculated only for the central axis of the single sub-beam (e.g. the bragg peak is not deformed, it is only scaled on the direction of the beam). I would like to focus the attention of the reader on this point. The sub-component does not take in account the general morphology of the target but only the one corresponding to the voxels crossed by its central axis, in other words, it does not take in account inhomogeneities near the sub-beam axis if they are not \emph{on} the axis. I will show in details this issue in the next chapter. 
+In order to compensate this deficiency, a large number of sub-beams should be used. 
+As can be easy to forecast, the higher is the number of sub-beams the higher is the accuracy of the simulation. 
+The number of sub-components used is $N=324$. This number has been chosen after analysis on computation time, more than accuracy. As one can see from figure \ref{fig:gausn}, the gain in accuracy is almost irrelevant compared with the loss in computation time. For high $N$, the computation has also other problems, such as memory issues because of the huge amount of data in the RAM.
+\begin{figure}[t]
+{\includegraphics[width=.5\textwidth]{Images/gamman}}
+{\includegraphics[width=.5\textwidth]{Images/timen}}
+\caption{Gamma index (left) and time consumption (right) as function of $n$. The value $n$ on the $x$-axis is related with the number of compontents as $N=(2n+2)^2$}
+\label{fig:gausn}
+\end{figure}
+
+The new flowchart of the model (\ref{tikz:fs}) is very similar to the previous one but with one more loop.
 %%% add figures:
 %%%		- sub-gaussians
 %%%		- grid
-Apart for the weights, there is a function that allows the projection 
+Apart for the weights, there is a function that allows the projection .........
 
 
 %\begin{figure}[!h]
