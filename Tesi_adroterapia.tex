@@ -508,7 +508,7 @@ These are the fastest and the more robust software we had access to, but they ha
 \centering
 \begin{tikzpicture}[node distance=1.5cm, xshift=5cm]
 
-\node (start) [startstop, xshift=-5cm] {Import and Plan};
+\node (start) [startstop, xshift=-5cm] {Import data and Plan};
 
 \node (rt) [process, below of=start] {Ray Tracing};
 \node (loopray) [decision, below of=rt, yshift=-1.3cm] {For each Ray};
@@ -562,7 +562,7 @@ We should have that the gaussian profile of the beam (with standard deviation $\
 \frac{1}{\sqrt{2 \pi}\sigma}e^{(x^2+y^2)/2\sigma} = \sum_{i=1}^N \frac{w_i}{\sqrt{2 \pi}\sigma_{sub}}e^{[(x-\mu_{xi})^2+(y-\mu_{yi})^2]/2\sigma_{sub}}
 \]
 Where $N$ is the number of sub-components, $\mu_{xi}$ and $\mu_{yi}$ are the spacing of the grid and $w_i$ are the weights of each component.
-Obviously a component near to the center should give a higher contribute than a component further away and they do not have the same impact on the Dose. So I imposed the weights to be gaussian shaped and I used a function that finds the correct weights, minimizing the square of the difference between the \textbf{suddette} functions.
+Obviously a component near to the center should give a higher contribute than a component further away and they do not have the same impact on the Dose. So I imposed the weights to be gaussian shaped and I used a function that finds the correct weights, minimizing the square of the difference between the aforesaid functions.
 In formula
 \[
 \sum^M_{j=1}\, \bigg|\frac{1}{\sqrt{2\pi}\sigma}e^{(x_j^2+y_j^2)/2\sigma}\, - \sum^N_{i=1} \,\frac{W}{\sqrt{2\pi}\Sigma}e^{(x_j^2+y_j^2)/2\Sigma} \,\frac{1}{\sqrt{2\pi}\sigma_{sub}}e^{[(x_j-\mu_{xi})^2+(y_j-\mu_{yi})^2]/2\sigma_{sub}} \bigg|^2
@@ -599,23 +599,23 @@ The number of sub-components used is $N=324$. This number has been chosen after 
 \end{figure}
 
 The new flowchart of the model (\ref{tikz:fs}) is very similar to the previous one but with one more loop.
-%%% add figures:
-%%%		- sub-gaussians
-%%%		- grid
-Apart for the weights, there is a function that allows the projection .........
+Apart for the weights, there is a function that allows the projection of the radiation depth of the central axis of the component on the other points of the components.
 
 
 %\begin{figure}[!h]
 %\centering
 %\begin{tikzpicture}[node distance=1.5cm, xshift=5cm]
 %
-%\node (start) [startstop, xshift=-5cm] {Import and Plan};
+%\node (start) [startstop, xshift=-5cm] {Import data and Plan};
 %
 %\node (rt) [process, below of=start] {Ray Tracing};
-%\node (loopray) [decision, below of=rt, yshift=-1.3cm] {For every Ray};
+%\node (loopray) [decision, below of=rt, yshift=-1.3cm] {For each Ray};
 %\node (geo) [process, below of=loopray, yshift=-1.3cm] {Calc lateral distances};
-%\node (loopbixel) [decision, below of=geo, yshift=-1.3cm] {For every Bixel};
-%\node (calcdose) [process, below of=loopbixel, yshift=-1.3cm] {Calculate Dose};
+%\node (wei) [process, below of=geo] {Calculate weights};
+%\node (loopbixel) [decision, below of=wei, yshift=-1.3cm] {For each Bixel};
+%\node (proj) [process, below of=loopbixel, yshift=-1.3cm] {Projection};
+%\node (loopsb) [decision, below of=proj, yshift=-1.3cm] {For each Component};
+%\node (calcdose) [process, below of=loopsb, yshift=-1.3cm] {Calculate Dose};
 %\node (store) [process, below of=calcdose] {Store Dose};
 %
 %\node (end) [startstop, below of=store, xshift=-5.5cm, yshift=-2cm] {Export Dose};
@@ -633,8 +633,11 @@ Apart for the weights, there is a function that allows the projection .........
 %\draw [arrow] (start) -- (rt);
 %\draw [arrow] (rt) -- (loopray);
 %\draw [arrow] (loopray) -- (geo);
-%\draw [arrow] (geo) -- (loopbixel);
-%\draw [arrow] (loopbixel) -- (calcdose);
+%\draw [arrow] (geo) -- (wei);
+%\draw [arrow] (wei) -- (loopbixel);
+%\draw [arrow] (loopbixel) -- (proj);
+%\draw [arrow] (proj) -- (loopsb);
+%\draw [arrow] (loopsb) -- (calcdose);
 %\draw [arrow] (calcdose) -- (store);
 %\draw[->] (store) -- (r_store) -- node[midway, left]{} (r_loopbixel) -- (loopbixel) ;
 %\draw[->] (loopbixel) -- (l_loopbixel) -- (l_loopbixel) -- (ls_store) -- (rs_store) -- (r_loopray) -- (loopray);
@@ -643,9 +646,9 @@ Apart for the weights, there is a function that allows the projection .........
 %
 %\end{tikzpicture}
 %\caption{Pencil beam algorithm flowchart}
-%\label{tikz:pba}
+%\label{tikz:fs}
 %\end{figure}
-%\newpage
+\newpage
 
 
 
@@ -659,41 +662,134 @@ Apart for the weights, there is a function that allows the projection .........
 \caption{Single PTW-31015 ionization chamber, on the right (left picture), and precise description of its dimensions (right picture)}
 \label{fig:31015}
 \end{figure}
-%troppi rimandi ad altre fonti......spiega un po' di pi�!
-We compared our data with a set of measurements done at HIT center. The target consists of a plexiglass box filled with water with a detector inside. The detector is composed by 24 ionization chambers models \emph{PTW-31015}\footnote{A complete set of specifications can be found at \url{https://www.rpdinc.com/ptw-31015-003-cc-pinpoint-chamber-976.html}} produced by PTW-Freiburg\footnote{\url{http://www.ptw.de/home_start.html?&no_cache=1}}. The ionization chambers have a cylindrical shape with vented sensitive volumes of $30\,mm^3$ ($1.45\,mm$, length $5\,mm$) and $2.9\,mm$ in external diameter (figure \ref{fig:31015}).
+\emph{Phantom}, in this field, is a technical word used to indicate a target built on purpose in order to run tests on real and physically well know objects. Building his own phantom, one can decide its physical properties chosen in order to simplify errors detection, in diagnostic and treatment. 
+
+In this work, I compared my dataset with a set of measurements done at HIT center on a phantom. The target consists of a plexiglass box filled with water with a detector inside. The detector is composed by 24 ionization chambers models \emph{PTW-31015}\footnote{A complete set of specifications can be found at \url{https://www.rpdinc.com/ptw-31015-003-cc-pinpoint-chamber-976.html}} produced by PTW-Freiburg\footnote{\url{http://www.ptw.de/home_start.html?&no_cache=1}}. The ionization chambers have a cylindrical shape with vented sensitive volumes of $30\,mm^3$ ($1.45\,mm$, length $5\,mm$) and $2.9\,mm$ in external diameter (figure \ref{fig:31015}).
 %% The productor declares a nominal response of $800\,pC/Gy$. (\textbf{from this i should find the error on the measurement but i miss some data})
 The chambers are arranged in 6 lines on 3 levels, inside a plexiglass support that allows to immerse the chambers directly inside the water. In figure \ref{fig:24cham} is shown the set up of the detector.
-The colleagues of the Hadron therapy center collected data from measurements in nine different positions where the whole detector was moved inside the volume and across the surface of a cubic target area. More about this measurements will be tell in the next chapter.
+The colleagues of the Hadron therapy center collected data from measurements in nine different positions where the whole detector was moved inside the volume and across the surface of a cubic target area. More about this measurements will be told in the next chapter.
 
 \begin{figure}[h]
+{\includegraphics[width=.5\textwidth]{Images/doublew}}
+{\includegraphics[width=.5\textwidth]{Images/doublew2}}
+\caption{Three-dimensional views of the \emph{Double Wedge} phantom with details of the plastic absorber (green), water (blue), target cube (red) and beam direction (black line). Scales are in tens of pixels, one pixel has a resolution of $1\times1\times1\,cm$}
+\label{fig:doublew}
+\end{figure}
+
+\subsection{Double Wedge} 
+The Double Wedges is a particular kind of phantom built from HIT colleagues with the aim of trying the effects of the treatment through a surface that has a considerable slope at the entrance surface. 
+Figure \ref{fig:doublew} represents the CT of this phantom. The light blue box is the limit of the matrix and its dimensions are $512\times512\times390\,mm$. The black line is the direction of the beam and points towards $-x$ direction (or in other words, from the air part toward the water). The line passes though a point called \emph{Isocenter} and marked with a red cross. It represents the center of the axis in the machine reference system.
+The actual phantom is a parallelepiped of plastic (with a know attenuation coefficient) filled with water. Its dimensions are around $500\times200\times350\,mm$. On the beam direction, with comparable dimensions, there is a \emph{double wedge}, i.e. a couple of triangular plastic attenuators. These two have gradients of $30$ and $60^\circ$.
+The red square box with side of $50\,mm$ is the target where we want to release the largest part of the dose. 
+
+\subsection{Alderson phantom}
+
+\newpage
+\subsection{HU and Stopping Power}
+\begin{wrapfigure}{l}{.6\textwidth}
+{\includegraphics[width=0.6\textwidth]{Images/dpp}}
+\caption{PDD example}
+\label{fig:pdd}
+%\vspace{-10mm}
+\end{wrapfigure}
+The delivery of accurate proton dose for clinical trials requires that the appropriate conversion function from Hounsfield unit (HU) to relative linear stopping power (RLSP) be used in proton treatment planning systems (TPS). 
+In contrast to the photon dose calculation depending on the electron density of a material, proton radiation therapy relies on a material's stopping power to describe the energy loss of protons due to the interactions in matter and to calculate proton doses. As such, the CT calibration curve in a proton treatment planning system relates Hounsfield unit values to relative stopping power. This generally differs from the electron density of materials used in a HU calibration curve for photon therapy. 
+The Hounsfield unit scale is a linear transformation of the original linear attenuation coefficient measurement into one in which the radiodensity (or opacity to the radio wave) of distilled water at standard pressure and temperature is defined as zero Hounsfield units, while the radiodensity of air at STP is defined as $-1000\, HU$. In a voxel with average linear attenuation coefficient $\mu$, the corresponding HU value is therefore given by
+\[
+HU=1000\,\frac {\mu -\mu _{water}}{\mu _{water}-\mu _{air}}
+\]
+Where $\mu _{water}$ and $\mu _{air}$ are respectively the linear attenuation coefficients of water and air.
+The relative linear stopping power of a certain material is calculated starting from computation of the percent depth dose (PDD) curve and the relative shift with the PDD of water for the same beam (example in figure \ref{fig:pdd}).
+So
+\[
+RLSP = \frac{\Delta x}{d_m}
+\]
+Where $\Delta x$ is the change in the depth of the distal $80\%$ PDD when the tissue-substitute material is introduced into the beam, and $d_m$ is the thickness of the material.
+In figure \ref{fig:HU}, Grant (et al.) in \cite{gra:hu}, fitted data obtained for several materials and obtained a (almost linear) relation between Hounsfield unit and relative linear stopping power.
+\begin{figure}[t!]
+\centering
+{\includegraphics[width=.9\textwidth]{Images/hu_rlsp}}
+\caption{RLSP and HU relation }
+\label{fig:HU}
+\end{figure}
+
+This relation is fundamental to convert the CT voxel value in a water-equivalent stopping power, in order to be able to calculate radiation depth.
+
+
+\section{Analysis techniques}
+All the simulations collected during this study, should finally be compared one another. 
+The key problem in this work is, in fact, to find a discriminating factor that could establish if one simulation is more or less accurate than another one. Two threedimensional matrices can be compared in many ways, but is it possible to find a method that gives us a complete analysis and a simple way to construe it?
+This is not a simple question to deal with. 
+
+Furthermore, There is a problem in showing the result. For example, if one plots only a slide of a 3D-matrix, he could highlight some lacks and do not see others. Then we need a method that qualitatively tells us where the issue is and how much it influence the results.
+
+In order to validate this work, I used three different kind of comparison. In this section, I will explain them.
+
+\subsection{Dose difference Maps}
+\begin{figure}[t!]
+\includegraphics[width=\textwidth]{Images/diffmap2}
+\caption{Bragg peak (upper left) and dose difference maps. Axis in $cm$}
+\label{fig:diff}
+\end{figure}
+The first and most intuitive method is to calculate the strict difference, element-by-element, between the two matrices I want to compare. Conceptually is very simple. If we want to obtain the difference map between matrix $A$ and $B$, we define the generic element of $C$, as
+\[
+C_{ijk} = A_{ijk} - B_{ijk}
+\]
+The resulting matrix should now be plotted in a comprehensible way. In figure \ref{fig:diff}, there is a plot of a slice of a dose deposition cube (i.e. a bragg peak, in upper left) and the difference between that cube and the same one, translated of $0.5\,mm$ towards right on the orizontal axis. 
+The difference maps are plotted in different ways: the first one is a slide of the difference-dose matrix and it is plotted flat with a colomap; the lower left, is the same data but plotted in 3D; the last one instead is the tridimensional representation of the whole dose-difference cube, given with similar color-code.
+
+Given the simmetry, the 3D graphs do not tell us anything new, that is why we will always show Dose difference maps using the upper-right graph.
+
+A point to focus on is that, as can clear be seen, the maximum error is over the $10\%$ of the maximum value of the dose deposition. In addition, the \emph{percentage difference}\footnote{In all this work, I will refer to percentage difference as the difference point-by-point between $A$ and $B$, divided the maximum of $A$, times 100} has a average value of $3.5\%$ (in the area where dose is above $1\%$ of the maximum). 
+This seems to be a large disagreement. Instead, as we know, it is the same dose shifted only of half a millimetre, that can be considered reasonably inside our error. The reason it gave us a result like this, comes from the fact that we are subtracting two curves with high gradients. So, we should find a better way to account for this.
+
+\subsection{Dose Profiles}
+If one would like to have a better prospective on comparison between  high gradient curves, should look at dose profiles. 
+These are the dose values
+\begin{wrapfigure}{l}{.5\textwidth}
+{\includegraphics[width=0.5\textwidth]{Images/prof}}
+\caption{Profiles example}
+\label{fig:prof}
+\vspace{-5mm}
+\end{wrapfigure}
+\noindent taken from a line of voxels and plotted in relation with position. For example, if I want to see the dose profile along the center of the beam, I should select the dose value of the voxel traversed by the beam axis and plot them with their corresponding position.
+In figure \ref{fig:prof}, are shown the most common examples: the entrance profile, (normally) depending only by the machine properties; the peak profile, with notable gaussian shape; and the central profile, usually refered as the \emph{Depth-Dose Profile} (DDP). There is another important DDP that is used for displaying the total dose as function of the depth, it is called \emph{Integrated-Depth-Dose profile} (IDDP). This is similar to DDP but it takes, not only a line of voxels, but a whole plane (or volume) and sum all the elements on the direction perpendicular to the beam axis, obtaining the same thing as DDP but integrated on the lateral direction.
+
+This method represents a better way to compare two high gradient curves but it is not enough. We need a discriminator that can give us a simple and fast way to judge if a simulation is more accurate than another one.
+
+
+\subsection{Gamma Index}
+The peculiar attribute of the dose deposition simulations is to have large flat or low-gradient zones, usually inside and outside the target area and very-high-gradient zones in the region surrounding it (or tumor in real cases).
+The mathematical difference between two datasets will not give us a full and exhaustive comparison because it could highlights an area of significant disagreement near high-gradient regions and a more quantitative assessment may be needed for final system approval.   
+We need an instrument that gives us an estimation of accuracy in dose difference and in \emph{distance} (like the Dose profile does).
+In order to get this, I used the method shown in Low (et al.) \cite{low:gamma} or else the \emph{gamma-index test} that uses a distance-to-agreement (DTA) distribution to determine the acceptability of the dose calculation. The DTA is the distance between a measured data point and the nearest point in the calculated dose distribution that exhibits the same dose. Each measured point is evaluated to determine if both dose difference and DTA exceed the selected respective tolerances. Points that fail both criteria are identified on a composite distribution. This is an extension of the isodose comparison tool that simultaneously incorporates the dose and the distance criteria and provides a numerical quantity index (further called $gamma$-index) that serves as a measure of disagreement in the regions that fail the acceptance criteria and indicates the calculation quality in the regions that pass. 
+In mathematics, (comparing matrix $A$ with subscript $a$ and $B$ with subscript $b$) the gamma index is
+\[
+\gamma(r_a) = min\{\Gamma(r_a,r_b) \}\,\,\,\,\forall\{ r_b\}
+\]
+where
+\[
+\Gamma(r_a,r_b) = \sqrt{\frac{r^2(r_a,r_b)}{\Delta d^2_M} + \frac{\delta^2(r_a,r_b)}{\Delta D^2_M}}
+\]
+In this formulation, $r^2(r_a,r_b)$ is the distance and $\delta^2(r_a,r_b)$ is the dose difference between two point of $A$ and $B$. Instead, $\Delta d^2_M$ and $\Delta D^2_M$ are the criteria respectively for distance and Dose.
+These last represent the acceptance value that we want to assign to our comparison. For example: if we have a matrix with a resolution of $3\times3\times3\,mm$, a distance criteria $\Delta d^2_M = 3\,mm$ would be the optimal one. So, if the matrix $B$ has a point with same Dose value as the point $r_a$, at a distance smaller than $3\,mm$, the gamma index test is passed for that point $r_a$.
+In general, the pass-fail criteria therefore become
+\[
+\gamma(r_a)\leq1\,\,\,\,\,\,\textrm{calculation passes}
+\]
+\[
+\gamma(r_a)>1\,\,\,\,\,\,\textrm{calculation fails}
+\]
+The output of this test is usually given in percentage of points passing the test on total points of the matrix.
+From this result are excluded the points with Dose value smaller than $\Delta D^2_M$ criteria
+
+
+
+\begin{figure}[b]
 {\includegraphics[width=\textwidth]{Images/Siemens24chambers}}
 \caption{Photographs of the complete mounted detector from different points of view}
 \label{fig:24cham}
 \end{figure}
-\subsection{Water boxes and simple configurations}
-\subsection{Double Wedge}
-The Double Wedges is a particular kind of phantom built from HIT colleagues with the aim of trying the effects of the treatment through a surface that has a considerable slope at the entrance surface. %??????????????????????ci sono i fantasmi OoO
-\subsection{Alderson phantom}
-\subsection{HU and Stopping Power}
-
-\section{Analysis techniques}
-\subsection{Dose Profiles}
-\subsection{Dose difference Maps}
-MatRad was initially thought as a dose calculation software based on the same concept as the Siemens product. The result of every simulation is a cube of $512\times512\times39$ voxels, that is the same dimension as the CT-cube. When I refer to the percentage difference between two cubes, I mean the difference in percentage made point-by-point from one voxel of the first cube to the respective one on the second cube. %???????metti o un disegno o qualche formula o aggiungi qualcosa che faccia capire meglio
-\subsection{Gamma Index}
-The peculiar attribute of the dose deposition simulations is to have large flat or low-gradient zones, usually inside and outside the target area and very-high-gradient zones in the region surrounding it (or tumor in real cases).
-The mathematical difference between two datasets will not give us a full and exhaustive comparison because it could highlights an area of significant disagreement near high-gradient regions and a more quantitative assessment may be needed for final system approval.   
-\begin{figure}[b!]
-\includegraphics[width=\textwidth]{Images/Images/highGradientExample.png}
-\caption{Example of the difference (right) between two identical curves with high-gradient(left)}
-\label{fig:highgrad}
-\end{figure}
-For example: if one compares two sets of identical data but shifted of a fraction of the millimeter, as in figure~\ref{fig:highgrad}, the difference will have a very pronounced peak that could be considered out of our tolerance range for the dose axis but inside our acceptance level for the distance.
-In order to avoid this issue, I used the method shown in Low \emph{et al.} \cite{low:gamma} or else the \emph{gamma-index test} that uses a distance-to-agreement (DTA) distribution to determine the acceptability of the dose calculation. The DTA is the distance between a measured data point and the nearest point in the calculated dose distribution that exhibits the same dose. Each measured point is evaluated to determine if both dose difference and DTA exceed the selected respective tolerances. Points that fail both criteria are identified on a composite distribution. This is an extension of the isodose comparison tool that simultaneously incorporates the dose and the distance criteria and provides a numerical quantity index (further called $gamma$-index) that serves as a measure of disagreement in the regions that fail the acceptance criteria and indicates the calculation quality in the regions that pass. A further and Mathematical explanation is given in Appendix A.
-%riscrivi meglio la prima parte non ho capito una \hbar
-
-\subsubsection{Interpolation}
-
 
 \chapter{Results} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \label{chap:res}
@@ -961,8 +1057,8 @@ In the following pages, I will show a series of images where it is shown a slice
 
 \chapter{Conclusions} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\appendix
-\chapter{$\gamma$-index test}
+%\appendix
+%\chapter{$\gamma$-index test}
 
 \tableofcontents
 \listoffigures
@@ -994,6 +1090,11 @@ Phys. Med. Biol. 41, 1331–9 (1996)
 Ferrari A., Sala P.R., Fassò A. and Ranft J. -
 \emph{FLUKA: a multi-particle transport code} -
 CERN-2005-10, INFN/TC\_05/11, SLAC-R-773 (2005)
+
+\bibitem{gra:hu}
+Grant R. L., Summers P. A., Neihart J. L., Blatnica A. P., Sahoo N., Gillin M. T., Followill D. S. and Ibbott G. S. -
+\emph{Relative stopping power measurements to aid in the design of anthropomorphic phantoms for proton radiotherapy} -
+J Appl Clin Med Phys. 15(2): 4523 (2014)
 
 \bibitem{high:mcs}
 Highland V.L. -
@@ -1049,8 +1150,6 @@ Phys. Med. Biol. 50, 5089–5104 (2005)
 Weyrather W.K., Ritter S., Scholz M., Kraft G. - 
 \emph{RBE for carbon track-segment irradiation in cell lines of differing repair} -
 capacity. Int. J. Radiat. Biol. 75, 1357–1364 (1999)
-
-
 
 %% aggiungere history of hadrontherapy dell'amaldi e del degiovanni
 
