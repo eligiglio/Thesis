@@ -113,101 +113,117 @@
 
 
 \begin{abstract}
-The hadrontherapy is a medical therapy based on a new technology allowing to treat a cancer without surgery and with contained damages to healthy surrounding tissues. Nowadays, before every treatment, some simulations are run in order to forecast the Dose deposition inside the patient. The most accurate softwares for this purpose are Monte Carlo based and simulate the effects for a huge amount of particles requiring a significant amount of computing time. Lately, new methods are taking hold, such as the Analytical Probabilistic Modelling, the Pencil Beam Algorithms and the Fine Sampling Beam. The aim of this project is to understand, improve and implement the last two of the aforesaid methods by using MatRad, and to compare them to the measurements provided by the Heidelberg Ions Therapy Center, the Syngo (Siemens' MatRad clone) and the Fluka-based MC simulations. The most peculiar property of the Pencil Beam Algorithms is the speed, and I figured out that they can be exploited in a new method in order to increase the accuracy of the simulation instead. Then, my work focuses on the realization of this new software based on the Pencil Beam Algorithms. The first of the three steps of this work is to compare MatRad, the Fine sampling (FS) algorithm and the Monte Carlo simulations for simple cases, i.e. in water environment and with some inhomogeneities. Then, I show the results for some cases of the Spread-Out Bragg Peaks and as last, for some full fields simulations either for Matrad and FS and Syngo. 
+The hadrontherapy is a medical therapy based on a new technology allowing to treat a cancer without surgery and with contained damages to healthy surrounding tissues. Nowadays, before every treatment, some simulations are run in order to forecast the dose deposition inside the patient. The most accurate softwares for this purpose are Monte Carlo based and simulate the effects for a huge amount of particles requiring a significant amount of computing time. Lately, new methods are taking hold, such as the Analytical Probabilistic Modelling, the Pencil Beam Algorithms and the Fine Sampling Beam. The aim of this project is to understand, improve and implement the last two of the aforesaid methods by using MatRad, and to compare them to the measurements provided by the Heidelberg Ions Therapy Center, the Syngo (Siemens' MatRad clone) and the Fluka-based MC simulations. The most peculiar property of the Pencil Beam Algorithms is the speed, and I figured out that they can be exploited in a new method in order to increase the accuracy of the simulation instead. Then, my work focuses on the realization of this new software based on the Pencil Beam Algorithms. The first of the three steps of this work is to compare MatRad, the Fine sampling (FS) algorithm and the Monte Carlo simulations for simple cases, i.e. in water environment and with some inhomogeneities. Then, I show the results for some cases of the Spread-Out Bragg Peaks and as last, for some full fields simulations either for Matrad and FS and Syngo. 
 
 As I show in this work... (preliminary rough overview of the result)
 
 \end{abstract}
 
 \chapter{Introduction} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%This therapy uses beams of protons or light nuclei (as Carbon) in order to ionize the tumor region and destroy the cancerous tissue.
-Nowadays, one of the most used therapies to treat a patient affected by cancer is the radiation therapy. Radiation therapy is the medical method using ionizing radiation to kill the tumor. The tumor cells are destroyed by beams of X rays (high energy photons) produced by acceleration of electrons and directly delivered to the patient. This process uses crossing beams from many angles and it is planned such that the tumor target is hit by the radiation while the surrounding normal tissues stay preserved. Nevertheless, some radiation dose is always deposited in the healthy tissues.
-When the irradiating beams consist of charged particles (protons, carbon and other ions), radiation therapy is named hadrontherapy. The physical and radiobiological properties of these charged particle make the main strength of the hadrontherapy.
+
+\section{History of charged particle therapy}
+
+Nowadays, one of the most used therapies to treat a patient affected by cancer is radiation therapy. Radiation therapy is a medical method using ionizing radiation to kill the tumor. The tumor cells are destroyed by beams of X-rays (high energy photons) produced by the acceleration of electrons onto a metal anode where, trough Bremsstrahlung, X-rays are emitted and then directly delivered to the patient. 
+This process uses crossing beams from many angles and it is planned such that the tumor target is hit by the radiation
 \begin{wrapfigure}{r}{.5\textwidth}
 \centering
 {\includegraphics[width=.5\textwidth]{Images/37cycl}}
 \caption{E. O. Lawrence (right) and M.S. Livingston (left) standing beside the 37-inch
-cyclotron (Berkeley Lab)}
+cyclotron (Berkeley Lab). From \emph{The evolution of the cyclotron} by Lawrence E.O. -
+Nobel Lecture, 1951}
 \label{fig:37cycl}
 \end{wrapfigure}
-A fundamental improvement that shows up by using charged particles instead of X rays concern the selectivity of the beam. In fact, charged particles can penetrate the tissues with little diffusion and deposit the peak of energy just before stopping. This allows to deposit more dose in the tumor than in the surrounding tissues by using just one beam.
-The peaked shape of the hadron energy deposition is called Bragg peak and has become the symbol of hadrontherapy. With the use of hadrons the tumour can be irradiated while the damage to healthy tissues is less than with X-rays.
-Due to their large penetration depth, low energy neutrons were the first hadrons used in radiotherapy. Neutrons act via their scattering and recoil-ions, these are in biological tissues mostly low energy protons and produce a greater Relative Biological Effectiveness (RBE). 
-In 1936 the first experimental studies were published by the Lawrence brothers\footnote{Lawrence JH, Aebersold PC, Lawrence EO. Proc Natl Acad Sci U S A 1936;22(9):543.} and, at the end of September 1938, the first patients were treated with neutrons produced by a 37-inch cyclotron accelerating deuterions up to 8 MeV, in figure \ref{fig:37cycl}. The fast neutrons, used for the therapy, were produced by bombarding a beryllium target. In the traversed tissues the neutrons transfer their energy mainly to highly ionizing protons, which have a value of the Linear Energy Transfer (LET) that is much larger than the one of the electrons put in motion by MeV photons produced by linacs.
-But because of the poor depth-dose distribution, the biologically high-effective dose was also large in the normal tissues outside of the target volume, causing severe side effects. Therefore, in most countries neutron therapies have been terminated.
-The next big hopes were negative-pion beams producing an additional boost of dose at the end of the pions range. There, the negative pions are captured by the target nuclei and release additional energy. However, clinical trials could not find an improved cure rate and the pion trials were terminated worldwide after the treatment of some 800 patients.\footnote{H. Blattmann, Pions at Los Alamos, PSI and Vancouver, in Hadrontherapy in Oncology, eds. U. Amaldi and B. Larsson (Elsevier, 1994), pp. 199–207.}
+\noindent while the surrounding normal tissues stay preserved. Nevertheless, some radiation dose is always deposited in the healthy tissues.
+When the irradiating beams consist of charged particles (protons, carbon and other ions), radiation therapy is named hadrontherapy. The physical and radiobiological properties of these charged particle make the main strength of the hadrontherapy.
+A fundamental improvement was the introduction of charged particles, used as an alternative to X-rays. In fact, charged particles can penetrate the tissues with a smaller diffusion and deposit the peak of energy just before stopping. This allows to deposit more dose in the tumor than in the surrounding tissues by using just one beam.
+The peaked shape of the hadron energy deposition is called Bragg peak and has become the symbol of hadrontherapy. With the use of hadrons the tumour can be irradiated while the damage to healthy tissues is contained and, in most cases, far smaller than with X-rays. Eventhough, today radiotherapy is actuated with both photons and ions.
+The first hadrons used in radiotherapy were neutrons because of their large range inside matter. Neutrons ionizate via the recoil of the ions they scatter with. In biological tissues these ions are mostly termal-energy protons and they produce a great Relative Biological Effectiveness (RBE). 
+The first experiments started in 1936 and were published by the Lawrence brothers\footnote{Lawrence JH, Aebersold PC, Lawrence EO. Proc Natl Acad Sci U S A 1936;22(9):543.} and, in 1938, the first patients were treated with fast neutrons produced by bombarding a beryllium target with deuterions accelerated by a 37-inch cyclotron (shown in figure \ref{fig:37cycl}) up to $8\,MeV$. The neutrons, inside matter, transfer their energy mainly ionizing atoms. The secondary electrons produced in nuclear interaction have a Linear Energy Transfer (LET) value much larger than the elctrons freed by photons in conventional radiotherapy.
+Because of the not suitable depth-dose distribution, the biological effects in the normal tissues outside of the target volume were large. Therefore, because of the severe side effects, neutron therapies have been terminated.
+The next experiment was done with negative-pion beams producing an additional boost of dose at the end of their range. There, the target nuclei capture the pions (negatively charged) and release energy. However, clinical trials could not find an improved cure rate and the pion trials were terminated worldwide after the treatment of some 800 patients.\footnote{H. Blattmann, Pions at Los Alamos, PSI and Vancouver, in Hadrontherapy in Oncology, eds. U. Amaldi and B. Larsson (Elsevier, 1994), pp. 199–207.}
 
-The idea of using protons for cancer treatment was first proposed in 1946 by the physicist Robert Wilson, who later became the founder and first director of the Fermi National Accelerator Laboratory (Fermilab) near Chicago. The first patients were treated in the 1950s in nuclear physics research facilities by means of non-dedicated accelerators. Initially, the clinical applications were limited to few parts of the body, as accelerators were not powerful enough to allow protons to penetrate deep in the tissues.
-In the late 1970s, improvements in accelerator technology coupled with advances in medical imaging and computing, made proton therapy a viable option for routine medical applications.
-By the mid-1970s at the Harvard Cyclotron Laboratory, the physicists Andy K\"ohler, Bernard Gottschalk and their colleagues working with radiation oncologists guided by Herman Suit had developed methods to treat large brain tumours, while Michael Goitein had written very sophisticated codes for quantifying the related treatment plans.
-From the fifties to the mid-eighties particle radiotherapy was based exclusively on accelerator facilities developed for nuclear physics research, with easy-to-build horizontal beam lines used for proton therapy. It was frequently stated that the field would not develop without dedicated facilities. A new era in particle therapy started with the construction and installation of dedicated accelerators in hospital-based clinical centres. The first was the MC60, a 62.5 MeV proton cyclotron, delivered by Scanditronix, which has been operating at the Clatterbridge Oncology Centre (UK) since 1989. The cyclotron has been used for fast neutron radiotherapy and is still used for the treatment of ocular tumours.\footnote{Kacperek A. Protontherapy of eye tumours in the UK: a review of treatment at
-Clatterbridge. Appl Radiat Isotopes 2009;67(3):378e86.} In the same period, other six centres (mostly located in physics laboratories, differently from the case of Clatterbridge) accelerating proton beams to 60 e 70 MeV started treatment of eye melanomas and other eye tumours and malformations. They were located in PSI, Nice, University California San Francisco, Triumph, Berlin and Catania and feature a single horizontal beam.
+The pioneer of proton therapy was the physicist Robert Wilson, who in 1946 proposed to use protons for cancer treatment and later founded and directed the Fermi National Accelerator Laboratory (Fermilab) near Chicago.
+In 50s, patients started to be treated in nuclear physics research facilities using accelerator that were not build for this purpose.
+The first accelerators were not powerful enough to allow treatment deep inside the patients, so at the beginning, this method was applied only to few parts of the body and for the most external tumors.
+In the 70s, thanks to the improvements in accelerator technology and medical imaging and computers, proton therapy became a valid treatment.
+Before 80s, there were not any dedicated facilities for particle therapy. In fact, this kind of treatment was done in nuclear physics research centers, using easy-to-build horizontal beam lines.
+
+But this field could not develop without the constrution of dedicated facilities. 
+As Myers and Bruning say in \cite{mye:acc}: \emph{From the sixties to the eighties of the 20th century, particle radiotherapy was based exclusively on accelerator facilities developed for nuclear physics, with beam lines and treatment rooms adapted to the needs of radiotherapy. The first hospital based installations occurred: at first, the MC60, a $62.5\,MeV$ proton cyclotron, delivered by Scanditronix, operating at the Clatterbridge Oncology Centre (UK) since 1989; and then from 1990, a dedicated $250\,MeV$ proton synchrotron, developed by FermiLab at Loma Linda University (California, USA), the first dedicated clinical facility equipped with three rotating gantries.}
+The MC60 cyclotron has been used for fast neutron radiotherapy and is still used for the treatment of ocular tumours.\footnote{Kacperek A. Protontherapy of eye tumours in the UK: a review of treatment at
+Clatterbridge. Appl Radiat Isotopes 2009;67(3):378e86.} In the same period, six more centres were opened treating eye melanomas and other eye tumours and malformations featuring a sigle horizontal beam. These accelerators had a maximum energy of $60-70\,MeV$ and were located in PSI, Nice, University California San Francisco, Triumph, Berlin and Catania.
 \begin{figure}[!t]
 \centering
 {\includegraphics[width=\textwidth]{Images/Synch_fermilab}}
-\caption{The LLUMC synchrotron built in Fermilab}
+\caption{The LLUMC synchrotron built in Fermilab. From Slater \cite{jd:llu}}
 \label{fig:synchF}
 \end{figure}
-The next major step was the installation at Loma Linda University (LLUMC, California, USA) of a dedicated 7-m-diameter 250 MeV synchrotron built by FermiLab, in figure \ref{fig:synchF}. This was the first hospital-based facility using a synchrotron, and it has been a pioneer also because of the three 10 m diameter rotating gantries that allow adjusting the angle of the beam penetrating into the patient's body.\footnote{Slater JM, Archambeau JO, Miller DW, Notarus MI, Preston W, Slater JD. The proton treatment center at Loma Linda University Medical Centre: rationale
-for and description of its development. Int J Radiat Oncol Biol Phys 1992;22: 383e9} The first patient was irradiated in 1990 and, in the same year, USA Medicare approved the insurance coverage of this new cancer treatment.
+As already said, the major introduction at that time was the 7-m-diameter $250\,MeV$ synchrotron built by FermiLab, in figure \ref{fig:synchF} and installed at Loma Linda University in California. This was coupled with three $10\,m$ diameter rotating gantries used in order to adjust the entering angle of the beam in respect to the patient's body.
+This was the first synchrotron applied to a hospital-based facility\footnote{Slater JM, Archambeau JO, Miller DW, Notarus MI, Preston W, Slater JD. The proton treatment center at Loma Linda University Medical Centre: rationale
+for and description of its development. Int J Radiat Oncol Biol Phys 1992;22: 383e9}.
 Another major advancement in particle therapy, which I will talk about later, was the application of scanning beams, which allows painting the tumour target with the Bragg peak.
 The first scanning systems were developed in the research facilities at PSI (Villigen, Switzerland) for protons and GSI (Darmstadt, Germany) for carbon ions and have been used to treat patients since 1996 and 1997, respectively.
-To fully exploit the accelerator, every hospital-based centre has from 3 to 5 treatment rooms so that, while a patient is irradiated for 3-5 minutes in one room, in others precise alignment measurements are taken to prepare other patients. Because each patient needs 20-30 sessions, one four-room centre can treat up to 1200-1300 patients a year. The size of the facility and the optimisation of the workflow are still debated and many studies have addressed this problem.
+In order to use the accelerator at its maximum possibility every hospital centre has usually between 3 and 5 gantries (or treatment rooms) so that, while the 3-5 minutes irradiation in one room, in others can be started the procedures of alignment to prepare other patients. Because each patient needs 20-30 sessions, one four-room centre can treat up to 1200-1300 patients a year. The size of the facility and the optimisation of the workflow are still debated and many studies have addressed this problem.
 
-At present about forty-five proton therapy centres are in operation or under construction throughout the world. The list of the centres in operation with the statistics of the number of treated patients is updated every year by the Particle Therapy Co-Operative Group (PTCOG).\footnote{\url{https://www.ptcog.ch/}}
-
+As stated on Particle Therapy Co-Operative Group\footnote{\url{https://www.ptcog.ch/}}: \emph{At present about forty-five proton therapy centres are in operation or under construction throughout the world. The list of the centres in operation with the statistics of the number of treated patients is updated every year by the PTCOG.}
 %%%   includere tabella dei centri magari
 
+\emph{In Europe, the interest in hadrontherapy has been growing rapidly and the first dual ion (carbon and protons) clinical facility in Heidelberg, Germany started treating patients at the end of 2009. Some more such facilities are now in operation, for example: CNAO in Pavia, MIT in Marburg, and MedAustron in Wiener Neustadt are treating patients.
+Globally there is a huge momentum in particle therapy, especially treatment with protons. By 2020 it is expected there will be almost 100 centres around the world, with over 30 of these in Europe}.
 
-In Europe, the interest in hadrontherapy has been growing rapidly and the first dual ion (carbon and protons) clinical facility in Heidelberg, Germany started treating patients at the end of 2009. Some more such facilities are now in operation, for example: CNAO in Pavia, MIT in Marburg, and MedAustron in Wiener Neustadt are treating patients.
-Globally there is a huge momentum in particle therapy, especially treatment with protons. By 2020 it is expected there will be almost 100 centres around the world, with over 30 of these in Europe.
 
-This work will focus on proton therapy only. 
+\section{Production of therapeutic charged particle beams}
+The core component in the production of therapeutic charged particle beams is the accelerateor. Some centres use a \emph{Cyclotron}, smaller than a \emph{Synchrotron}, which allows to accelerate protons to energies sufficient for the therapies but, because of technology limits, today this is not used for light ions therapy. But research is improving fast on this topic and there are some prototypes of cyclotrons for carbon Ions therapy, as the IBA C400 (more info in \cite{jong:iba}). In order to accelerate Carbon or Helium ions to energies around some hundreds of MeV per nucleon, there is the need of a \emph{Synchrotron}. The most modern centres use a circular accelerator, usually around tens of meters of length. Meanwhile the patient is positioned on a couch which is able to rotate in order that the beam can hit the patient with different angles. There are two different possible environments:%%%add a figure about that?
+The standard \emph{fixed beam line} that has a static beam direction and a system that allows the cot (on which the patient lays down) to cover a $360^\circ$ angle on the horizontal plane and eventually of small angles on the azimuthal plane; and the \emph{gantry} that as a system of magnets, that rotating around the patient, bend the beam and allow to cover the full $4\pi$ angle, as for example the one at the Heidelberg Ion-Beam Therapy Center (HIT) in figure \ref{fig:HIT}. The gantry at HIT is a rotating construction made of steel that is 25 meters long, 13 meters in diameter and weighs 670 tons (the weight of an AirBus A380 fully charged is around 577 tons), of which 600 tons can be rotated with precision under a millimetre. 
+%\begin{figure}[t]
+%{\includegraphics[width=.45\textwidth]{Images/gantryHITout2c}}
+%{\includegraphics[width=.45\textwidth]{Images/gantryHITout}}\\
+%{\includegraphics[width=.45\textwidth]{Images/gantryHITin}}
+%\caption{The 25-meter-long $360^\circ$ rotating gantry at HIT, from the inside and the outside.}
+%\label{fig:HIT}
+%\end{figure}
 
-\section{Charged Particle Therapy}
-I will explain the way this treatment works starting from the physical structure of a hadrontherapy center. The core of it is the accelerator. Some centres use a \emph{Cyclotron}, smaller and less expensive than a \emph{Synchrotron}, which allows to accelerate protons to energies sufficient for the therapies but, because of its limits, this cannot be used for light ions therapy. In order to accelerate Carbon or Helium ions to energies around some hundreds of MeV per nucleon, there is the need of a \emph{Synchrotron}. The most modern centres use a circular accelerator, usually around tens of meters of length. Mean while the patient is lied down on a bed which is able to rotate in order that the beam can hit the patient with different angles. The standard gantry has a system that allows the cot (on which the patient lays down) to cover a $360^\circ$ angle on the horizontal plane and eventually of small angles on the azimuthal plane. But there are some others that cover the full $4\pi$ angle, for example the one at the Heidelberg Ion-Beam Therapy Center (HIT) in figure \ref{fig:HIT}. The gantry at HIT is a gigantic steel construction. It is 25 meters long, 13 meters in diameter and weighs 670 tons (the weight of a AirBus a380 fully charged is around 577 tons), of which 600 tons can be rotated with precision under a millimetre. 
 \begin{figure}[t]
-{\includegraphics[width=.45\textwidth]{Images/gantryHITout2c}}
-{\includegraphics[width=.45\textwidth]{Images/gantryHITout}}\\
-{\includegraphics[width=.45\textwidth]{Images/gantryHITin}}
-\caption{The 25-meter-long $360^\circ$ rotating gantry at HIT, from the inside and the outside.}
+\includegraphics[width=\textwidth]{Images/gantryHIT}
+\caption{The 25-meter-long $360^\circ$ rotating gantry at HIT, from the inside and the outside. From the websites of Univerit\"atsKlinicum Heidelberg \url{https://www.klinikum.uni-heidelberg.de} and DKFZ \url{https://www.dkfz.de}}
 \label{fig:HIT}
 \end{figure}
 
-So in the case of a center based on Synchrotron, the path of the particle starts in the initializer, then it is accelerated and transferred inside the main ring where particles are futhermore accelerated and divided in bunches. After the part of acceleration, the Synchrotron can be used as a storage ring where all the bunches, of fixed energy and intesity, wait for the extraction. Extracted particles will fly inside a vacuum tube from the ring to the gantry. During this flight, there is a part of beam diagnostic, where intensity, position and dimention of the beam is analysed to detect and avoid abnormalities. Using \emph{Active Beam Scanning} (of which I will talk in section \ref{activeScanning} ), shape and direction are adjusted respectevely with the use of lead collimators and two magnets deflecting the beams on the plane perpendicular to the flight direction. After the last step, the beam exits the machine and hit the patient.
+In the case of a center based on Synchrotron, the path of the particle starts from the source, then it is accelerated and injected inside the main ring where particles are futhermore accelerated in bunches. After the part of acceleration, the Synchrotron can be used as a storage ring where all the bunches, of fixed energy and intesity, wait for the extraction. Extracted particles will fly inside a vacuum tube from the ring to the gantry. During this flight, there is a part of beam diagnostic, where intensity, position and dimension of the beam is analysed to detect and avoid abnormalities. Using \emph{Active Beam Scanning} (of which I will talk in section \ref{activeScanning} ), shape and direction are adjusted respectively with the use of lead collimators and two magnets deflecting the beams on the plane perpendicular to the flight direction. After the last step, the beam exits the machine and enters the patient.
 
 \section{Interaction of charged particles with matter}
 Many effects, involving beam particles and patient tissue, must be taken in account during a treatment.
-Protons lose their energy to matter primarily through electromagnetic interactions with atomic electrons. Protons have a mass which is large compared to the mass of the electrons, hence they lose only a small fraction of their energy in a single interaction (at most $4 m/M = 0.0022\%$, where $m$ is the electron mass and $M$ is the proton mass) and they are deflected by only small angles in each interaction.
-In general, the proton interactions with matter can be divided into three categories: interactions with the individual electrons of atoms; interactions with the nucleus; and interactions with the atoms as a whole. The latter occurs only at very low energies and it is beyond the aim of this work. Nuclear interactions include inelastic scattering, Coulomb scattering and nuclear reactions. Eventhough, in this work, I will explain on interactions with electrons of atoms and nuclei, since at therapy energies, these processes dominate.  
-The range of energies used in hadron therapy is between $\sim30$ and $\sim200\,MeV$ per nucleon. 
-In this energy range, where the residual range of the protons in tissue is between $1\,cm$ and approximately $35\,cm$, interactions with electrons are dominant. Even at these energies, however, one cannot completely ignore the effects
-of nuclear interactions. For tissue-equivalent material, the probability that protons will undergo a nuclear interaction while traversing a path length segment of $1\,g/cm^{2}$ is of the order of $1\%$. At a depth of $20\,cm$, approximately 1 in 4 of the protons will have suffered a nuclear interaction\footnote{Source: Clinical Proton Dosimetry - part 1, ICRU Report 59 (1998)}. 
+The main ones are electromangetic interaction with electrons that constitute the primary reason of energy loss by protons. Because they have a mass which is large compared to the mass of the electrons, hence they lose only a small fraction of their energy in a single interaction (at most $4 m/M = 0.0022\%$, where $m$ is the electron mass and $M$ is the proton mass) and they are deflected by only small angles in each interaction.
+In general, the proton interactions with matter can be divided into three categories: interactions with the individual electrons of atoms; interactions with the nucleus; and interactions with the atoms as a whole. The latter occurs only at very low energies and it is beyond the aim of this work. In this work, I will explain Coulomb interactions of the projectile with the target electrons and nuclei, since at therapy energies, these processes dominate.  
+The energies used in hadron therapy is between $\sim30$ and $\sim200\,MeV$ per nucleon. 
+In this range, the residual range of the protons in tissue is between $1\,cm$ and approximately $35\,cm$. However, one cannot completely ignore the effects of nuclear interactions. \emph{For tissue-equivalent material, the probability that protons will undergo a nuclear interaction while traversing a path length segment of $1\,g/cm^{2}$ is of the order of $1\%$. At a depth of $20\,cm$, approximately 1 in 4 of the protons will have suffered a nuclear interaction}\footnote{Source: Clinical Proton Dosimetry - part 1, ICRU Report 59 (1998)}. 
 
 \subsection{Multiple Coulomb Scattering in lateral direction}
+\label{sec:mcs}
 \begin{figure}[!t]
 \centering
 \includegraphics[width=\textwidth]{Images/sigmaParodi}
-\caption{Examples of the values of $\sigma_{1,2}$ and $w$ in relation to the relative depth, at the low (left) and high (right) beam energy}
+\caption{Examples of the values of $\sigma_{1,2}$ and $w$ in relation to the relative depth, at the low (left) and high (right) beam energy. From Parodi (et al.) \cite{par:latspr}}
 \label{fig:sigPar}
 \end{figure}
 \begin{figure}[!t]
 \includegraphics[width=.9\textwidth]{Images/latSig}
-\caption{Example of the spread of proton and $^{12}$C ion beams in the nozzle, air gap and water for a typical treatment beamline (U. Weber, GSI Darmstadt)}
+\caption{Example of the spread of proton and $^{12}$C ion beams in the nozzle, air gap and water for a typical treatment beamline (U. Weber, GSI Darmstadt). From García-Ramos (et al.) \cite{garc:nucu}}
 \label{fig:latSig1}
 \end{figure}
-Coulomb scattering is the deviation of the trajectory of the particles due to the electric field of the nuclei in the medium and it is the major responsible for the broadening of the beam inside matter. Protons are heavy enough to be compared with the mass of the atoms, they have much greater momentum than target nuclei, so, the outgoing angle in their trajectory is usually very small as is the energy loss, per scattering. It becomes simple to consider the mean value of the outcoming angles (supposing the energy constant) and this is the reason why, in literature, can be found many references to \emph{multiple Coulomb scattering}. Considering the average of multiple scattering allows gaussian approximation and reduces sensibly computation time in Monte Carlo simulations.
-The lateral spread of proton or ion beams passing through an absorber is mainly caused by Coulomb scattering and is well described by the Molière-Theory \cite{mol:mcs}. For small angles the higher-order terms in Molière's solution can be neglected and the angular distribution can be approximated by a Gaussian function (Highland \cite{high:mcs}) with a standard deviation 
+Coulomb scattering is the deviation of the trajectory of the particles due to the electric field of the nuclei in the medium and it is the major responsible for the broadening of the beam inside matter. Protons are heavy enough to be compared with the mass of the atoms, they have much greater momentum than target nuclei, so, the outgoing angle in their trajectory is usually very small as is the energy loss, per scattering. It becomes simple to consider the mean value of the outcoming angles (supposing the energy constant) and this is the reason why, in literature, can be found many references to \emph{multiple Coulomb scattering}.
+The lateral spread is described by the Molière-Theory \cite{mol:mcs}. For small angles the higher-order terms in Molière's solution can be neglected and the angular distribution can be approximated by a Gaussian function (Highland \cite{high:mcs}) with a standard deviation 
 \[
 \sigma_\theta [rad]= \frac{14.1\,MeV}{\beta pc}\, Z_p\, \sqrt{d/L_{rad}} \cdot \bigg[ 1 + \frac{1}{9}\,\log_{10} (d/L_{rad} )\bigg]
 \]
-Where the absorber material is characterized by the thickness $d$ and the radiation length $L_{rad}$. 
-A modern correction proposed by Schneider (et al.) and a comparison with Highland's method, can be found in \cite{schn:mcs}. This formulas are implemented in Monte Carlo based softwares that calculate the complete path of the single particle. The result is a dose depotion profile that can be nicely fitted with a sum of two gaussians.
-In sofware using databases (i.e. algorithms that reconstruct the dose deposition considering the beam as single object, introduced in section \ref{sec:pen}), lateral spread is represented as a double gaussian. Most of this parametrizations are based on the work of Parodi (et al.) in \cite{par:latspr}, who fitted the lateral profile of Monte Carlo simulated beams and extracted an analytical form of it
+where the absorber material is characterized by the thickness $d$ and the radiation length $L_{rad}$. The particle has charge unit $Z_p$, momentum $p$ and velocity $\beta c$.
+A modern correction proposed by Schneider (et al.) and a comparison with Highland's method, can be found in \cite{schn:mcs}. 
+
+In sofware using databases (i.e. algorithms that reconstruct the dose deposition considering the beam as single object, introduced in section \ref{sec:pen}), the adopted model is usually based on a double-gaussian profile. This is obtained during exstensive fitting to Monte Carlo simulations. Most of this parametrizations are based on the work of Parodi (et al.) in \cite{par:latspr}, who fitted the lateral profile of Monte Carlo simulated beams and extracted an analytical form of it
 \[
 D(E,z_{eq},r) = n\cdot \bigg(  \frac{1-w}{2\pi\sigma_1^2}\,e^{r^2\,/\,2\sigma_1^2} + \frac{w}{2\pi\sigma_2^2}\,e^{r^2\,/\,2\sigma_2^2} \bigg)
 \]
-where the weight $w$, $\sigma_{1,2}$ and $n$, functions of the energy $E$ and the water equivalent depth $z_{eq}$, are fitting constants. Their relation with relative depth (i.e. depth normalized to bragg peak position) is shown in figure \ref{fig:sigPar}
+where the $w$, $\sigma_{1,2}$ and $n$ are fitting constants that depend both on the energy $E$ and the water equivalent depth $z_{eq}$. Their relation with relative depth (i.e. depth normalized to bragg peak position) is shown in figure \ref{fig:sigPar}
 
 %\begin{figure}[!ht]
 %     \subfloat[First sub-figure\label{subfig-1:dummy}]{%
@@ -220,156 +236,157 @@ where the weight $w$, $\sigma_{1,2}$ and $n$, functions of the energy $E$ and th
 %     \caption{Dummy figure}
 %     \label{fig:dummy}
 %   \end{figure}
-Between machine and patient, in air, all the scattering effects can be neglected and the main responsible of beam broadening is the natural divergence of the beam, leading to a linear treand, as can be seen in figure \ref{fig:latSig1}. Instead inside matter, the dominant effect is coulomb scattering, so the broadening becomes faster expecially as the particle loses energy.
+Between machine and patient, in air, all the scattering effects become smaller and the main responsible of beam broadening is the natural divergence of the beam, leading to a linear treand, as can be seen in figure \ref{fig:latSig1}.
+But usually in dose calculation softwares, both are taken in account on the base of tabulated data. Inside matter, instead, the dominant effect is coulomb scattering, so the broadening becomes faster expecially as the particle loses energy.
 
-
-\textbf{ask Mark about graphics}
-
-\textbf{is the second one plausible? why?}
-
-
-\subsection{Ionization}
-\begin{figure}[!t]
-     \subfloat[DNA possible deformations and breaks\label{fig:dna}]{%
-       \includegraphics[width=.57\textwidth]{Images/DNA}
-     }
-     \hfill
-     \subfloat[CHO cells Survival ratio realted with Dose, for $X$-rays and $^{12}$C ions\label{fig:surv}]{%
-       \includegraphics[width=.41\textwidth]{Images/survival}
-     }
-\caption{DNA structure and survival ratio}
-   \end{figure}
-In addition to the interactions with nuclei fields, incoming protons interact with atoms, transmitting some of their energy to the surrounding electrons. If that energy is sufficient, the atom is ionized and electron is free to move inside the medium, consuming his remaining energy in further scatterings or Bremsstrahlung. These secondary electrons have a large range of energies and some of those can have enough energy to provoke further secondary ionization. Such electrons are usually referred as $\delta$-rays \footnote{Antiquated definition due to hystorical reasons. At the beginning, $\delta$-rays where not recognised as electrons} or knock-on electrons.
-Ionization is the effect causing the death (complete loss of the proliferation capacity) of the cells during radiation therapy and  the main reason is DNA fragmentation. As shown in figure \ref{fig:dna}, through ionizing radiation, DNA chain can brake in multiple parts. Cells are provided with enzymes, called \emph{ligase}\footnote{There is a complete description of this phenomenon and the correlated risks, on the wiki page: \url{https://en.wikipedia.org/wiki/DNA_repair}}, that facilitates the joining of DNA strands together by catalyzing the formation of a phosphodiester bond but if deposided dose is over some threshold (that depends on the biology of the cell), correct repair is impossible and the cell is fated to die or become a cancerous one.
-Weyrather (et al.) in \cite{weyr:rbe}, treat the dose effect curve for $X$-rays and $^{12}$C ions on Chinese Hamster cells (CHO), for different energies. The analytical form of the \emph{survival ratio} can be written as
-\[
-S = e^{-\alpha D + \beta D^2}
-\]
-Where $S$ is the survival fraction, $D$ is Dose and $\alpha$, $\beta$ are fit constants.
-Their results and the caratteristic slope of this function is in figure \ref{fig:surv}.
-The ratio $\alpha/\beta$ is therefore a measure for the repair capacity of the cells and takes typical values of $1\div3\, Gy$ for cells with high repair potential and close to $10\, Gy$ for repair-deficient cells.
-As a measure for the effectiveness the factor RBE (\emph{Relative Biological Effectiveness}) was introduced as the ratio between $X$-ray dose and ion dose which are required to produce the same effect
-\[
-RBE = \frac{D_X}{D_{ion}}\Bigg|_{isoeffect}
-\]
-As can be seen from figure \ref{fig:surv}, at $10\%$ survival level, the RBE values for $^{12}$C ions increase from $1.6$ at $266\,MeV/u$ to $3.7$ at $11\,MeV/u$ and decrease again  
-\begin{wrapfigure}{r}{.5\textwidth}
-\centering
-{\includegraphics[width=.5\textwidth]{Images/secondary}}
-\caption{Monte-Carlo simulations showing individual tracks of $\delta$-electrons produced by energetic protons and $^{12}C$ ions penetrating tissue}
-\label{fig:secondary}
-\end{wrapfigure}
-\noindent to $2.1$ in the $2.4\,MeV/u$ case. The reason is very simple actually. At low energies, dose deposition is higher than at high energies, this is better explained in section \ref{sec:sobp}.
-Surprisingly, at still lower ion energies RBE does not further increase but decreases again. This can be
-explained by two different effects: if the dose deposited by a single ion is much higher than necessary to kill the cell, the energy is wasted and leads to a saturation effect (``overkill''); or at very low energy, the fluences required for doses of a few $Gy$ become very small and a certain fraction of the cells may not be hit at all, thus again decreasing the effectiveness.
-The higher biological effectiveness of ion beams can be explained by the microscopic structure of particle tracks and their interaction with the DNA molecule. As discussed above, the interaction of energetic ions with the tissue is governed by inelastic collisions with the atomic electrons. Since the ion/electron mass ratio is very large, the ions are moving on practically straight trajectories through the tissue.
-Delta-electrons are emitted mainly in forward direction and those emitted at larger angles have comparatively low energies and short ranges (due to the collision kinematics). The local dose inside these particle ``tracks'' decreases extremely steeply ($\sim1/r^2$) with the radial distance $r$. In figure \ref{fig:secondary} (from Kr\"amer \cite{Kram:track}), we can see an explicative image showing the secondary particle production for protons and Carbon ions.
-Concluding this section, we can say that RBE is an important value for heavy ion therapy but not for protons whose differences between RBE and Dose are neglectable.
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%
-\textbf{Parlarne con Elisabetta perchè ho qualche dubbio}
-
-\begin{figure}[!h]
-\includegraphics[width=\textwidth]{Images/rbe12c}
-\caption{Example of Radio-Biological Effect against Physical Dose, for $^{12}$C}
-\label{fig:rbe12c}
+\begin{figure}[!ht]
+{\includegraphics[width=\textwidth]{Images/BBp}}
+\caption{Bethe Bloch formula for a proton. From Kraan \cite{Kra:range}}
+\label{fig:BB}
 \end{figure}
 
-
-
 \subsection{Bethe Bloch}
-In 1932 Bethe proposed the first formula for the mean energy loss from a relativistic charged particle traversing matter. In the beginnning, this only took into account few effects and was composed only from the $z^2$ term and worked only for low energies. Thanks to the corrections made by Barkas, Anderson and Bloch, we have now the complete formula
+The first version of the Bethe formula was proposed in 1932. It describes the mean energy loss from a relativistic charged particle traversing matter and at the beginning used to account only the few known effects, and contained only the term depending on $z^2$ because was applied only in low energy cases.
+Thanks to the corrections made by Barkas, Anderson and Bloch, we have now the complete formula
 \[
--\bigg\langle\frac{dE}{dx}\bigg\rangle= \frac{4\pi}{m_ec^2}\frac{z^2}{\beta^2}\bigg(\frac{e^2}{4\pi\epsilon_0} \bigg)^2\bigg[\ln{\bigg(\frac{2m_ec^2\beta^2}{I\cdot(1-\beta^2)}\bigg)}-\beta^2 -\frac{\delta}{2}\bigg]
+-\bigg\langle\frac{dE}{dx}\bigg\rangle= \frac{4\pi}{m_ec^2}\frac{nz^2}{\beta^2}\bigg(\frac{e^2}{4\pi\epsilon_0} \bigg)^2\bigg[\ln{\bigg(\frac{2m_ec^2\beta^2}{I\cdot(1-\beta^2)}\bigg)}-\beta^2 -\frac{\delta}{2}\bigg]
 \]
 Where $\beta c$ is the velocity of the particle, $I=(10\,eV)\cdot Z$ is the mean excitation potential and 
 \[
 n = \frac{N_AZ\rho}{AM_u}
 \]
-is given by some constants depending on the characteristic of the medium. Then, $\delta$ is a parameter describing the shielding of the electric field of the particle due to the polarization of the medium (density effect).
-In figure \ref{fig:BB}, we show a plot of the Bethe-Bloch as a function of $\beta\gamma$. The very first notable thing is the minimum of this function, called the minimum ionization point. Its position is always around $\beta\gamma=3$ and it is almost indipendent from both the nature of the particle and the medium. At higher energies, the contribution of the logarithm in the formula becomes stronger and the curve rises again. Close to $\beta\gamma=1000$, the radiative effects become dominant and the function changes its gradient, with a well pronounced knee described by the density effects.
-\begin{figure}[!ht]
-{\includegraphics[width=\textwidth]{Images/bethe_bloch}}
-\caption{Bethe Bloch formula for a $\mu$---- change it in one for protons}
-\label{fig:BB}
-\end{figure}
+is given by some constants depending on the characteristic of the medium. $N_A$ is the Avogadro number, $A$ and $Z$ are the mass number and the atomic number of the medium, $\rho$ its density and $M_u$ is the atomic mass unit. Then, $\delta$ is a parameter describing the shielding of the electric field of the particle due to the polarization of the medium (density effect).
+In figure \ref{fig:BB}, we show a plot of the Bethe-Bloch curve as a function of $\beta\gamma$. The very first notable thing is the minimum of this function, called the minimum ionization point. Its position is always around $\beta\gamma=3$ and it is almost independent from both the nature of the particle and the medium. At higher energies, the contribution of the logarithm in the formula becomes stronger and the curve rises again.
 
-The Bethe-Bloch formula works approximately only for $\beta\gamma\ge 0.1$, taking into account all the different effects to which the flying particle is subject. The proton therapy works is between the energy interval $\sim30$ and $\sim200\,MeV$. This imply an initial factor $0.25<\beta\gamma<0.6$ for both protons and ions. So, our attention is focus on the first part of the curve where there is a behaviour proportional to $1/\beta^2$, at the left of the maximum.
-Dr. Thomas Bortfeld, in \cite{bort:bragg}, shows a semi-empirical method to estimate the range of a proton in water. He states that range in water, in relation with initial energy can be calculated as
+\begin{figure}[!ht]
+     \subfloat[Bragg curve simulated for $\alpha$ particle in air. From \url{https://en.wikipedia.org/wiki/Bragg_peak}\label{fig:bragg}]{%
+       \includegraphics[width=.47\textwidth]{Images/bragg}
+     }
+     \hfill
+\hspace{2mm}
+     \subfloat[Example of a Bragg curve of $330\,MeV/u$ $^{12}$C ions in water and calculated contributions of primary ions, secondary and tertiary nuclear fragments. From H\"attner (et al.) \cite{haet:frag}\label{fig:tail}]{%
+       \includegraphics[width=.48\textwidth]{Images/tail}
+     }
+\caption{Bragg peak examples}
+   \end{figure}
+The Bethe-Bloch formula works approximately only for $\beta\gamma\ge 0.01$, taking into account all the different effects to which the flying particle is subject. The energy range of beams in proton therapy is between $\sim30$ and $\sim200\,MeV$. This imply an initial factor $0.25<\beta\gamma<0.6$ for both protons and ions. So, our attention is focused on the first part of the curve where there is a behaviour proportional to $1/\beta^2$, at the left of the maximum. This tells us that the particles lose more energy as the become slower. That determines the shape of the bragg curve where the peak of energy loss is at the end of the particle path.
+Bortfeld, in \cite{bort:bragg}, shows a semi-empirical method to estimate the range of a proton in water. He states that range in water, in relation with initial energy can be calculated as
 \[
 R_0 = \alpha E_0^p
 \]
 where $E_0$ is the initial energy and $\alpha$,$p$ are fitting parameters. Obviously, this relation works only in a certain energy range and in the article is stated to be between $10$ and $250\,MeV$, coherent with our energy range.
 
+While photons fluence decreases exponentially with distance, meaning a larger dose deposition near the surface of the target, protons have a completely different dose deposition function in relation with depth.
+In figure \ref{fig:bragg}, we can see the relation between energy loss and path lenght, or Bragg curve. As we already said, the peak in the last part of the path. Soon we can notice the advantage of using protons instead of photons. In the cases of tumors located far from the surface we are allowed to hit the target with less damages to healthy tissues and we are not forced to shoot the particles from many angles, as is usually done in radiotherapy.
+Even if there are good approximations as the one that Bortfeld suggests, Bragg curve has not a proper analytical function\footnote{Another approximation can be obtained by a sum of $n$ gaussian with $n\geq 10$ with minimum error, see Bangert (et al.) \cite{bang:apm}} due to the irregular behaviour of Bethe-Bloch at low energies. So Bragg peak is the reason why hadron therapy is faster (because need less entrace ports, so less time spent for turning the machine around the patient) and less dangerous for patients than photons radiotherapy. 
+In figure \ref{fig:sobp}, in the next chapter, we have a superposition of a sum of bragg peaks and an exponential energy loss by a photon. Later in this work, I will introduce it.
+
+\subsection{Ionization}
+\begin{wrapfigure}{l}{.5\textwidth}
+\vspace{-6mm}
+\centering
+{\includegraphics[width=.5\textwidth]{Images/survival}}
+\caption{CHO cells Survival ratio realted with sose, for $X$-rays and $^{12}$C ions. From Weyrather (et al.) \cite{weyr:rbe}}
+\label{fig:surv}
+\vspace{-5mm}
+\end{wrapfigure}
+In addition to the interactions with nuclei fields, incoming protons interact with atoms, transmitting some of their energy to the surrounding electrons. If that energy is sufficient, the atom is ionized and electron is free to move inside the medium, consuming his remaining energy through Coulomb interactions and continuously slow down just like heavier charged particles. The secondary electrons momentum is determined by the energy transfered by the incoming particle so, they can have a wide range of energies. The most energetic ones can also provoke further secondary ionization. 
+%\begin{figure}[!h]
+%     \subfloat[DNA possible deformations and breaks\label{fig:dna}]{%
+%       \includegraphics[width=.57\textwidth]{Images/DNA}
+%     }
+%     \hfill
+%     \subfloat[CHO cells Survival ratio realted with sose, for $X$-rays and $^{12}$C ions. From Weyrather (et al.) \cite{weyr:rbe}\label{fig:surv}]{%
+%       \includegraphics[width=.41\textwidth]{Images/survival}
+%     }
+%\caption{DNA structure and survival ratio}
+%   \end{figure}
+Such electrons are usually referred as $\delta$-rays \footnote{Antiquated definition due to hystorical reasons. At the beginning, $\delta$-rays were not recognised as electrons} or knock-on electrons.
+Ionization is an effect that causes the death (meant as the complete loss of the proliferation capacity) of the cells during radiation therapy and the main reason is DNA fragmentation. The analytical form of the \emph{survival ratio} can be written as
+\[
+S = e^{-\alpha D + \beta D^2}
+\]
+where $D$ is dose and $\alpha$, $\beta$ are radiosensitivity parameters.
+Their results and the characteristic slope of this function is in figure \ref{fig:surv}.
 \begin{figure}[!t]
-     \subfloat[Bragg curve simulated for $\alpha$ particle in air\label{fig:bragg}]{%
-       \includegraphics[width=.47\textwidth]{Images/bragg}
-     }
-     \hfill
-\hspace{2mm}
-     \subfloat[Example of a Bragg curve of $330\,MeV/u$ $^{12}$C ions in water and calculated contributions of primary ions, secondary and tertiary nuclear fragments\label{fig:tail}]{%
-       \includegraphics[width=.48\textwidth]{Images/tail}
-     }
-\caption{Bragg peak examples}
-   \end{figure}
-While photons lose energy exponentially with distance, meaning a larger dose deposition near the surface of the target, protons have a completely different dose deposition function in relation with depth.
-In figure \ref{fig:bragg}, we can see the relation between energy loss and path lenght, or Bragg curve. The first most notable thing is the peak in the last part of the path. Soon we can notice the advantage of using protons instead of photons. In the cases of tumors located far from the surface we are allowed to hit the target with less damages to healthy tissues and we are not forced to shoot the particles from many angles, as is usually done in radiotherapy.
-Bragg curve has not a proper analytical function\footnote{Could be obtained by a sum of $n$ gaussian with $n\geq 10$ with minimum error, see Bangert (et al.) \cite{bang:apm}} due to the irregular behaviour of Bethe-Bloch at low energies. So Bragg peak is the reason why hadron therapy is faster and less dangerous for patients than photons radiotherapy. 
-In figure \ref{fig:SOPB}, in the next chapter, we have a superposition of a sum of bragg peaks and an exponential energy loss by a photon. Later in this work, I will introduce it.
+\includegraphics[width=\textwidth]{Images/rbe12c}
+\caption{Example of Radio-Biological Effect against Physical Dose, for $^{12}$C}
+\label{fig:rbe12c}
+\end{figure}
+The ratio $\alpha/\beta$ is discriminator factor of the capacity of the cells to repair themselves and has typical values of $1-3\, Gy$ for cells with high repair potential and close to $10\, Gy$ for repair-deficient cells.
+As a measure for the effectiveness the factor RBE (\emph{Relative Biological Effectiveness}) was introduced as the ratio between $X$-ray dose and ion dose which are required to produce the same effect
+\[
+RBE = \frac{D_X}{D_{ion}}\Bigg|_{isoeffect}
+\]
+As can be seen from figure \ref{fig:surv}, at $10\%$ survival level, the RBE values for $^{12}$C ions increase from $1.6$ at $266\,MeV/u$ to $3.7$ at $11\,MeV/u$ and decrease again to $2.1$ in the $2.4\,MeV/u$ case. The reason is very simple actually. At low energies, dose deposition is higher than at high energies, this is better explained in section \ref{sec:sobp}.
 
-
+Surprisingly, at still lower ion energies RBE does not further increase but 
+\begin{wrapfigure}{l}{.5\textwidth}
+\centering
+{\includegraphics[width=.5\textwidth]{Images/secondary}}
+\caption{Monte-Carlo simulations showing individual tracks of $\delta$-electrons produced by energetic protons and $^{12}C$ ions penetrating tissue. From Kr\"amer \cite{Kram:track}}
+\label{fig:secondary}
+\end{wrapfigure}
+\noindent decreases again. This can be explained by two different effects: if there is a surplus of deposited energy by a single ion, e.g. the dose is larger than the one needed to kill the cell, that surplus is wasted and that leads to saturation; another effect is that, at very low energy, the fluence become small and there is a possiblity of not depositing dose in the cell, at all. Thus again reduces the effectiveness.
+Ion beams have a larger biological effectiveness and that can be explained studying the structure of the particle track and interaction of second ionization with the molecules of DNA. 
+As discussed above, ions are very energetic and their interactions are ruled mostly by inelastic collisions with the atomic electrons. Because of their very large mass compare with the electrons, the ions are pratically moving on straight trajectories inside the medium.
+Secondary electrons, because of the aforesaid methods are mainly emitted in forward direction.
+Due to collision kinematic, only a small percentage is emitted with larger angles in respect to the direction of flight of the ion and have lower energies and short ranges. The Dose around particle ``tracks'' decreases fast ($\sim1/r^2$) with the radial distance $r$. In figure \ref{fig:secondary}, we can see an image, imported  from Kr\"amer \cite{Kram:track}, showing the secondary particle production for protons and Carbon ions.
+Concluding this section, we can say that RBE is an important value for heavy ion therapy but not for protons whose differences between RBE and Dose are neglectable.
 \subsection{Fragmentation}
-So far, I talked about all the interactions involving charged particle in matter. I only avoided nuclear reaction because they are almost irrelevant for protons but this is not true for heavy ions.
-
-\begin{figure}[!h]
+So far, I talked about electromagnetic interaction between of particle in matter. I only avoided nuclear reaction because they are of secondary importance for protons but this is not true for heavy ions.
+\begin{figure}[!t]
 {\includegraphics[width=\textwidth]{Images/frag}}
 \caption{Illustration of the Abrasion-ablation model}
 \label{fig:frag}
 \end{figure}
+In heavy ion therapy are required beams with energies of few hundred $MeV/u$. In these energy range, an ion scattering with a stationary nucleus, interacts mostly with peripheral collision with the possibility if loosing nucleons.
+The so-called abrasion-ablation model according to \cite{serb:nucRea}, as illustrated in figure \ref{fig:frag}, is the most used method for describing this effect.
+García-Ramos (et al.) in \cite{garc:nucu}, say: \emph{The total reaction cross sections at high energies ($>100\,MeV/u$) can be well described by semi-empirical geometrical models and are almost constant over a wide energy range. Typical values (for water target) are about $350\, mb$ for $200\,MeV$ protons and $1400\,mb$ for $380\,MeV/u$ $^{12}$C ions. These values correspond to mean free path lengths in water of about 85 cm for protons and 21 cm for 12C ions. This means that e.g. at a depth of $10\,cm$ in water about $11\%$ of the initial proton flux was lost by nuclear reactions, while this number is much higher ($38\%$) for $^{12}$C ions.
+The projectile-fragments continue travelling with nearly the same velocity and direction. These nuclear reactions lead to an attenuation of the primary beam flux and a build-up of lower-Z fragments with increasing penetration depth}.
+As a consequence there is change in the shape of the Bragg curve. Since the energy deposition depends on the charge of the particle squared $z^2$, small fragments have a longer range than the parent Ions. This is the reason of the tail beyond the Bragg peak, in figure \ref{fig:tail}. 
+In the first part of the tail, the contributions are given mostly by fragments like $B$, $Be$ and $Li$-ions, and then from alphas and protons, in the last part of the tail.
+Obviously, the effect of fragmentation, becomes more important as the range of the ions grows due to the increasing production of fragments.
 
-At energies of several hundred $MeV/u$ which are required for radiotherapy the most frequent nuclear interactions are peripheral collisions where the beam particles loose one or several nucleons. These reactions are well described by the so-called abrasion-ablation model according to \cite{serb:nucRea} as illustrated in figure \ref{fig:frag}.
-The total reaction cross sections at high energies ($>100\,MeV/u$) can be well described by semi-empirical geometrical models and are almost constant over a wide energy range. Typical values (for water target) are about $350\, mb$ for $200\,MeV$ protons and $1400\,mb$ for $380\,MeV/u$ $^{12}$C ions. These values correspond to mean free path lengths in water of about 85 cm for protons and 21 cm for 12C ions. This means that e.g. at a depth of $10\,cm$ in water about $11\%$ of the initial proton flux was lost by nuclear reactions, while this number is much higher ($38\%$) for $^{12}$C ions.
-The projectile-fragments continue travelling with nearly the same velocity and direction. These nuclear reactions lead to an attenuation of the primary beam flux and a build-up of lower-Z fragments with increasing penetration depth.
-As a consequence of nuclear fragmentation a rather complex radiation field is produced and leads to significant alterations which can also be observed in the shape of the Bragg curves. Since the range of the particles (at same velocity) scales with $A/Z^2$ and therefore lower-charge fragments have a correspondingly longer range, the depth-dose profile of heavy-ion beams shows a characteristic fragment tail beyond the Bragg peak, in figure \ref{fig:tail}.
-In the tail behind the Bragg peak first heavier fragments like B, Be, Li-ions contribute most of the dose, while the long range tail is caused essentially by protons and $\alpha$-particles. Of course, these fragmentation effects get more important with increasing depth due to the loss of primary ions and increasing production of fragments.
 %%% serve una frase conclusiva
 
 \section{Particle treatments in clinical context}
-Before the patient enters the gantry-room, where the real treatment takes place, there are several steps of diagnostics and verification, necessary for the patient health and for the success of the operation.
-
-The first step of treatment planning for any radiation therapy modality is to define and delineate the target volume on the basis of modern imaging techniques. $X$-ray Comupted tomography (CT) provides quantitative information about the anatomical structures by recording photon attenuation images with a typical pixel resolution of $1\,mm$ and slice thickness of $3\,mm$. Native CT data (without contrast agents) are essential for calculating the particle range and dose deposited in tissue and have to be recorded under the same conditions and with the eventual same fixation aids (e.g. head mask, in passive beam delivery systems, further explained in section \ref{activeScanning}) as used later in the treatment. Magnetic resonance imaging (MRI) and Positron-Emission-Tomography (PET) are often applied in combination with CT to allow for a better definition of the target volume and organs at risk.
-Several steps of preparation are needed before the treatment can start:
+Before the patient enters the treatment room, where the real treatment takes place, there are several steps of diagnostics and verification, necessary for the patient health and for the success of the operation.
+These steps are:
 \begin{itemize}
-\item Diagnostic: definition and delineation of the target volume (CT, MRI, PET)
-\item transformation of patient CT-data to water-equivalent path-length of ions
+\item Diagnostic (CT, MRI, PET)
 \item Treatment planning:
-	\begin{itemize}
-	\item find best beam entrance ports
-	\item optimization of absorbed dose based on physical model
+	\begin{enumerate}
+	\item find the most suitable beam entrance ports
+	\item transformation of patient CT-data to water-equivalent path-length of ions or translation material composition (for MC)
+	\item calculation and optimization of the sose deposition based on the patient anatomy
 	\item (for heavy ions) biological optimization and RBE calculation
-	\end{itemize}
-\item Eventual verification of planned dose distribution in water phantom
+	\end{enumerate}
+\item Eventual further experimental verifications (for example in a water-phantom)
 \item Patient positioning in gantry-room and further verification through $X$-rays
 \item Irradiation
 \end{itemize}
-To calculate the dose deposition including the exact position of the Bragg peak in heterogeneous tissue, the relationship between CT numbers (given in Hounsfield units) and stopping power has to be established. The concept of water-equivalent path length is used to relate the traversal of an ion through a given CT voxel to the corresponding ion path length in water.
-There are many sources of uncertainty in all these steps.
-Modern 3D CT, just like RMN and PET, have a resolution of the order of $1\,mm$, at worst on two axis. The goal of particle therapy hardware is to reach at least the same resolution. In fact, energy and direction of the beam, representing Bragg peak position (in ideal conditions), are very accurate on all the axis, [\textbf{numerical values}].
+The first step of treatment planning for any radiation therapy modality is to define and delineate the target volume on the basis of modern imaging techniques. $X$-ray Comupted tomography (CT) provides quantitative information about the anatomical structures. It does it reconstructing the attenuation of photons inside target and has typical pixel resolution of $1\,mm$ in lateral direction and 2-5mm in axial direction. The CT of the patient is absolutely required in order to calculate the particle range inside the patient. Other diagnosis are often coupled with CT, as the Magnetic resonance imaging (MRI) and Positron-Emission-Tomography (PET), helping a better definition and delineation of the volumes inside the patient.
+All this analysis must be done with all the eventual passive elements (e.g. head mask, in passive beam delivery systems, further explained in section \ref{activeScanning}) and usually are repeated right before the irradiation.
+Step 2 is a core passage of the Dose calculation because it gives the patient anatomy in the format used in calculation of the dose deposition and the exact position of the Bragg peak in heterogeneous tissue.
+But in order to do that, the CT gray-scale-values (usually given in Hounsfield units) should be converted in a number indicating the distance that a particle would cover in average in a similar medium or its stopping power.
+
+There are many sources of uncertainty in all these steps, as the aforesaid resolution of Diagnostic. The goal of particle therapy hardware is to reach at least the same resolution. In fact, energy and direction of the beam, representing Bragg peak position (in ideal conditions), are very accurate at least on the lateral steering.
 Patient positioning errors are mostly compensated by the last verifications, in loco.
 %But there is still a problem of beam divergence that force the standard deviation of the profile of the beam to be several millimetres large also at small energies. [\textbf{numerical values}].
-We can say that, apart from planning, the largest uncertainty is given by diagnostic.
-State of the art dose calculation softwares should at least keep the resolution smaller than the error in diagnostic. This is possible with Monte Carlo based softwares and it is under investigation and study for pencil beam algorithms. The reasons why, will be processed accurately in the next chapter.
+State of the art dose calculation softwares should at least keep the error smaller than the resolution in diagnostic. This is possible with Monte Carlo based softwares and it is under investigation and study for pencil beam algorithms. The reasons why, will be processed accurately in the next chapter.
 
 %%% non so che scrivere, non mi piace
 
 
-\section{Motivation and Scope of this work} 
-Nowadays in radiation onchology, the main challenges are to speed up the preparation steps needed for the therapy and increase accuracy. Because of the long time lost in this routine, biggest world centers can treat, in average, only few hundred people per year. And poor accuracy means more risks for the patient.
+\section{Motivation and scope of this work} 
+Nowadays in radiation onchology, the main challenges are improvements in accuracy and safety. 
+The current compromise is a standard workflow based on setting up a single plan before the start of the therapy and then apply that plan to all the following sessions untile the end of the treatment.
+Scientists are working on alternative workflows where the treatment is adapted everyday (or even on the fly, while the patient is on the couch), this is called adaptive radiotherapy.
+%Because of the long time lost in this routine, biggest world centers can treat, in average, only few hundred people per year. And poor accuracy means more risks for the patient.
 A key role is played by softwares, used either for diagnostic, planning and verification.
 The part on which I focused my work on is the treatment planning. In fact, I will investigate the most common methods used for particle dose calculation and I will implement one, Fine Sampling Beam algorithm, in an already existent software, MatRad. 
-Usign Monte Carlo simulated Dose and HIT fullfield experimental data as reference models, I will compare mine with already existent softwares, with the goal of overcoming accuracy of pencil beam algorithm, keeping short the computation time.  
+Using Monte Carlo simulated Dose and HIT fullfield experimental data as reference models, I will compare mine with already existent softwares, with the goal of overcoming accuracy of pencil beam algorithm, keeping short the computation time.  
 %Furthermore
 
 Providing scientists and doctors with strongest instruments to plan patient treatments precisely in the shortest possible time, will make Particle Radiotherapy faster, more accessible and cheaper.
@@ -389,79 +406,92 @@ Providing scientists and doctors with strongest instruments to plan patient trea
 
 Particle beams provided by cyclotron or synchrotron accelerators are typically narrow, pencil-like beams centred at the axis of the beam tube. An 
 \begin{wrapfigure}{l}{.5\textwidth}
-{\includegraphics[width=0.5\textwidth]{Images/collimator}}
-\caption{Multileaf Collimator for the shaping of the radiation beam}
-\label{fig:collimator}
+{\includegraphics[width=0.5\textwidth]{Images/Alderson}}
+\caption{Simulation of dose deposition in human head. Calculated with MatRad. Dose in $Gy$}
+\label{fig:alderson}
 \vspace{-10mm}
 \end{wrapfigure}
-\noindent important task which is performed by the so-called beam delivery system is to distribute the beam over the planned target volume (PTV) accurately and homogeneously with the desired dose distribution.
-Two different basic strategies were followed which in their extreme forms are represented by the fully passive systems with fixed beam modulation or the fully active beam scanning techniques.
+\noindent important task, which is performed by the so-called beam delivery system, is to distribute the beam over the planning target volume (PTV) accurately and homogeneously with the desired dose distribution.
+Two different basic strategies are used in clinical facilities which in their extreme forms are represented by the fully passive systems with fixed beam modulation or the fully active beam scanning techniques.
 
 
 \subsection{Passive systems}
-In the first case, the particle beam
-is adapted in three dimensions to the target volume only by passive non-variable
-field shaping elements.
-The principle of a fully passive system is shown in figure \ref{fig:passive}. The initially narrow beam delivered by the accelerator is first broadened by a scattering device, normally a double-scattering system which generates a flat transversal profile in a most efficient way. 
-The pristine Bragg peak is spread out by a range modulator in order to cover the entire length of the target volume. The whole spread-out Bragg peak (SOBP) can be shifted in depth by absorber plates (range shifter). 
-The following two devices are patient specific and need to be precisely fabricated (increasing the costs and the time consumption): the collimator (figure \ref{fig:collimator}) cuts out the field area defined by the largest target contour as seen in beam’s eye view, preventing particles outside the field to pass through. 
+In the first case, the particle beam is adapted in three dimensions to the target volume only by passive field shaping elements, that are non-variable.
+The principle of a fully passive system is shown in figure \ref{fig:passive}. The initial beam incoming from the accelerator is first broadened by a scattering device, this is needed in order to generate a flat transversal profile for a more efficient treatment. This is done by a double-scattering system.
+Using range modulator, the Bragg peak is spread out, in order to cover the entire length of the target volume. The whole spread-out Bragg peak (SOBP) can be shifted in beam direction by absorber plates (range shifter). 
+The following two devices are patient specific and need to be precisely fabricated (increasing the costs and the time consumption): the collimator cuts out the field area defined by the largest target contour as seen in beam’s eye view, preventing particles outside the field to pass through. 
 The range compensator adjusts the distal depth pattern, taking into account also the complex tissue composition. A major limitation of the fully passive modulation system is the fixed width of the SOBP, which may result in significant dose deposition outside the target volume, e.g. in the proximal part when the particle range is adjusted to the distal contours (in figure \ref{fig:passive}).
-
-
-Then, because it is difficult to obtain a monochromatic and homogeneous photons beam of a chosen energy, they are more used in radiation therapy than in hadrontherapy.
-The most modern centres use automated leaf collimators reducing sensibly the treatment time\footnote{The NCI Hospital uploaded a very interesting video about the IMRT using collimators. This can be found at the address: \url{https://www.youtube.com/watch?v=eZS6DVGBx0k}}. 
-%\begin{wrapfigure}{l}{.5\textwidth}
-%{\includegraphics[width=0.5\textwidth]{Images/passiveandactive}}
-%\caption{Comparison between passive and active beam scanning}
-%\label{fig:actandpas}
-%\end{wrapfigure}
 \begin{figure}[t]
 {\includegraphics[width=\textwidth]{Images/passive}}
-\caption{Example of complete Passive system}
+\caption{Example of complete Passive system. From Chu (et al.) \cite{chu:pass}}
 \label{fig:passive}
 \end{figure}
 
-In charged particle therapy, the use of collimators is also usually avoided because of Coulomb scattering that can direct some particles towards sensible zones, causing serious damages to the patient.
-
 \section{Active Scanning Techniques}
 \label{activeScanning}
-In the early 1990s a new beam delivery technique was developed almost in parallel at PSI (Switzerland) and at GSI (Germany). Both the spot scanning system (PSI) and the raster scanning system (GSI) represent fully active techniques in the sense that no passive elements are used in order to adapt the dose deposition optimally to the target volume. The basic principle of the raster scanning system is shown in figure \ref{fig:active}.
-In contrast to the passive systems there is no scattering device, but the fine pencil-like beam is moved in horizontal and vertical direction by fast magnetic deflection magnets. The treatment dose is delivered slice by slice, each slice corresponding to constant beam energy.
-When the desired dose in one voxel is reached, the beam is moved to the next voxel-line. After completion of one slice the synchrotron beam extraction is instantly interrupted and the beam energy for the next slice is selected and delivered with the next synchrotron pulse. The scanning control system is linked with the accelerator control system and requests the appropriate beam parameters for each slice irradiation during execution of the treatment plan. 
-With this system it is possible to adapt the dose distribution to any complex shape of the target volume, individually for each patient and without any patient-specific hardware.
-
-\begin{figure}[t]
+In the 90s, a new technique for beam delivery was developed both at PSI (Switzerland) and at GSI (Germany). The so-called \emph{spot scanning system} at PSI and the \emph{raster scanning system} at GSI are examples of  fully active techniques.That means that no passive elements are placed between the beam deliverer and the patient, adapting the dose deposition to the target volume. The basic principle of the raster scanning system is shown in figure \ref{fig:active}.
+In contrast to the passive systems there are not scattering devices. The pencil-beam is shifted in horizontal and vertical direction by a couple deflection magnets that allow the scanning. The target volume is divided in slices and cylinders, each one corresponds to a constant beam energy and each cylinder represents a direction of flight of the particles.
+\begin{figure}[!b]
 {\includegraphics[width=\textwidth]{Images/active}}
-\caption{Example of Active Scanning Technique}
+\caption{Principle of the intensity-controlled raster scanning system at GSI \cite{hab:scan}}
 \label{fig:active}
 \end{figure}
+The cylinders central axis is parallel to the beam and their section of the same order of dimension of the depositing bragg peak. The volume intersection between a cylinder and a slice is called voxel.
+So, at the beginning, an energy is selected and the dose is delivered to the first voxel.
+When the dose limit is reached, in one voxel, the beam is shifted to the next voxel, without changing the energy. After completion of one slice extraction of particle from the synchrotron is instantly interrupted. Then the energy should be increased or decreased for the next slice and then should be delivered with the next synchrotron pulse. The scanning control system is linked with an accelerator control system that overviews all the treatment and decides the appropriate parameters of the beam for each slice irradiation during the execution of the treatment plan. 
+With this system it is possible to adapt the dose distribution to any complex shape of the target volume, individually for each patient and without any patient-specific hardware.
 
-Compared to the passive scattering techniques using a small number of broad fields, many (up to tens of thousands) narrow proton beams are used for irradiation in the active scanning. Each spot is weighted in a computer-based optimisation procedure to find the optimal solution for the prescribed dose in the target volume and for sparing the critical organs as much as possible.
-This is precisely what a Dose calculation software does.
-%%%%%%% add all the different energies in a table??
-
+Compared to the passive scattering techniques, in active scannig, several (up to tens of thousands) narrow proton beams are used for irradiating a target volume. Each beam energy and dose deposition is weighted in a computer-based optimisation procedure in order to find the best solution for the prescribed dose in the target volume and for safeguarding and protect the critical organs as much as possible.
+This is precisely what a treatment planning software does.
 
 
 \subsection{Spread Out Bragg Peak}
 \label{sec:sobp}
 
-A strictly mono-energetic proton beam is unsuitable for cancer treatment because of its longitudinally narrow Bragg peak. 
-It is rather necessary to \emph{spread out} the Bragg peak in order to provide a uniform dose within the target volume. As shown in figure  \ref{fig:sobp}, the flat-top SOBP function has been obtained summing the contribution of many single bragg peaks. This can be provided by a suitably weighted energy distribution of the incident beam. 
-By varying the energy and the intensity of the monochromatic beam without changing the flight direction, we can overlap the effect
+A mono-energetic proton beam, by itself, is non suitable for cancer treatment in a large volume because of its longitudinally narrow Bragg peak. 
+It is necessary to \emph{spread out} the Bragg peak providing a uniform dose deposition inside the target volume. As shown in figure  \ref{fig:sobp}, the flat-top SOBP function has been obtained summing the contribution of many single bragg peaks. Weighting the energy distribution of the incoming beam, this can be easily done by 
 \begin{wrapfigure}{r}{.5\textwidth}
-{\includegraphics[width=0.5\textwidth]{Images/SOBP}}
-\caption{Comparison between protons Spread Out Bragg Peak and photons energy loss in matter}
+{\includegraphics[width=0.5\textwidth]{Images/SOBP3}}
+\caption{Comparison between protons Spread Out Bragg Peak and photons energy loss in matter. From Degiovanni \cite{deg:lin}}
 \label{fig:sobp}
+\vspace{-10mm}
 \end{wrapfigure}
-\noindent of every bunch in the same cylindric volume inside the target and, summing their contribution with the correct weights, we are able to obtain a constant value of dose deposited in the whole target area.
+\noindent a dose calculation software.
+By varying the energy and the intensity of the monochromatic beam without changing the flight direction, we can overlap the effect of every bunch in the same cylindric volume inside the target and, summing their contribution with the correct weights, we are able to obtain a constant value of dose deposited in the whole target area.
 
+Proton beams has been studied by various investigators, in particular by Bortfeld and Schlegell in \cite{bort:SOBP}. They have developed a simple analytical way for determining the weights of proton beams with various initial energies required to create an SOBP for a proton beam. Jette and Chen (\cite{jett:SOBP}) improved this method, finding a more precise one. 
 
-The problem of producing a spread-out Bragg peak (SOBP) through a weighted collection of mono-energetic proton beams has been studied by various investigators, in particular by Bortfeld and Schlegell in \cite{bort:SOBP}. They have developed a simple analytical way for determining the weights of proton beams with various initial energies required to create an SOBP for a proton beam. Jette and Chen (\cite{jett:SOBP}) improved this method, finding a more precise one. %Bortfeld e Schlegell gli investigatopi che trovano le tope
-%% add calculation??
+\subsection{HU and Stopping Power}
+Delivering the correct dose during clinical trials, in proton treatment planning systems (TPS), requires the appropriate conversion from Hounsfield unit (HU) to relative linear stopping power (RLSP). In contrast to the photon dose calculation that depends on the electron density of a material, proton radiation therapy  needs the stopping power of a certain material in order to calculate the energy loss, to describe the interactions in matter and
+\begin{wrapfigure}{l}{.6\textwidth}
+{\includegraphics[width=0.6\textwidth]{Images/dpp}}
+\caption{PDD example. Grant (et al.) \cite{gra:hu}}
+\label{fig:pdd}
+\end{wrapfigure}
+\noindent to evaluate dose for protons. So, the CT calibration curve converts Hounsfield unit values to relative stopping power, in a proton treatment planning system.
+Hounsfield units (HU) were introduced by Sir Godfrey Hounsfield and are used in order to have a standardised form to indicate CT numbers.
+They depend on the measured linear attenuation coefficient $\mu$ of the medium.
+In formula,
+\[
+HU=1000\,\frac {\mu -\mu _{water}}{\mu _{water}-\mu _{air}}
+\]
+where $\mu _{water}$ and $\mu _{air}$ are respectively the linear attenuation coefficients of water and air.
+So, the radiodensity of distilled water at standard temperature and pressure is defined as $0\,HU$ instead the radiodensity of air in the same condition is $-1000\,HU$
+The relative linear stopping power of a certain material is calculated starting from computation of the percent depth dose (PDD) curve and the relative shift with the PDD of water for the same beam (example in figure \ref{fig:pdd}).
+So
+\[
+RLSP = \frac{\Delta x}{d_m}
+\]
+where $\Delta x$ is the change in the depth of the distal $80\%$ PDD when the tissue-substitute material is introduced into the beam, and $d_m$ is the thickness of the material.
+In figure \ref{fig:HU}, Grant (et al.) in \cite{gra:hu}, fitted data obtained for several materials and obtained a (almost linear) relation between Hounsfield unit and relative linear stopping power.
 
-
-%%%%%%%%%%%%%NON HO CAPITO!spiega meglio
-
+This relation is fundamental to convert the CT voxel value in a water-equivalent stopping power, in order to be able to calculate radiation depth.
+\begin{figure}[t]
+\centering
+{\includegraphics[width=.9\textwidth]{Images/hu_rlsp}}
+\caption{RLSP and HU relation. From Grant (et al.) in \cite{gra:hu}}
+\label{fig:HU}
+\end{figure}
 
 
 
@@ -475,32 +505,65 @@ Nowadays there are three main ways to evaluate dose deposition inside matter. Th
 %solo questo????
 
 \subsection{Monte Carlo}
-The Monte Carlo simulations calculate the dose deposited by single particles approximating their path and evaluating randomly the outcome for every scattering. In reality, in order to speed up this method, the modern software simulate only a part of the particles and assemble a certain number of successive scattering in a single and more complex one. In spite of Monte Carlo simulations are highly expensive in terms of time, they ensure very accurate simulations. This is the reason why we choose it as our ``gold standard'' in the single pencil beam case, whose we do not have any real measurement.
-The Monte Carlo simulations used in this project were produced by \emph{FLUKA}\footnote{More info about Fluka at \url{http://www.fluka.org/fluka.php}}. It is able to simulate with high accuracy the interaction and the propagation in matter of about 60 different particles. It is extensively used at CERN for all the beam-machine interactions, the radio protection calculations and the facility design of some forthcoming projects. 
-Outside CERN, among various applications worldwide, FLUKA serves as a core tool for the HIT and CNAO hadron-therapy facilities in Europe and it is supported also by \emph{INFN}.
-Another promising technique in hadrontherapy for in-vivo monitoring relies on the detection of prompt photons emitted following nuclear interactions by the beam particles. FLUKA capabilities in this aspect have been recently enhanced.
-The main publication on innovations and the state of the art of this software is made by B\"ohlen \emph{et al.} \cite{boeh:fluka} where they show the latest improvements.
-Furthermore, a complete and very exhaustive guide\footnote{It can be found at \url{http://cds.cern.ch/record/898301?ln=it}} for the FLUKA world, possibilities and configurations, for experts and none, has been made from Ferrari \emph{et al.} \cite{ferr:fluka}.
+The Monte Carlo simulations work on the basic idea of reconstructing the path of all the single particles inside a medium. The software calculates the probability of all the possible interactions between particle and matter and chooses randomly, on the base of these probabilities, which effects the single particle undergoes and, for example, lenght and direction of its free path between two interactions.
+
+In reality, in order to speed up this method, the modern software simulate only a part of the particles and assemble a certain number of successive scattering in a single and more complex one. In spite of Monte Carlo simulations are highly expensive in terms of time, they ensure very accurate simulations. This is the reason why we choose it as our ``gold standard''.
+The Monte Carlo simulations used in this project were produced by \emph{FLUKA}\footnote{More info about Fluka at \url{http://www.fluka.org/fluka.php}}. As supporters say on their website: \emph{it is able to simulate with high accuracy the interaction and the propagation in matter of about 60 different particles. it is extensively used at CERN for all the beam-machine interactions, the radio protection calculations and the facility design of some forthcoming projects. 
+Outside CERN, among various applications worldwide, FLUKA serves as a core tool for the HIT and CNAO hadron-therapy facilities in Europe and it is supported also by \emph{INFN}.}
+
+In particular, the software we used does not randomly choose the interaction on the base of its probability and then establishes the free path of the particle before that interaction, but it does the opposite. Before, it randomly determins the free walk of the particle, from its starting point, for every possible interaction, separately. %(for example, it establishes that the particle flies for a distance $x_1$ before interac.
+Then, it chooses the process that occurs earlier.
+For example, a particle starts from a point $x_0$, after establishing all the $n$ possible interaction processes that the particle can undergo, the software simulates the walk of the particle $n$ times, from $x_0$ to the $x_i$ (point where the i-th interaction process happens). At the end, it takes $\min(\{ x_i-x_0 \})$ as the free path of the particle and the i-th interaction as the occurring one.
+I referred that for completeness but the difference between this two method should not influence much our simulations because of the high statistics.
 
 %Add something..... %%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%da riscrivere ultima parte. scrivere i nomi delle sigle o aggiungi le sigle quando citi i nomi precedentemente. questo anche nella parte successiva,
 
 \subsection{Pencil Beam} 
 \label{sec:pen}
-The Pencil beam algorithms are based on a method called \emph{Ray Tracing}\footnote{On Schaffner (et al.) \cite{schaf:pba}, there is a comparison between ray casting algorithm, other methods and Monte Carlo simulations}. This method consists in calculating the energy loss of the particles along a straight line inside the tomography of the target. For doing this, the method calculates the path of straight lines being parallel to the beam. For each three-dimensional pixel, i.e. \emph{voxel}, it is possible to calculate the \emph{water equivalent distance} based on the distance traveled by the particles and the electron density of that voxel, i.e. the distance that a particle should travel in order to undergo the same attenuation as in the voxel. The calculation of the \emph{water equivalent distance} is done because the algorithm works with the help of pre-computed Monte Carlo simulations considering particles at all the possible energies that can be provided by the accelerator, in a water environment. 
+A standard dose calculation software id divided into two main parts: dose influence matrix calculation; and optimization. The second one, is the process used in order to determine the weights of the charged particle fluence distribution according to the user constraints. Including CT, plan and segmentation (or \emph{cst}), useful to define the direction of the beam and to prescribe the limits of the dose deposition for every area.
+Mathematically, the dose $d_i$ in the voxel $i$ is computed as
+\[
+d_i = \sum_j D_{ij}w_j\,\,\,\,\,\,\textit{or:}\,\,\,\,\,\vec{d} = D\vec{w}
+\]
+where $D$ is the dose influence matrix and $\vec{w}$ is a vector containing the weights of the pencil beams. $i$ and $j$ are the indeces respectively of the voxel and the pencil beam.
+Further explanation of this method is beyond the scope of these work.
 
-A standard Pencil beam algorithm consists of different steps structured as follows. First of all, the operator imports the CT (included with the \emph{cst} \textbf{anagram??}), defines the direction of the beam and prescribes the limits of the Dose deposition for every area, defining the treatment plan.
-Then, the first step of the algorithm occurs when the software calculates the \emph{radiation depth} and estimates the range of the particles inside the target by ray casting, once for every direction of the beam. So, starting from a CT or from a tridimensional matrix giving the electron density of the target, it estimates the water equivalent distance that can be covered by a particle at the given energy inside that particular CT. 
-The second step is to calculate the lateral spread of the beam depending on the direction of the ray. This also allows to highlight the volume covered by the radiation and restrict the operations to that area in order to save computation time. 
-Then, the information provided by these two steps is used in the following part of the software in order to calculate the dose. Therefore, this part represents the core of the software. By knowing the energy of the beam, it finds the corresponding pre-computed Bragg peak stored in the look-up tables. Then, it adapts the Bragg peak in both longitudinal and lateral direction, depending on the morphology of the target. 
-The full process is repeated for every \emph{bixel}, i.e. for every beam energy and for every direction. In order to get the final dose, the software makes a loop over all the bixels whose steps have the aim to calculate the corresponding value of the dose and store it in a sparse matrix. The final dose is then the result of the sequential sum of the doses calculated for every bixel.
+I will focus only on methods for the calculation of the dose influence matrix.
+The Pencil beam algorithms are based on a method called \emph{Ray Tracing}\footnote{On Schaffner (et al.) \cite{schaf:pba}, there is a comparison between ray casting algorithm, other methods and Monte Carlo simulations}. This method consists in calculating the energy loss of the particles along a straight line inside the CT of the patient. For doing this, the method calculates the path of straight lines being parallel to the beam. For each three-dimensional pixel, i.e. \emph{voxel}, it is possible to calculate the \emph{water equivalent distance} (otherwise referred as $z_{eq}$ or radiation lenght) based on the distance traveled by the particles and the stopping power of that voxel, i.e. the distance that a particle should travel in order to undergo the same attenuation as in the voxel. The calculation of $z_{eq}$ is necessary because the algorithm works with the help of pre-computed Monte Carlo simulations considering particles at all the possible energies that can be provided by the accelerator, in a water environment. 
+For a precise voxel, the water equivalent distance is the sum of the product between the path inside the $i$-th voxel $l_i$ and its water equivalent density\footnote{To better explain what is this, $\rho_i$ is the distance that a particle would travel inside the voxel, if it was in water, divided by the actual travelled distance. At parity of energy loss} $\rho_i$, over all the voxels $i$ crossed before that particular voxel.
+In formula
+\[
+z_{eq} = \sum_{i} \rho_i\cdot l_i
+\]
+obviously, it is a value that strictly increases with depth.
+In figure \ref{fig:rd}, there is an example for a CT of a phantom with human skull and artificial tissue.
+\begin{figure}[!t]
+\centering
+\includegraphics[width=.45\textwidth]{Images/ald_rx}
+\includegraphics[width=.45\textwidth]{Images/ald_rd}
+\caption{Slice of the radiation lenght matrix (right) of a pseudo-human head CT (left). The beam comes for the upper part in vertical direction}
+\label{fig:rd}
+\end{figure}
+After the evaluation of the radiation depth, the second step is to calculate the lateral distance  $r$ of every voxel from the beam central axis. This also allows to highlight the maximum volume covered by the radiation and restrict the operations to that area in order to save computation time. 
+Then, the information provided by these two steps is used in the following part of the software in order to calculate the dose. Therefore, this part represents the core of the software. By knowing the energy of the beam, it finds the corresponding pre-computed Bragg peak stored in the look-up tables, whose function is $B(z)$, depending on depth $z$. Then, it adapts the Bragg peak in both longitudinal and lateral direction, depending on the morphology of the target. 
+Formally, the calculated dose for the single bixel $d_{sb}$ is 	
+\[
+d_{sb} = B(z_{eq}) \cdot L(z_{eq},r)
+\]
+where $L(z_{eq},r)$ is the lateral spread of the beam estimated with the double gaussian method explained in section \ref{sec:mcs}, depending also on the radial coordinate $r$. It has a shape like
+\[
+L(z_{eq},r) = \frac{1}{\sqrt{2\pi}\,\sigma_n}e^{r^2/2\sigma_n^2} + \frac{1}{\sqrt{2\pi}\,\sigma_b}e^{r^2/2\sigma_b^2} 
+\]
+where $\sigma_n$ and $\sigma_b$ are the standard deviation of the narrow and broad parts of the double gaussian function and both depend on $z_{eq}$
+The full process is repeated for every \emph{bixel}, i.e. for every beam energy and for every direction. In order to get the final dose, the software makes a loop over all the bixels whose steps have the aim to calculate the corresponding value of the dose and store it in a sparse matrix. The final dose influence matrix is then the result of the sequential sum of the doses calculated for every bixel.
 The figure \ref{tikz:pba} shows a flowchart reassuming the main steps of the algorithm.
 
-A standard pencil beam algorithm does not take into account the possibility for the protons to change direction of flight inside the target. So, the algorithm rescales the range of penetration based only on the stopping power along a straight line. In some cases, this leads to steep Dose gradients. This issue and others will be treated in chapter \ref{chap:res}.
+A standard pencil beam algorithm does not take into account the possibility for the protons to change direction of flight inside the target. So, the algorithm rescales the range of penetration based only on the stopping power along a straight line. In some cases, this leads to steep dose gradients. This issue and others will be treated in chapter \ref{chap:res}.
 
 
 \subsubsection{Syngo and MatRad}
-Syngo\footnote{Syngo online user manual: \url{http://dei-s2.dei.uminho.pt/outraslic/lebiom/seim/VA40_P10_Software.pdf}} is a professional software produced by Siemens that is based on Pencil beam model. Syngo is used in many radiotherapy centers such as HIT in Heidelberg and has been used in this work for being compared with MatRad\footnote{Software and more information can be found at: \url{http://e0404.github.io/matRad/}}, which is its opensource ``twin" developed and maintained by DKFZ Cancer Research Center Heidelberg. 
+Syngo RT Planning is a professional software produced by Siemens that is based on Pencil beam model. Syngo is used in many radiotherapy centers such as HIT in Heidelberg and has been used in this work for being compared with matRad\footnote{Software and more information can be found at: \url{http://e0404.github.io/matRad/}}, an open source dose calculation and optimization toolkit for photon, proton and carbon ion therapy. It is maintained by the department of Medical Physics in Radiation Oncology at the German Cancer Research Center DKFZ. 
 These are the fastest and the more robust software we had access to, but they have limits in the precision. In fact, they are affected by difficulty of accurately describing the dose around high gradient zones, especially near bones and air bubbles.
 
 \newpage
@@ -511,34 +574,37 @@ These are the fastest and the more robust software we had access to, but they ha
 \node (start) [startstop, xshift=-5cm] {Import data and Plan};
 
 \node (rt) [process, below of=start] {Ray Tracing};
-\node (loopray) [decision, below of=rt, yshift=-1.3cm] {For each Ray};
-\node (geo) [process, below of=loopray, yshift=-1.3cm] {Calculate lateral spread};
-\node (loopbixel) [decision, below of=geo, yshift=-1.3cm] {For each Bixel};
-\node (calcdose) [process, below of=loopbixel, yshift=-1.3cm] {Calculate Dose};
+\node (geo) [process, below of=rt, yshift=-0.5cm] {Calculate lateral distances};
+\node (calcdose) [process, below of=geo, yshift=-0.5cm] {Calculate Dose};
 \node (store) [process, below of=calcdose] {Sum Dose};
 
-\node (end) [startstop, below of=store, xshift=-5.5cm, yshift=-2cm] {Export Dose};
+\node (loopbixel) [decision, below of=store, yshift=-1cm] {For each Bixel};
+\node (loopray) [decision, below of=loopbixel, yshift=-1.8cm] {For each Ray};
+
+\node (end) [startstop, below of=loopray, yshift=-1cm] {Export dose influence matrix};
 
 \node[coordinate] (r_store) [right of=store, xshift=2cm] {};
 \node[coordinate] (r_loopbixel)   [right of=loopbixel, xshift=2cm] {};
-\node[coordinate] (l_loopbixel)   [left of=loopbixel, xshift=-2cm] {};
-\node[coordinate] (ls_store)   [left of=store, xshift=-2cm, yshift=-2cm] {};
-\node[coordinate] (rs_store)   [right of=store, xshift=4cm, yshift=-2cm] {};
-\node[coordinate] (r_loopray)   [right of=loopray, xshift=4cm] {};
-\node[coordinate] (l_loopray)   [left of=loopray, xshift=-4cm] {};
+\node[coordinate] (bef_dose) [below of=geo, yshift=0.5cm] {};
+\node[coordinate] (r_bef_dose) [right of=bef_dose, xshift=2cm] {};
+\node[coordinate] (bef_calcdose) [below of=rt, yshift=0.5cm] {};
+\node[coordinate] (r_bef_calcdose) [right of=bef_calcdose, xshift=3cm] {};
+\node[coordinate] (r_loopray)   [right of=loopray, xshift=3cm] {};
 
+\node[coordinate] (r_phantom) [right of=store, xshift=5cm] {};
+\node[coordinate] (l_phantom) [left of=store, xshift=-5cm] {};
 
 
 \draw [arrow] (start) -- (rt);
-\draw [arrow] (rt) -- (loopray);
-\draw [arrow] (loopray) -- (geo);
-\draw [arrow] (geo) -- (loopbixel);
-\draw [arrow] (loopbixel) -- (calcdose);
+\draw [arrow] (rt) -- (geo);
+\draw [arrow] (geo) -- (calcdose);
 \draw [arrow] (calcdose) -- (store);
-\draw[arrow] (store) -- (r_store) -- node[midway, left]{} (r_loopbixel) -- (loopbixel) ;
-\draw[arrow] (loopbixel) -- (l_loopbixel) -- (l_loopbixel) -- (ls_store) -- (rs_store) -- (r_loopray) -- (loopray);
-\draw[arrow] (loopray) -- (l_loopray) -- (end);
-%\draw [arrow] (loopray) |- (end);
+\draw [arrow] (store) -- (loopbixel);
+\draw [arrow] (loopbixel) -- (loopray);
+\draw [arrow] (loopray) -- (end);
+
+\draw[arrow] (loopbixel) -- (r_loopbixel) -- node[midway, left]{}  (r_bef_dose) -- (bef_dose) ;
+\draw[arrow] (loopray) -- (r_loopray) -- node[midway, left]{}  (r_bef_calcdose) -- (bef_calcdose) ;
 
 \end{tikzpicture}
 \caption{Pencil beam algorithm flowchart. This is repeated for every direction of irradiation}
@@ -601,53 +667,58 @@ The number of sub-components used is $N=324$. This number has been chosen after 
 The new flowchart of the model (\ref{tikz:fs}) is very similar to the previous one but with one more loop.
 Apart for the weights, there is a function that allows the projection of the radiation depth of the central axis of the component on the other points of the components.
 
+\newpage
+\begin{figure}[!ht]
+\centering
+\begin{tikzpicture}[node distance=1.2cm, xshift=5cm]
 
-%\begin{figure}[!h]
-%\centering
-%\begin{tikzpicture}[node distance=1.5cm, xshift=5cm]
-%
-%\node (start) [startstop, xshift=-5cm] {Import data and Plan};
-%
-%\node (rt) [process, below of=start] {Ray Tracing};
-%\node (loopray) [decision, below of=rt, yshift=-1.3cm] {For each Ray};
-%\node (geo) [process, below of=loopray, yshift=-1.3cm] {Calc lateral distances};
-%\node (wei) [process, below of=geo] {Calculate weights};
-%\node (loopbixel) [decision, below of=wei, yshift=-1.3cm] {For each Bixel};
-%\node (proj) [process, below of=loopbixel, yshift=-1.3cm] {Projection};
-%\node (loopsb) [decision, below of=proj, yshift=-1.3cm] {For each Component};
-%\node (calcdose) [process, below of=loopsb, yshift=-1.3cm] {Calculate Dose};
-%\node (store) [process, below of=calcdose] {Store Dose};
-%
-%\node (end) [startstop, below of=store, xshift=-5.5cm, yshift=-2cm] {Export Dose};
-%
-%\node[coordinate] (r_store) [right of=store, xshift=2cm] {};
-%\node[coordinate] (r_loopbixel)   [right of=loopbixel, xshift=2cm] {};
-%\node[coordinate] (l_loopbixel)   [left of=loopbixel, xshift=-2cm] {};
-%\node[coordinate] (ls_store)   [left of=store, xshift=-2cm, yshift=-2cm] {};
-%\node[coordinate] (rs_store)   [right of=store, xshift=4cm, yshift=-2cm] {};
-%\node[coordinate] (r_loopray)   [right of=loopray, xshift=4cm] {};
-%\node[coordinate] (l_loopray)   [left of=loopray, xshift=-4cm] {};
-%
-%
-%
-%\draw [arrow] (start) -- (rt);
-%\draw [arrow] (rt) -- (loopray);
-%\draw [arrow] (loopray) -- (geo);
-%\draw [arrow] (geo) -- (wei);
-%\draw [arrow] (wei) -- (loopbixel);
-%\draw [arrow] (loopbixel) -- (proj);
-%\draw [arrow] (proj) -- (loopsb);
-%\draw [arrow] (loopsb) -- (calcdose);
-%\draw [arrow] (calcdose) -- (store);
-%\draw[->] (store) -- (r_store) -- node[midway, left]{} (r_loopbixel) -- (loopbixel) ;
-%\draw[->] (loopbixel) -- (l_loopbixel) -- (l_loopbixel) -- (ls_store) -- (rs_store) -- (r_loopray) -- (loopray);
-%\draw[->] (loopray) -- (l_loopray) -- (end);
-%%\draw [arrow] (loopray) |- (end);
-%
-%\end{tikzpicture}
-%\caption{Pencil beam algorithm flowchart}
-%\label{tikz:fs}
-%\end{figure}
+\node (rt) [process] {Ray Tracing};
+\node (start) [startstop, left of=rt, xshift=-3cm] {Import data and Plan};
+\node (geo) [process, below of=rt, yshift=-0.2cm] {Calculate lateral spread};
+\node (weight) [process, below of=geo, yshift=-0.2cm] {Weight Calculation};
+\node (proj) [process, below of=weight, yshift=-0.2cm] {Projection};
+\node (calcdose) [process, below of=proj, yshift=-0.2cm] {Calculate Dose};
+\node (store) [process, below of=calcdose, yshift=-0.2cm] {Sum Dose};
+\node (loopcomp) [decision, below of=store, yshift=-1.4cm] {For each Comp};
+\node (loopbixel) [decision, below of=loopcomp, yshift=-2.6cm] {For each Bixel};
+\node (loopray) [decision, below of=loopbixel, yshift=-2.4cm] {For each Ray};
+%\node (end) [startstop, below of=loopray, yshift=-1cm] {Export Dose};
+
+\node[coordinate] (r_loopcomp) [right of=loopcomp, xshift=2cm]{};
+\node[coordinate] (bef_calcdose) [below of=proj, yshift=0.5cm] {};
+\node[coordinate] (r_bef_calcdose) [right of=bef_calcdose, xshift=2cm] {};
+
+
+\node[coordinate] (r_loopbixel)   [right of=loopbixel, xshift=3cm] {};
+\node[coordinate] (bef_proj) [below of=weight, yshift=0.5cm] {};
+\node[coordinate] (r_bef_proj) [right of=bef_proj, xshift=3cm] {};
+
+\node[coordinate] (r_loopray)   [right of=loopray, xshift=4cm] {};
+\node[coordinate] (bef_geo) [below of=rt, yshift=0.5cm] {};
+\node[coordinate] (r_bef_geo) [right of=bef_geo, xshift=4cm] {};
+
+\node[coordinate] (r_phantom) [right of=store, xshift=5cm] {};
+\node[coordinate] (l_phantom) [left of=store, xshift=-5cm] {};
+
+
+\draw [arrow] (start) -- (rt);
+\draw [arrow] (rt) -- (geo);
+\draw [arrow] (geo) -- (weight);
+\draw [arrow] (weight) -- (proj);
+\draw [arrow] (proj) -- (calcdose);
+\draw [arrow] (calcdose) -- (store);
+\draw [arrow] (store) -- (loopcomp);
+\draw [arrow] (loopcomp) -- (loopbixel);
+\draw [arrow] (loopbixel) -- (loopray);
+%\draw [arrow] (loopray) -- (end);
+
+\draw[arrow] (loopcomp) -- (r_loopcomp) -- node[midway, left]{} (r_bef_calcdose) --(bef_calcdose) ;
+\draw[arrow] (loopbixel) -- (r_loopbixel) -- node[midway, left]{}  (r_bef_proj) -- (bef_proj) ;
+\draw[arrow] (loopray) -- (r_loopray) -- node[midway, left]{}  (r_bef_geo) -- (bef_geo) ;
+\end{tikzpicture}
+\caption{Pencil beam algorithm flowchart}
+\label{tikz:fs}
+\end{figure}
 \newpage
 
 
@@ -656,14 +727,35 @@ Apart for the weights, there is a function that allows the projection of the rad
 %b\footnote{Siemens link to Syngo page: \url{https://www.healthcare.siemens.it/medical-imaging-it}}
 
 \section{Phantom Data}
+\emph{Phantom}, in this field, is a technical word used to indicate a target built on purpose in order to run tests on real and physically well know objects. Building his own phantom, one can decide its physical properties chosen in order to simplify errors detection, in diagnostic and treatment. 
+
+\subsection{Software Phantoms}
+\begin{figure}[h]
+{\includegraphics[width=\textwidth]{Images/phantoms2}}
+\caption{From left ro right: Homogeneous; Inhomogeneous; Airbox; and Soukup phantom}
+\label{fig:phantoms}
+\end{figure}
+When there is need to compare Dose calculation softwares, the simpliest thing to do is to ``build'' a CT that represents a phantom with features decided on purpose by the programmer. This gives the chance to test this kind of softwares in situation that can highlight their lacks and their strengths.
+
+
+For single beam comparison, I used four types of phantoms:
+\begin{itemize}
+\item The homogeneous waterphantom, a simple $80\times80\times80\,mm$ water box with relative stopping power (RSP) equal to 1.
+\item The inhomogeneous phantom, a box of the same dimensions as the above one but divided in halves, one half contains water and the other one contains a softer material of $0.8$ RSP. The cut is parellel to the beam direction and it is right at the center of it.
+\item The airbox phantom, a water box of the usual dimensions with a $20\times20\times20\,mm$ air box inside. The airbox was placed in different positions.
+\item The Soukup phantom \footnote{This phantom was used from Soukup (et al.) in their article about fine sampling beam \cite{souk:pba}}, a waterbox with two inhomogeneities of $1.5$ and $0.4$ RSP at $30\,mm$ of depth, both $20\,mm$ width.
+\end{itemize}
+
+In figure \ref{fig:phantoms} all these phantom are shown. You may notice that all the inhomogeneities are placed in order to cut the beam in halves. The beam direction is veritcal, towards down and the beam axis is at the center of the orizontal axis.
+
+
+\subsection{Water Phantom}
 \begin{figure}[h]
 {\includegraphics[width=0.55\textwidth]{Images/PTW_31015}}
 {\includegraphics[width=0.45\textwidth]{Images/PTW_31015spec}}
 \caption{Single PTW-31015 ionization chamber, on the right (left picture), and precise description of its dimensions (right picture)}
 \label{fig:31015}
 \end{figure}
-\emph{Phantom}, in this field, is a technical word used to indicate a target built on purpose in order to run tests on real and physically well know objects. Building his own phantom, one can decide its physical properties chosen in order to simplify errors detection, in diagnostic and treatment. 
-
 In this work, I compared my dataset with a set of measurements done at HIT center on a phantom. The target consists of a plexiglass box filled with water with a detector inside. The detector is composed by 24 ionization chambers models \emph{PTW-31015}\footnote{A complete set of specifications can be found at \url{https://www.rpdinc.com/ptw-31015-003-cc-pinpoint-chamber-976.html}} produced by PTW-Freiburg\footnote{\url{http://www.ptw.de/home_start.html?&no_cache=1}}. The ionization chambers have a cylindrical shape with vented sensitive volumes of $30\,mm^3$ ($1.45\,mm$, length $5\,mm$) and $2.9\,mm$ in external diameter (figure \ref{fig:31015}).
 %% The productor declares a nominal response of $800\,pC/Gy$. (\textbf{from this i should find the error on the measurement but i miss some data})
 The chambers are arranged in 6 lines on 3 levels, inside a plexiglass support that allows to immerse the chambers directly inside the water. In figure \ref{fig:24cham} is shown the set up of the detector.
@@ -679,42 +771,11 @@ The colleagues of the Hadron therapy center collected data from measurements in 
 \subsection{Double Wedge} 
 The Double Wedges is a particular kind of phantom built from HIT colleagues with the aim of trying the effects of the treatment through a surface that has a considerable slope at the entrance surface. 
 Figure \ref{fig:doublew} represents the CT of this phantom. The light blue box is the limit of the matrix and its dimensions are $512\times512\times390\,mm$. The black line is the direction of the beam and points towards $-x$ direction (or in other words, from the air part toward the water). The line passes though a point called \emph{Isocenter} and marked with a red cross. It represents the center of the axis in the machine reference system.
-The actual phantom is a parallelepiped of plastic (with a know attenuation coefficient) filled with water. Its dimensions are around $500\times200\times350\,mm$. On the beam direction, with comparable dimensions, there is a \emph{double wedge}, i.e. a couple of triangular plastic attenuators. These two have gradients of $30$ and $60^\circ$.
+The actual phantom is a parallelepiped of plastic (with a know attenuation coefficient) filled with water. Its dimensions are around $500\times200\times350\,mm$. On the beam direction, with comparable dimensions, there is a \emph{double wedge}, i.e. a couple of triangular plastic attenuators of $1.165$ relative stopping power. These two have gradients of $30$ and $60^\circ$.
 The red square box with side of $50\,mm$ is the target where we want to release the largest part of the dose. 
 
-\subsection{Alderson phantom}
 
 \newpage
-\subsection{HU and Stopping Power}
-\begin{wrapfigure}{l}{.6\textwidth}
-{\includegraphics[width=0.6\textwidth]{Images/dpp}}
-\caption{PDD example}
-\label{fig:pdd}
-%\vspace{-10mm}
-\end{wrapfigure}
-The delivery of accurate proton dose for clinical trials requires that the appropriate conversion function from Hounsfield unit (HU) to relative linear stopping power (RLSP) be used in proton treatment planning systems (TPS). 
-In contrast to the photon dose calculation depending on the electron density of a material, proton radiation therapy relies on a material's stopping power to describe the energy loss of protons due to the interactions in matter and to calculate proton doses. As such, the CT calibration curve in a proton treatment planning system relates Hounsfield unit values to relative stopping power. This generally differs from the electron density of materials used in a HU calibration curve for photon therapy. 
-The Hounsfield unit scale is a linear transformation of the original linear attenuation coefficient measurement into one in which the radiodensity (or opacity to the radio wave) of distilled water at standard pressure and temperature is defined as zero Hounsfield units, while the radiodensity of air at STP is defined as $-1000\, HU$. In a voxel with average linear attenuation coefficient $\mu$, the corresponding HU value is therefore given by
-\[
-HU=1000\,\frac {\mu -\mu _{water}}{\mu _{water}-\mu _{air}}
-\]
-Where $\mu _{water}$ and $\mu _{air}$ are respectively the linear attenuation coefficients of water and air.
-The relative linear stopping power of a certain material is calculated starting from computation of the percent depth dose (PDD) curve and the relative shift with the PDD of water for the same beam (example in figure \ref{fig:pdd}).
-So
-\[
-RLSP = \frac{\Delta x}{d_m}
-\]
-Where $\Delta x$ is the change in the depth of the distal $80\%$ PDD when the tissue-substitute material is introduced into the beam, and $d_m$ is the thickness of the material.
-In figure \ref{fig:HU}, Grant (et al.) in \cite{gra:hu}, fitted data obtained for several materials and obtained a (almost linear) relation between Hounsfield unit and relative linear stopping power.
-\begin{figure}[t!]
-\centering
-{\includegraphics[width=.9\textwidth]{Images/hu_rlsp}}
-\caption{RLSP and HU relation }
-\label{fig:HU}
-\end{figure}
-
-This relation is fundamental to convert the CT voxel value in a water-equivalent stopping power, in order to be able to calculate radiation depth.
-
 
 \section{Analysis techniques}
 All the simulations collected during this study, should finally be compared one another. 
@@ -762,7 +823,8 @@ This method represents a better way to compare two high gradient curves but it i
 The peculiar attribute of the dose deposition simulations is to have large flat or low-gradient zones, usually inside and outside the target area and very-high-gradient zones in the region surrounding it (or tumor in real cases).
 The mathematical difference between two datasets will not give us a full and exhaustive comparison because it could highlights an area of significant disagreement near high-gradient regions and a more quantitative assessment may be needed for final system approval.   
 We need an instrument that gives us an estimation of accuracy in dose difference and in \emph{distance} (like the Dose profile does).
-In order to get this, I used the method shown in Low (et al.) \cite{low:gamma} or else the \emph{gamma-index test} that uses a distance-to-agreement (DTA) distribution to determine the acceptability of the dose calculation. The DTA is the distance between a measured data point and the nearest point in the calculated dose distribution that exhibits the same dose. Each measured point is evaluated to determine if both dose difference and DTA exceed the selected respective tolerances. Points that fail both criteria are identified on a composite distribution. This is an extension of the isodose comparison tool that simultaneously incorporates the dose and the distance criteria and provides a numerical quantity index (further called $gamma$-index) that serves as a measure of disagreement in the regions that fail the acceptance criteria and indicates the calculation quality in the regions that pass. 
+In order to get this, I used the method shown in Low (et al.) \cite{low:gamma} or else the \emph{gamma-index test} that uses a distance-to-agreement (DTA) distribution to determine the acceptability of the dose calculation. 
+The distance between the two nearest voxels (of the two compared matrices) that have the same dose is called DTA. Distance and dose difference are calculated for every voxel and checked if they exceed the respective tolerance limits. Points are valued on the basis of the result got appling these criteria. This method provide an index for every voxel (further called $gamma$-index) that indicates agreement (or disagreement) between regions that pass (or fail) the test.
 In mathematics, (comparing matrix $A$ with subscript $a$ and $B$ with subscript $b$) the gamma index is
 \[
 \gamma(r_a) = min\{\Gamma(r_a,r_b) \}\,\,\,\,\forall\{ r_b\}
@@ -781,7 +843,8 @@ In general, the pass-fail criteria therefore become
 \gamma(r_a)>1\,\,\,\,\,\,\textrm{calculation fails}
 \]
 The output of this test is usually given in percentage of points passing the test on total points of the matrix.
-From this result are excluded the points with Dose value smaller than $\Delta D^2_M$ criteria
+From this result are excluded the points with Dose value smaller than $\Delta D^2_M$ criteria.
+Ad the end, we finally built the instrument that we needed. Anyway, in the next chapter I will expose the results using all the aforesaid methods.
 
 
 
@@ -794,62 +857,71 @@ From this result are excluded the points with Dose value smaller than $\Delta D^
 \chapter{Results} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \label{chap:res}
 
-
-
 In order to give an accurate and full comparison between the algorithms that we considered, I will proceed by several steps, starting from the simplest example towards more complicated and realistic treatment fields.
 
-
-
+I will present, the results using all the methods shown in the last chapter
 
 \section{Elementary Pencil Beams}
-The basic starting point for a comparison between similar methods is to actually confirm that they are similar in very simple cases. Only after one is allowed to proceed and analyse more sophisticated problems. 
+%\begin{figure}[h!]
+%\centering
+%\vspace{-10mm}
+%\includegraphics[width=0.8\textwidth]{Images/images_thesis/homo_dose}
+%\caption{Dose deposition in water box for (from left to right) MatRad, Fine Sampling, Monte Carlo}
+%\label{fig:WB1}
+%\end{figure}
 
-\subsubsection{Water Box}
-The easiest case that we can put our hands on is the full Water Box. Nothing more than a fully symmetrical cubic box made of water.
-The dose simulations gave us the result in figure\ref{fig:WB1}, where the Isocenter slice of the dose cubes is plotted.
-\begin{figure}[!ht]
+\begin{figure}[!b]
 \centering
 \subfloat[][\emph{MatRad}]
-{\includegraphics[width=.31\textwidth]{Images/Images_homog_phantom/mR_FSBvsMC_pub_homog_notitle_01.png}}
+{\includegraphics[width=.25\textwidth]{Images/Images_homo/mR_FSBvsMC_pub_homog_02}}\quad
 \subfloat[][\emph{Fine Sampling}]
-{\includegraphics[width=.31\textwidth]{Images/Images_homog_phantom/mR_FSBvsMC_pub_homog_notitle_02.png}}
+{\includegraphics[width=.25\textwidth]{Images/Images_homo/mR_FSBvsMC_pub_homog_03}}\quad
 \subfloat[][\emph{Monte Carlo}]
-{\includegraphics[width=.31\textwidth]{Images/Images_homog_phantom/mR_FSBvsMC_pub_homog_notitle_03.png}}
-\caption{Dose deposition in water box}
+{\includegraphics[width=.25\textwidth]{Images/Images_homo/mR_FSBvsMC_pub_homog_04}}\quad
+\caption{Dose deposition in water box.}
 \label{fig:WB1}
+\vspace{-20mm}
 \end{figure}
+The basic starting point for a comparison between similar methods is to actually confirm that they are similar in very simple cases. Only after that, one is allowed to proceed and analyse more sophisticated problems. 
+A normal treatment plan consists in thousands of elementary pencilbeams (the ones calculated for every bixel).
+An eventual small error in the single pencil beam, could sistematically be summed in the case of a full field simulation, resulting in a huge error.
+
+\subsection{Water Box}
+The easiest case that we can put our hands on is the full Water Box. Nothing more than a fully symmetrical cubic box made of water. With this test, we want to confirm that our method has not programming mistakes and, in general, can represent a bragg peak, as sum of many. 
+The dose simulations gave us the result in figure \ref{fig:WB1}, where the Isocenter slice of the dose cubes is plotted.
+
 
 
 The full agreement of these data sets can be confirmed by the percentage difference map and the $\gamma$-index test. Figure \ref{fig:WB1gam} shows excellent results.
 \begin{figure}[!ht]
 \centering
 \subfloat[][\emph{Percentage\\ difference}]
-{\includegraphics[width=.25\textwidth]{Images/Images_homog_phantom/mR_FSBvsMC_pub_homog_notitle_04n.png}} 
+{\includegraphics[width=.25\textwidth]{Images/Images_homo/mR_FSBvsMC_pub_homog_05.png}} 
 \subfloat[][\emph{$\gamma$-index \\ $99.92\%$ [$1\%$ $1mm$]}]
-{\includegraphics[width=.25\textwidth]{Images/Images_homog_phantom/mR_FSBvsMC_pub_homog_notitle_05n.png}}
+{\includegraphics[width=.25\textwidth]{Images/Images_homo/mR_FSBvsMC_pub_homog_06.png}}
 \subfloat[][\emph{Percentage\\ difference}]
-{\includegraphics[width=.25\textwidth]{Images/Images_homog_phantom/mR_FSBvsMC_pub_homog_notitle_06n.png}} 
+{\includegraphics[width=.25\textwidth]{Images/Images_homo/mR_FSBvsMC_pub_homog_07.png}} 
 \subfloat[][\emph{$\gamma$-index \\ $99.92\%$ [$1\%$ $1mm$]}]
-{\includegraphics[width=.25\textwidth]{Images/Images_homog_phantom/mR_FSBvsMC_pub_homog_notitle_07n.png}} 
-\caption{Comparison between MatRad and Monte Carlo (left), Fine Sampling and Monte Carlo (right) in water box}
+{\includegraphics[width=.25\textwidth]{Images/Images_homo/mR_FSBvsMC_pub_homog_08.png}} 
+\caption{Comparison between MatRad and Monte Carlo (left), Fine Sampling and Monte Carlo (right) in water box.}
 \label{fig:WB1gam}
 \end{figure}
 
-One easy notable thing is the light shift in the Bragg peak position. From the central profile (in figure \ref{fig:WB1prof}), we measured a shift of $0.13\pm0.10\,mm$ and $0.12\pm0.10\,mm$ in the direction of the beam, for Fine Sampling and MatRad respectively. In figure \ref{fig:WB1profz} there is a zoomed image of both these profiles.
+One easy notable thing is the light shift in the Bragg peak position. From the central profile (in figure \ref{fig:WB1prof}), we measured a shift of $0.13\pm0.10\,mm$ and $0.12\pm0.10\,mm$ in the direction of the beam, for Fine Sampling and MatRad respectively. In figure \ref{fig:WB1prof} there is a zoomed image of both these profiles.
 The measured integral dose is $103.3\,cGy$ for MatRad $103.0\,cGy$ for Fine Sampling and $103.7\pm1.0\,cGy$ for Monte Carlo simulations.\\
 \\
 
 \begin{figure}[!ht]
 \centering
 \subfloat[][\emph{Central Dose profile}]
-{\includegraphics[width=.45\textwidth]{Images/Images_homog_phantom/CP_wb_zoom.png}} 
+{\includegraphics[width=.45\textwidth]{Images/Images_homo/mR_FSBvsMC_pub_homog_09.png}} 
 \subfloat[][\emph{Integrated Depth Dose profile}]
-{\includegraphics[width=.45\textwidth]{Images/Images_homog_phantom/IDD_wb_zoom.png}} \\
+{\includegraphics[width=.45\textwidth]{Images/Images_homo/mR_FSBvsMC_pub_homog_10.png}} \\
 \subfloat[][\emph{Phantom surface entering profile}]
-{\includegraphics[width=.45\textwidth]{Images/Images_homog_phantom/mR_FSBvsMC_pub_homog_notitle_10.png}} 
+{\includegraphics[width=.45\textwidth]{Images/Images_homo/mR_FSBvsMC_pub_homog_11.png}} 
 \subfloat[][\emph{Peak profile}]
-{\includegraphics[width=.45\textwidth]{Images/Images_homog_phantom/mR_FSBvsMC_pub_homog_notitle_11.png}}
-\caption{Profiles in water box simulation}
+{\includegraphics[width=.45\textwidth]{Images/Images_homo/mR_FSBvsMC_pub_homog_12.png}}
+\caption{Profiles in water box simulation.}
 \label{fig:WB1prof}
 \end{figure}
 
@@ -862,122 +934,165 @@ The measured integral dose is $103.3\,cGy$ for MatRad $103.0\,cGy$ for Fine Samp
 %\caption{Profiles in water box simulation, zoomed}
 %\label{fig:WB1profz}
 %\end{figure}
-
-The next case will be a beam entering the phantom with a $30^\circ$ angle. This example is important to understand the basic differences between MatRad and Fine Sampling algorithms. As you can see from figure \ref{fig:WB2}, the shape of these dose depositions appears different compared with the Monte Carlo simulation. The reason why they behave in this way comes from the evaluation of the radiation depth. MatRad, as a software based on \emph{Ray Casting}, calculates the radiation depth for every possible particle direction and adjusts the precomputed bragg peak in water to the aforementioned radiation depth. Fine sampling instead divides the incoming particle fluence in several sub-beams and their radiation depth is evaluated singularly and only on the central axis of the sub-sample giving a better sensitivity to the morphology of the target but a bad response on to small inhomogeneities inside the tissue.
-This is the reason for a considerable shift of the Bragg Peak in the central and lateral dose profile of the peak, shown in figure \ref{fig:WB2prof}. I calculated the shift and I got $0.4\pm0.3\,mm$ for the Fine Sampling algorithm and $0.7\pm0.4\,mm$ for the MatRad algorithm. This can be considered a great result given the $3mm$ resolution of the CT data.
-The total Dose deposited is $811.9$, $810.2$ and $813.2\pm8.1\,cGy$ for MatRad, Fine Sampling and Monte Carlo respectively.\\
-\\
-
-\begin{figure}[!t]
+\newpage
+\begin{figure}[!b]
 \centering
 \subfloat[][\emph{MatRad}]
-{\includegraphics[width=.31\textwidth]{Images/Images_homog_phantom/mR_FSBvsMC_pub_homog_notitle_12.png}}\quad
+{\includegraphics[width=.25\textwidth]{Images/Images_homo/mR_FSBvsMC_pub_homog_15.png}}\quad
 \subfloat[][\emph{Fine Sampling}]
-{\includegraphics[width=.31\textwidth]{Images/Images_homog_phantom/mR_FSBvsMC_pub_homog_notitle_13.png}}\quad
+{\includegraphics[width=.25\textwidth]{Images/Images_homo/mR_FSBvsMC_pub_homog_16.png}}\quad
 \subfloat[][\emph{Monte Carlo}]
-{\includegraphics[width=.31\textwidth]{Images/Images_homog_phantom/mR_FSBvsMC_pub_homog_notitle_14.png}}\quad
-\caption{Dose deposition in water box, $30^\circ$ degree entering beam}
+{\includegraphics[width=.25\textwidth]{Images/Images_homo/mR_FSBvsMC_pub_homog_17.png}}\quad
+\caption{Dose deposition in water box, $30^\circ$ degree entering beam.}
 \label{fig:WB2}
 \end{figure}
-
-\begin{figure}[]
-\centering
-\subfloat[][\emph{Percentage difference and\\ $\gamma$-index  $98.77\%$ [$3\%$ $3mm$]}]
-{\includegraphics[width=.45\textwidth]{Images/Images_homog_phantom/mR_FSBvsMC_pub_homog_30g_mR.png}} 
-\subfloat[][\emph{Percentage difference and \\$\gamma$-index  $96.86\%$ [$3\%$ $3mm$]}]
-{\includegraphics[width=.45\textwidth]{Images/Images_homog_phantom/mR_FSBvsMC_pub_homog_30g_FS.png}} 
-\caption{Comparison between MatRad and Monte Carlo (left), Fine Sampling and Monte Carlo (right) in water box, $30^\circ$ degree entering beam}
-\label{fig:WB2gam}
-\end{figure}
-
-\begin{figure}[!ht]
-\centering
-\subfloat[][\emph{Central Dose profile}]
-{\includegraphics[width=.45\textwidth]{Images/Images_homog_phantom/mR_FSBvsMC_pub_homog_notitle_19.png}} 
-\subfloat[][\emph{Peak profile}]
-{\includegraphics[width=.45\textwidth]{Images/Images_homog_phantom/mR_FSBvsMC_pub_homog_notitle_22.png}}
-\caption{Profiles in water box simulation, $30^\circ$ degree entering beam}
-\label{fig:WB2prof}
-\end{figure}
-
+\subsubsection{$30^\circ$ entering beam}
 \begin{figure}[!t]
 \centering
-\subfloat[][\emph{MatRad}]
-{\includegraphics[width=.31\textwidth]{Images/Images_homog_phantom/mR_FSBvsMC_pub_homog_notitle_23.png}}\quad
-\subfloat[][\emph{Fine Sampling}]
-{\includegraphics[width=.31\textwidth]{Images/Images_homog_phantom/mR_FSBvsMC_pub_homog_notitle_24.png}}\quad
-\subfloat[][\emph{Monte Carlo}]
-{\includegraphics[width=.31\textwidth]{Images/Images_homog_phantom/mR_FSBvsMC_pub_homog_notitle_25.png}}\quad
-\caption{Dose deposition in water box, $45^\circ$ degree entering beam}
-\label{fig:WB3}
+\subfloat[][\emph{Percentage\\ difference}]
+{\includegraphics[width=.25\textwidth]{Images/Images_homo/mR_FSBvsMC_pub_homog_18.png}} 
+\subfloat[][\emph{$\gamma$-index \\ $98.77\%$ [$1\%$ $1mm$]}]
+{\includegraphics[width=.25\textwidth]{Images/Images_homo/mR_FSBvsMC_pub_homog_19.png}}
+\subfloat[][\emph{Percentage\\ difference}]
+{\includegraphics[width=.25\textwidth]{Images/Images_homo/mR_FSBvsMC_pub_homog_20.png}} 
+\subfloat[][\emph{$\gamma$-index \\ $96.30\%$ [$1\%$ $1mm$]}]
+{\includegraphics[width=.25\textwidth]{Images/Images_homo/mR_FSBvsMC_pub_homog_21.png}} 
+\caption{Comparison between MatRad and Monte Carlo (left), Fine Sampling and Monte Carlo (right) in water box.}
+\label{fig:WB2gam}
 \end{figure}
-
-\begin{figure}[]
+\begin{figure}[!b]
 \centering
-\subfloat[][\emph{Percentage difference and\\ $\gamma$-index  $96.62\%$ [$3\%$ $3mm$]}]
-{\includegraphics[width=.45\textwidth]{Images/Images_homog_phantom/mR_FSBvsMC_pub_homog_45g_mR.png}} 
-\subfloat[][\emph{Percentage difference and \\$\gamma$-index  $100\%$ [$3\%$ $3mm$]}]
-{\includegraphics[width=.45\textwidth]{Images/Images_homog_phantom/mR_FSBvsMC_pub_homog_45g_FS.png}} 
-\caption{Comparison between MatRad and Monte Carlo (upper graphics), Fine Sampling and Monte Carlo (lower graphics) in water box, $45^\circ$ degree entering beam}
-\label{fig:WB3gam}
-\end{figure}
-
-\begin{figure}[!ht]
-\centering
-\subfloat[][\emph{Central Dose profile}]
-{\includegraphics[width=.45\textwidth]{Images/Images_homog_phantom/mR_FSBvsMC_pub_homog_notitle_30.png}} 
 \subfloat[][\emph{Integrated Depth Dose profile}]
-{\includegraphics[width=.45\textwidth]{Images/Images_homog_phantom/mR_FSBvsMC_pub_homog_notitle_31.png}} \\
-\subfloat[][\emph{Phantom surface entering profile}]
-{\includegraphics[width=.45\textwidth]{Images/Images_homog_phantom/mR_FSBvsMC_pub_homog_notitle_32.png}} 
+{\includegraphics[width=0.31\textwidth]{Images/Images_homo/mR_FSBvsMC_pub_homog_22.png}}\quad
+\subfloat[][\emph{Central Dose profile}]
+{\includegraphics[width=0.31\textwidth]{Images/Images_homo/mR_FSBvsMC_pub_homog_24.png}}\quad
 \subfloat[][\emph{Peak profile}]
-{\includegraphics[width=.45\textwidth]{Images/Images_homog_phantom/mR_FSBvsMC_pub_homog_notitle_33.png}}
-\caption{Profiles in water box simulation, $45^\circ$ degree entering beam}
+{\includegraphics[width=0.31\textwidth]{Images/Images_homo/mR_FSBvsMC_pub_homog_25.png}}\quad
+\caption{Profiles in water box simulation.}
+\label{fig:WB2prof}
+\end{figure}
+The next case will be a beam entering the phantom with a $30^\circ$ angle. This example is important to understand the basic differences between MatRad and Fine Sampling algorithms. As you can see from figure \ref{fig:WB2}, the shape of these dose depositions appears different compared with the Monte Carlo simulation. The reason why they behave in this way comes from the evaluation of the radiation depth. MatRad, as a software based on \emph{Ray Casting}, calculates the radiation depth for every possible particle direction and adjusts the precomputed bragg peak in water to the aforementioned radiation depth. Fine sampling instead divides the incoming particle fluence in several sub-beams and their radiation depth is evaluated singularly and only on the central axis of the sub-sample giving a better sensitivity to the morphology of the target but a bad response on to small inhomogeneities inside the tissue.
+This is the reason for a considerable shift of the Bragg Peak in the central and lateral dose profile of the peak, shown in figure \ref{fig:WB2prof}. I calculated the shift and I got $0.4\pm0.3\,mm$ for the Fine Sampling algorithm and $0.7\pm0.4\,mm$ for the MatRad algorithm. This can be considered a great result given the $3mm$ resolution of the CT data.
+The total Dose deposited is $811.9$, $810.2$ and $813.2\pm8.1\,cGy$ for MatRad, Fine Sampling and Monte Carlo respectively.
+
+\begin{figure}[!h]
+\centering
+\subfloat[][\emph{MatRad}]
+{\includegraphics[width=.31\textwidth]{Images/Images_homo/mR_FSBvsMC_pub_homog_27.png}} 
+\subfloat[][\emph{Fine sampling}]
+{\includegraphics[width=.31\textwidth]{Images/Images_homo/mR_FSBvsMC_pub_homog_28.png}}
+\subfloat[][\emph{Monte Carlo}]
+{\includegraphics[width=.31\textwidth]{Images/Images_homo/mR_FSBvsMC_pub_homog_29.png}} \\
+\subfloat[][\emph{Integrated Depth Dose profile}]
+{\includegraphics[width=.31\textwidth]{Images/Images_homo/mR_FSBvsMC_pub_homog_35.png}}
+\subfloat[][\emph{Phantom surface entering profile}]
+{\includegraphics[width=.31\textwidth]{Images/Images_homo/mR_FSBvsMC_pub_homog_36.png}}
+\subfloat[][\emph{Peak Profile}]
+{\includegraphics[width=.31\textwidth]{Images/Images_homo/mR_FSBvsMC_pub_homog_37.png}}
+\caption{Profiles in water box simulation and Profiles in water box simulation,  $45^\circ$ degree entering beam.}
 \label{fig:WB3prof}
 \end{figure}
 
-As last but not less interesting is the case of the $45^\circ$-degrees-entering-beam. This shows us, in a more explicit form, the issue of Ray-Casting-algorithms treating surfaces with particular shapes. In figure \ref{fig:WB3}, the first thing we can notice is the artifice in MatRad simulation that reproduces the angle shape of the CT surface in the dose deposition. This is clearly wrong, even if the Monte Carlo simulation outlines the same behaviour in a smoother way. Fine sampling produces a wrong interpretation caused by the weights assigned to the sub-beams. In other words, it gives to the central beam almost twice the weight of the nearest lateral sub-beams and almost 20 times more compared to the most lateral ones.
+\subsubsection{$45^\circ$ entering beam}
+As last but not less interesting is the case of the $45^\circ$-degrees-entering-beam. This shows us, in a more explicit form, the issue of Ray-Casting-algorithms treating surfaces with particular shapes. In figure \ref{fig:WB3prof}, the first thing we can notice is the artifice in MatRad simulation that reproduces the angle shape of the CT surface in the dose deposition. This is clearly wrong, even if the Monte Carlo simulation outlines the same behaviour in a smoother way. Fine sampling produces a wrong interpretation caused by the weights assigned to the sub-beams. In other words, it gives to the central beam almost twice the weight of the nearest lateral sub-beams and almost 20 times more compared to the sub-components at $3\sigma$.
 Even though this little issue does not compromise the accuracy of the Fine Sampling simulation, as attested from the comparison tests in figure \ref{fig:WB3gam} and figure \ref{fig:WB3prof}. From this last figures, I measured a shift of $0.3\pm0.3\,mm$ for the Fine Sampling and $0.9\pm0.7\,mm$ for MatRad in the beam direction, and an integrated Dose of $946.8$, $940.3$ and $951.5\pm10.7\,cGy$ for MatRad, the Fine Sampling and the Monte Carlo respectively.
 
-\subsubsection{Inhomogeneous Water Box}
-\begin{figure}[!t] 
-%%%%%% replace figures with correct ones %%%%%%%
+\begin{figure}[!ht]
+\centering
+\subfloat[][\emph{Percentage\\ difference}]
+{\includegraphics[width=.25\textwidth]{Images/Images_homo/mR_FSBvsMC_pub_homog_30.png}} 
+\subfloat[][\emph{$\gamma$-index \\ $96.62\%$ [$1\%$ $1mm$]}]
+{\includegraphics[width=.25\textwidth]{Images/Images_homo/mR_FSBvsMC_pub_homog_31.png}}
+\subfloat[][\emph{Percentage\\ difference}]
+{\includegraphics[width=.25\textwidth]{Images/Images_homo/mR_FSBvsMC_pub_homog_32.png}} 
+\subfloat[][\emph{$\gamma$-index \\ $99.90\%$ [$1\%$ $1mm$]}]
+{\includegraphics[width=.25\textwidth]{Images/Images_homo/mR_FSBvsMC_pub_homog_33.png}} 
+\caption{Comparison between MatRad and Monte Carlo (left), Fine Sampling and Monte Carlo (right) in water box.}
+\label{fig:WB3gam}
+\end{figure}
+
+\subsection{Inhomogeneous Water Box}
+\begin{figure}[!b]
 \centering
 \subfloat[][\emph{MatRad}]
-{\includegraphics[width=.31\textwidth]{Images/Images_homog_phantom/mR_FSBvsMC_pub_homog_notitle_01.png}}\quad
+{\includegraphics[width=0.25\textwidth]{Images/Images_inhomo/mR_FSBvsMC_pub_inhomog_02.png}}\quad
 \subfloat[][\emph{Fine Sampling}]
-{\includegraphics[width=.31\textwidth]{Images/Images_homog_phantom/mR_FSBvsMC_pub_homog_notitle_02.png}}\\
+{\includegraphics[width=0.25\textwidth]{Images/Images_inhomo/mR_FSBvsMC_pub_inhomog_03.png}\label{fig:IPgam_FS}}\quad
 \subfloat[][\emph{Monte Carlo}]
-{\includegraphics[width=.31\textwidth]{Images/Images_homog_phantom/mR_FSBvsMC_pub_homog_notitle_03.png}}\quad
-\subfloat[][\emph{Fine Sampling Plus}]
-{\includegraphics[width=.31\textwidth]{Images/Images_homog_phantom/mR_FSBvsMC_pub_homog_notitle_02.png}}
-\caption{Dose deposition in inhomogeneous water box}
-\label{fig:HWB1}
+{\includegraphics[width=0.25\textwidth]{Images/Images_inhomo/mR_FSBvsMC_pub_inhomog_04.png}}\quad
+\caption{Profiles in water box simulation.}
+\label{fig:IP}
 \end{figure}
 
-This water box consists of a cube divided in two parts along the beam direction, one filled with water and the other one with a material with a slightly smaller electron density.
+This phantom consists of a cube divided in two parts along the beam direction, one filled with water and the other one with a material with a slightly smaller electron density, that I will call \emph{gum}, for simplicity.
 The aim is to show how Ray Casting algorithms sees this kind of phantoms.
-Ray casting gives back a dose with a clear step in it, caused by the same mechanism discussed before. The comparison with Monte Carlo simulation gives a surprising far better result than Fine Sampling, i.e. a $97.59\%$ of passing points with a [$3\%$ $3mm$] criterion against the $92.69\%$ of the Fine Sampling, in the same conditions. This algorithm has a disadvantage in this experiment, that is the high weight of the central beam. The method that I adopted in order to try to solve this issue is using a Fine Sampling model with a greater number of sub-beams, in order to make them narrower and with a more balanced weigh. I chose to bring the number of beams from 19 to 729 and, as you can see from the dose deposition in figure \ref{fig:HWB1} and from comparisons in figure \ref{fig:HWB1gam}, the so called Fine Sampling Plus  improves the accuracy over MatRad level.
-
-
+Ray casting gives back a dose with a clear step in it, caused by the same mechanism discussed before. The comparison with Monte Carlo simulation gives a very good result for Fine Sampling. With MatRad, we obained $95.72\%$ of passing points with a [$3\%$ $3mm$] criterion against the $97.68\%$ of the Fine Sampling, in the same conditions. This algorithm has a disadvantage in this experiment, there is no smoothing in Dose from the two sides of the phantom. The method that I adopted in order to try to solve this issue is using a Fine Sampling model with a great number of sub-beams, in order to make them narrower and with a more balanced weight. I chose to bring the number of beams to 324 and, as you can see from the dose deposition in figure \ref{fig:IP} and from comparisons in figure \ref{fig:IPgam}, it improves the accuracy over MatRad level.
 \begin{figure}[!ht]
-%%%%%% replace figures with correct ones %%%%%%%
 \centering
-\subfloat[][\emph{Percentage difference}]
-{\includegraphics[width=.45\textwidth]{Images/Images_homog_phantom/mR_FSBvsMC_pub_homog_notitle_04.png}} 
-\subfloat[][\emph{$\gamma$-index  $97.59\%$ [$3\%$ $3mm$]}]
-{\includegraphics[width=.45\textwidth]{Images/Images_homog_phantom/mR_FSBvsMC_pub_homog_notitle_05.png}} \\
-\subfloat[][\emph{Percentage difference}]
-{\includegraphics[width=.45\textwidth]{Images/Images_homog_phantom/mR_FSBvsMC_pub_homog_notitle_06.png}} 
-\subfloat[][\emph{$\gamma$-index  $97.91\%$ [$3\%$ $3mm$]}]
-{\includegraphics[width=.45\textwidth]{Images/Images_homog_phantom/mR_FSBvsMC_pub_homog_notitle_07.png}} 
-\caption{Comparison between MatRad and Monte Carlo (upper graphics), Fine Sampling Plus and Monte Carlo (lower graphics) in inhomogeneous water box}
-\label{fig:HWB1gam}
+\subfloat[][\emph{Percentage\\ difference}]
+{\includegraphics[width=.25\textwidth]{Images/Images_inhomo/mR_FSBvsMC_pub_inhomog_05.png}} 
+\subfloat[][\emph{$\gamma$-index \\ $95.62\%$ [$3\%$ $3mm$]}]
+{\includegraphics[width=.25\textwidth]{Images/Images_inhomo/mR_FSBvsMC_pub_inhomog_06.png}}
+\subfloat[][\emph{Percentage\\ difference}]
+{\includegraphics[width=.25\textwidth]{Images/Images_inhomo/mR_FSBvsMC_pub_inhomog_07.png}} 
+\subfloat[][\emph{$\gamma$-index \\ $97.68\%$ [$3\%$ $3mm$]}]
+{\includegraphics[width=.25\textwidth]{Images/Images_inhomo/mR_FSBvsMC_pub_inhomog_08.png}} 
+\caption{Comparison between MatRad and Monte Carlo (left), Fine Sampling and Monte Carlo (right) in water box.}
+\label{fig:IPgam}
 \end{figure}
 
+\begin{figure}[]
+\centering
+\subfloat[][\emph{Water central profile}]
+{\includegraphics[width=.45\textwidth]{Images/Images_inhomo/mR_FSBvsMC_pub_inhomog_09}\label{fig:IPprof_wcp}} 
+\subfloat[][\emph{Plastic central profile}]
+{\includegraphics[width=.45\textwidth]{Images/Images_inhomo/mR_FSBvsMC_pub_inhomog_10.png}\label{fig:IPprof_pcp}}\\
+\subfloat[][\emph{Integrated Depth Dose profile}]
+{\includegraphics[width=.45\textwidth]{Images/Images_inhomo/mR_FSBvsMC_pub_inhomog_11.png}} 
+\subfloat[][\emph{Phantom surface entering profile}]
+{\includegraphics[width=.45\textwidth]{Images/Images_inhomo/mR_FSBvsMC_pub_inhomog_12.png}}\\
+\subfloat[][\emph{Water peak profile}]
+{\includegraphics[width=.45\textwidth]{Images/Images_inhomo/mR_FSBvsMC_pub_inhomog_13.png}
+\label{fig:IPprof_wpp}}
+\subfloat[][\emph{Plastic peak profile}]
+{\includegraphics[width=.45\textwidth]{Images/Images_inhomo/mR_FSBvsMC_pub_inhomog_14.png}
+\label{fig:IPprof_ppp}}\\
+\caption{Profiles in water box simulation and Profiles in water box simulation,  $45^\circ$ degree entering beam.}
+\label{fig:IPprof}
+\end{figure}
+
+You may noticed that Monte Carlo simulation has two peaks having a not symmetric shape, in respect to the vertical axes. Instead, Fine sampling shows two a almost full simmetric shape of the peaks. This phenomenon derives from the shape of the sub-components. Each of these is a bragg peak, during calculation they do not consider if they are crossing am inhomogeneity in the lateral direction. In a case like this, the sub-beams are divided in two categories: the ones that are attuenated inside one material, like water; and the ones attenuated in the other one. There are not middle ways.
+Then, let's say, half of the components build one peak and half build the other one. In addition, the beams nearer to the center have a bigger weight, so a stronger influence on the resulting shape of the peak.
+Looking at the profiles\footnote{The profiles \ref{fig:IPprof_wcp} \ref{fig:IPprof_pcp} are the central dose profiles, on water side and plastic side. In particular, they are two parallel lines of voxels, at 1 voxel distance} in figure \ref{fig:IPprof_wcp} and \ref{fig:IPprof_pcp}, we soon notice this issue. It is visible that in both cases, FS has a peaked maximum, that is not true for MC that smoothly decreases. Matrad, beacuse of its features, has a behaviour completely indipendent for the two profiles.
+We see a complete agreement on one side of the first peak but a poor one on the second one.
+This is highlighted also in $\gamma$-index map of FS (\ref{fig:IPgam_FS}) and in the lower peak profile\footnote{The profiles \ref{fig:IPprof_wpp} \ref{fig:IPprof_ppp} are the peak profiles, on water side and plastic side.} (\ref{fig:IPprof_ppp}).
+
+About the Integrated Depth Dose Profile, the curve between the two peaks, in both MR and FS, has a sharp gradient change. Monte Carlo, on its own, is obviously smothier and the overflow of Dose is compensated with a smaller maximum. As proof, the total Dose is $116.2$, $116.0$ and $116.4\pm1.3\,cGy$ for MatRad, FS and Monte Carlo respectevely.
 
 
 
+\subsection{Aribox Phantom}
+As introduced above, the aribox phantom is a water phantom with a small cubic air-pocket inside. This should test the behaviour of the softwares in situations similar to lungs and intestine treatment. On a first consideration, results with this phantom should look like the ones of the previous inhomogeneous phantom. In reality, as you will see, an unpredictable effect occurs.
+
+I repeated the simulation six times, for six different air-pocket positions. It was placed
+
+\begin{enumerate}
+\item Right on the surface, in figure \ref{}
+\item at $5\,mm$ from the surface, in figure \ref{}
+\item at $15\,mm$ from the surface, in figure \ref{}
+\item at $25\,mm$ from the surface, in figure \ref{}
+\item at $35\,mm$ from the surface, in figure \ref{}
+\item at $45\,mm$ from the surface, in figure \ref{}
+\end{enumerate}
+
+\begin{figure}[!h]
+\centering
+{\includegraphics[width=.83\textwidth]{Images/gammacase}} 
+\caption{Gamma index in relation to the case number, for FS and MR}
+\label{fig:gamcase}
+\end{figure}
+
+From case 5 on, the bragg peak is on the air-pocket and we start seeing some issues. Gamma-index of Fine Sampling goes under the value of the one of MatRad. It coincides with the situation in which the first bragg peak is right on the air-pocket. As you can see in figure \ref{fig:gamcase}, the $\gamma$-index value of FS simiulation, decreases with the distance of the air-pocket from the surface. This effect was highlighted in Schaffner (et al.) \cite{schaf:pba} for a slightely different kind of method. The key issue is the deposition of Dose in air. Clearly, the Dose deposited in a certain volume of air is lower than the dose deposited in a similar volume of water. For example, beacuse of this reason, the bragg peak in air is far longer in depth, this ends up in a smoother and lower peak. In figures \ref{fig:AB5prof_app} and \ref{fig:AB6prof_app}, it is easy to see that there is not a peak inside the air-box. MatRad solves the issue for the 
 
 \newpage
 
@@ -1086,15 +1201,40 @@ Bortfeld T. and Schlegel W. -
 \emph{An analytic approximation of depth–dose distributions for therapeutic proton beams} -
 Phys. Med. Biol. 41, 1331–9 (1996)
 
+\bibitem{chu:pass}
+Chu W.T. - 
+\emph{Instrumentation for treatment of cancer using proton and light-ion beams} -
+Rev. Sci. Instrum. 64, 2055–2122 (1993)
+
+\bibitem{deg:lin}
+Degiovanni A. -
+\emph{Future trends in linacs} - 
+CERN, Geneva, Switzerland (2017)
+
 \bibitem{ferr:fluka}
 Ferrari A., Sala P.R., Fassò A. and Ranft J. -
 \emph{FLUKA: a multi-particle transport code} -
 CERN-2005-10, INFN/TC\_05/11, SLAC-R-773 (2005)
 
+\bibitem{garc:nucu}
+García-Ramos J.-E., Alonso C.E., Andrés M.V., Pérez-Bernal F. -
+\emph{Basic Concepts in Nuclear Physics: Theory, Experiments and Applications} -
+La Rábida International Scientific Meeting on Nuclear Physics (2015)
+
 \bibitem{gra:hu}
 Grant R. L., Summers P. A., Neihart J. L., Blatnica A. P., Sahoo N., Gillin M. T., Followill D. S. and Ibbott G. S. -
 \emph{Relative stopping power measurements to aid in the design of anthropomorphic phantoms for proton radiotherapy} -
 J Appl Clin Med Phys. 15(2): 4523 (2014)
+
+\bibitem{hab:scan}
+Haberer T. - 
+\emph{Magnetic scanning system for heavy ion therapy} -
+Nucl. Instr. Meth. Phys. Res. A 330, 296–305 (1993)
+
+\bibitem{haet:frag}
+Haettner E., Iwasel H., Krämer M., Kraft G. and Schardt D. -
+\emph{Experimental study of nuclear fragmentation of $200$ and $400\,MeV/u$ ${12}^C$ ions in water for applications in particle therapy}-
+Phys. Med. Biol. 58, 8265–8279 (2013)
 
 \bibitem{high:mcs}
 Highland V.L. -
@@ -1105,6 +1245,16 @@ Nucl. Instr. Meth. Phys. Res. 129, 497–499 (1975)
 Jette D. and Chen W. - 
 \emph{Creating a spread-out Bragg peak in proton beams} -
 Phys. Med. Biol. 56, N131–N138 (2011)
+
+\bibitem{jong:iba}
+Jongen Y., Abs M.,. Blondin A, Kleeven W., Zaremba S., Vandeplassche D., IBA (Belgium), Aleksandrov V.S., Gursky S., Karamysheva G.A., Kazarinov N.Yu., Kostromin S.A., Morozov N.A., Samsonov E.V., Shirkov G.D., Shevtsov V.F., Syresin E.M., Tuzikov A., JINR (Russia) - 
+\emph{Current status of the IBA C400 cyclotron project for Hadron Therapy} - 
+(2018)
+
+\bibitem{Kra:range}
+Kraan A.C. -
+\emph{Range Verification Methods in Particle Therapy: Underlying Physics and Monte Carlo Modeling} - 
+Front Oncol (2015)
 
 \bibitem{Kram:track}
 Krämer M. - 
@@ -1120,6 +1270,11 @@ Med. Phys. 25, 5 (1998)
 Molière G. -
 \emph{Theorie der Streuung schneller geladener Teilchen II, Mehrfach- und Vielfachstreuung} - 
 Z. Naturforsch. 3a, 78–97 (1948)
+
+\bibitem{mye:acc}
+Myers S.and  Bruning O. -
+\emph{Challenges And Goals For Accelerators In The XXI Century} -
+World Scientific
 
 \bibitem{par:latspr}
 Parodi K., Mairani A., Sommerer F. -
@@ -1141,6 +1296,11 @@ Serber R. -
 \emph{Nuclear reactions at high energies} -
 Phys. Rev. 72(11), 1114–1115 (1947)
 
+\bibitem{jd:llu}
+Slater, J.D. -
+\emph{Development and Operation of the Loma Linda University Medical Center Proton Facility} -
+Technol Cancer Res Treat. 6(4 Suppl), 67-72 (2007)
+
 \bibitem{souk:pba}
 Soukup M., Fippel M. and Alber M. -
 \emph{A pencil beam algorithm for intensity modulated proton therapy derived from Monte Carlo simulations} -
@@ -1150,6 +1310,7 @@ Phys. Med. Biol. 50, 5089–5104 (2005)
 Weyrather W.K., Ritter S., Scholz M., Kraft G. - 
 \emph{RBE for carbon track-segment irradiation in cell lines of differing repair} -
 capacity. Int. J. Radiat. Biol. 75, 1357–1364 (1999)
+
 
 %% aggiungere history of hadrontherapy dell'amaldi e del degiovanni
 
