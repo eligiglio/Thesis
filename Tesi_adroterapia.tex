@@ -1079,8 +1079,7 @@ About the Integrated Depth Dose Profile, the curve between the two peaks, in bot
 
 
 \subsection{Airbox Phantom}
-As introduced above, the airbox phantom is a water phantom with a small cubic air-pocket inside. This should test the behaviour of the softwares in situations similar to lungs and intestine treatment. On a first consideration, results with this phantom should look like the ones of the previous inhomogeneous phantom. As you will see, an unpredictable effect occurs.
-
+As introduced above, the airbox phantom is a water phantom with a small cubic air-pocket inside. This should test the behaviour of the softwares in situations similar to lungs and intestine treatment. 
 I repeated the simulation six times, for six different air-pocket positions. It was placed:
 
 \begin{enumerate}
@@ -1092,16 +1091,9 @@ I repeated the simulation six times, for six different air-pocket positions. It 
 \item at $45\,mm$ from the surface, in figure \ref{}
 \end{enumerate}
 
-\begin{figure}[!h]
-\centering
-{\includegraphics[width=.83\textwidth]{Images/gammacase}} 
-\caption{Gamma index in relation to the case number, for FS and MR}
-\label{fig:gamcase}
-\end{figure}
-
 % add figures
 
-From case 5 on, the Bragg peak is on the air-pocket and we start seeing some issues. Gamma-index of Fine Sampling goes under the value of that one of matRad. It coincides with the situation in which the first Bragg peak is right on the air-pocket. As you can see in figure \ref{fig:gamcase}, the $\gamma$-index value of FS simiulation, decreases with the distance of the air-pocket from the surface. This effect was highlighted in Schaffner (et al.) \cite{schaf:pba} for a slightly different method. The key issue is the deposition of dose in air. The dose deposited in a certain volume of air is lower than the dose deposited in a similar volume of water. Beacuse of this reason, the Bragg peak in air is more extended in depth and this produces a smoother and lower peak. In figures \ref{fig:AB5prof_app} and \ref{fig:AB6prof_app}, one can see that there is not a peak inside the air-box for MR and MC, instead FS shows a clear peak. The issue is the same introduced in the previous section. The peak on the side without air-pocket, is extended laterally because of the modified ray casting introduced by fine sampling, considering the radiation depth, so the stopping power, of the central axis of the sub-component, only.
+In these example, the key issue is the deposition of dose in air. The dose deposited in a certain volume of air is lower than the dose deposited in a similar volume of water. Beacuse of this reason, the Bragg peak in air is more extended in depth and this produces a smoother and lower peak. In figures \ref{fig:AB5prof_app} and \ref{fig:AB6prof_app}, one can see that there is not a peak inside the air-box for MR and MC, instead FS shows a clear peak. The issue is the same introduced in the previous section. The peak on the side without air-pocket, is extended laterally because of the modified ray casting introduced by fine sampling, considering the radiation depth, so the stopping power, of the central axis of the sub-component, only.
 MatRad does not suffer much this problem because of the aforesaid method based on ray casting. It calculates the dose deposited in air as constant. In practice, it is just like if it traslates the bragg peak of a distance equal to the air-pocket width (particularly clear in figure \ref{fig:AB6prof_app}), divergence of the beam in air is still considered.
 None of the two approaches (MR and FS) is correct, they create artifacts that considerably change the shape of the dose deposited in respect to reality.
 
@@ -1193,7 +1185,7 @@ In the following pages, I will show a series of images where there are shown a s
 
 \section{Summary}
 In the previous chapter, we went through some comparisons for single bixel cases and for full field simulation between simulations run with pencil beam and pencil beam fine sampling algorithms, Monte Carlo methods and measurements obtained at Heidelberg Ion-Therapy center.
-\begin{table}[b!]
+\begin{table}[b]
 \centering
 \begin{tabular}{ccccc}
 \toprule
@@ -1215,17 +1207,23 @@ With the waterbox phantom, we proved that there is a very good agreement between
 The Bragg peak is not identical beacuse the look-up tables of matRad (and as a consequence, of fine sampling) are obtained using a Monte Carlo based software that works in a slightly different way than FLUKA.
 In the other waterbox cases, we saw that matRad is still robust in describing the dose deposited by a beam entering with a $30^\circ$ angle from a flat surface and that failed the test of the $45^\circ$ entering beam because the beam is centered on the corner of the cube and then the peak is shaped in the same way. This is the main issue of ray-casting-based methods. Instead with fine sampling we have seen a good approximation in the $45^\circ$ case because it overcomes the problem of the corner, but poorer results in the other case because of the weights that are higher on the central sub-beams that on lateral ones. In table \ref{tab:hom}, a general overview for this case is reported.
 
+In the homogeneous phantom we saw how the three methods behaves in cases where the beam encounters a steep lateral gradient (in stopping power) on its path. Dose calculated with matlab appears sharply separated on two sides and there is no smooth transiction between them. It is like they are two completely indipendent (half a) Bragg peak.
+Fine sampling, instead, seems to have the opposite problem. An eventual transition through a lateral gradient is not taken in account, so the Bragg peaks generate by the sub-beams cross the plane between the two materials without being affected and this is reflected on the result, with two peaks wider than expected, accross the inhomogeneity. About gamma-index test, fine sampling obtained a slightly better result than matRad, with $97.68\%$ against $95.62\%$.
 
-In the $30^\circ$ and $45^\circ$ cases, the dose deposition calculated with Monte Carlo appears to be as
+\begin{figure}[!t]
+\centering
+{\includegraphics[width=.83\textwidth]{Images/gammacase}} 
+\caption{Gamma index in relation to the case number, for FS and MR}
+\label{fig:gamcase}
+\end{figure}
 
+In the airbox case, we proved what Schaffner (et al.) (\cite{schaf:pba}) infer on their paper. The fine sampling method is not able to describe correctly dose deposition when the Bragg peak (or part of it) is in an area where there is a high gratient in the CT. From case 5 on, the Bragg peak is on the air-pocket and we start seeing some issues. The gamma-index pass rate of fine sampling goes under the value of that one of matRad. It coincides with the situation in which the first Bragg peak is right on the air-pocket. As you can see in figure \ref{fig:gamcase}, the $\gamma$-index pass rate of FS simulation, decreases with the distance of the air-pocket from the surface. Instead it is the opposite for matRad that has its best agreement when fine sampling starts to fail. As explained before, the reason is the dose deposited in air, which is smaller than dose inside the tissue and results in sharply separated beams, more similiar to matRad ones.
 
-
- What we deduced from these examples is that ray casting methods have clear difficulties describing dose deposition in areas with steep longitudinal gradients in stopping power (e.g., the inhomogeneous phantom).
-
- fine sampling is a method that overcomes some problems of 
 
 
 \section{Interpretation}
+What we deduced from the other examples is that pencil beam methods have clear difficulties describing dose deposition in areas with steep longitudinal gradients in stopping power (e.g., the inhomogeneous phantom). 
+
 What we generally see from all the data obtained is that the matRad and fine sampling behave in complete opposite ways. Sometimes in this work I proposed results 
 
 in medio stat virtus.
