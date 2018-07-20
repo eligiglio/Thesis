@@ -861,12 +861,15 @@ Ad the end, we finally built the instrument that we needed. Anyway, in the next 
 \label{fig:24cham}
 \end{figure}
 
+
+
+
 \chapter{Results} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \label{chap:res}
 
 In order to give an accurate and full comparison between the algorithms that we considered, I will proceed by several steps, starting from the simplest example towards more complicated and realistic treatment fields.
 
-I will present the results using all the methods shown in the previous chapter.
+I will present the results using all the methods shown in the previous chapter. In the section about elementary beams: I used proton beams at $125\,MeV$ for the first three phantoms; beam energy of $125$ and $172\,MeV$ for the Soukup phantom; and $21$, $125$ and $172\,MeV$ for the double wedge phantom.
 
 \section{Elementary Pencil Beams}
 %\begin{figure}[h!]
@@ -1101,11 +1104,11 @@ From the lateral profiles, we can get more interesting information. The shape of
 
 \subsection{Soukup Phantom}
 As explained in section \ref{sec:pha}, I replicated a phantom used by Soukup (et al.) in \cite{souk:pba}. 
-This phantom is not so far from the air-box one because it has a low density window that cuts the beam in halves. They main difference is the presence of a high-stopping-power region that can be thought as a bone. This has the aim of checking what happens in a high-gradient region.
+This phantom is not so far from the air-box one because it has a low density window that cuts the beam in halves. They main difference is the presence of a high-stopping-power region that can be thought as a bone. This has the aim of checking what happens in a high-gradient region, as in the inhomogeneous phantom, but restricted to a strip of determined thickness.
 
-The experiment was made with two different energies of the beam (figure \ref{}). One that has the bragg peak inside the inhomogeneity and another one that crosses it and deposits the dose deeper.
+The experiment was made with two different energies of the beam (figure \ref{}), $125$ and $172\,MeV$. One that has the bragg peak inside the inhomogeneity and another one that crosses it and deposits the dose deeper.
 Knowing the behaviour of the dose deposition in airbox phantom, the result of the $\gamma$-index value is not so impressive as it seems. When there is a dose peak in the inhomogeneity, fine sampling shows its limits.
-Comparing the lateral profiles of the two cases on the peaks (figures \ref{}), we do not see big differences from one another. Instead from depth-dose profiles, it is clear that FS describes a whole different behaviour, especially in the second peak where dose maximum is almost half of what should be. Watching at the integrated depth-dose profile, there are small differences between the peaks, due probably to the fact that, in MC dose distribution, the dose in the knee region before the peak is basically a little higher that expected from the other methods (as already seen in waterbox case) and this phenomenon is someway emphasized in this case.
+Comparing the lateral profiles of the two cases on the peaks (figures \ref{}), we do not see big differences from one another. Instead from depth-dose profiles, it is clear that FS describes a whole different behaviour, especially in the second peak where dose maximum is almost half of what should be. Watching at the integrated depth-dose profile, there are small differences between the peaks, due probably to the fact that, in MC dose distribution, the dose in the knee region before the peak is basically a little higher that expected from the other methods (as already seen in waterbox case) and this phenomenon is emphasized in this case.
 
 
 \newpage
@@ -1213,18 +1216,41 @@ Fine sampling, instead, seems to have the opposite problem. An eventual transiti
 \begin{figure}[!t]
 \centering
 {\includegraphics[width=.83\textwidth]{Images/gammacase}} 
-\caption{Gamma index in relation to the case number, for FS and MR}
+\caption{Gamma index in relation to the case number, for FS and MR related to tab \ref{tab:air}}
 \label{fig:gamcase}
 \end{figure}
 
-In the airbox case, we proved what Schaffner (et al.) (\cite{schaf:pba}) infer on their paper. The fine sampling method is not able to describe correctly dose deposition when the Bragg peak (or part of it) is in an area where there is a high gratient in the CT. From case 5 on, the Bragg peak is on the air-pocket and we start seeing some issues. The gamma-index pass rate of fine sampling goes under the value of that one of matRad. It coincides with the situation in which the first Bragg peak is right on the air-pocket. As you can see in figure \ref{fig:gamcase}, the $\gamma$-index pass rate of FS simulation, decreases with the distance of the air-pocket from the surface. Instead it is the opposite for matRad that has its best agreement when fine sampling starts to fail. As explained before, the reason is the dose deposited in air, which is smaller than dose inside the tissue and results in sharply separated beams, more similiar to matRad ones.
+In the airbox case, we proved what Schaffner (et al.) (\cite{schaf:pba}) infer on their paper. The fine sampling method is not able to describe correctly dose deposition when the Bragg peak (or part of it) is in an area where there is a high gratient in the CT. From case 5 on, the Bragg peak is on the air-pocket and we start seeing some issues. The gamma-index pass rate of fine sampling goes under the value of that one of matRad. It coincides with the situation in which the first Bragg peak is right on the air-pocket. As you can see in figure \ref{fig:gamcase} and in table \ref{tab:air}, the $\gamma$-index pass rate of FS simulation, decreases with the distance of the air-pocket from the surface. Instead it is the opposite for matRad that has its best agreement when fine sampling starts to fail. As explained before, the reason is the dose deposited in air, which is smaller than dose inside the tissue and this results in sharply separated beams, more similiar to matRad ones. We have many analogies between airbox and Soukup phantom. We again see the problems of fine sampling when it calculates the Bragg peak on high gradient area. In fact, on the same phantom, it scores a gamma-index pass rate of $96.15\%$ in case with the most energetic beam, against the $83.77\%$ of the other case, where part of one peak is the high gradient area of the phantom. In this case, the proble is not air as itself but the principle is the same.
+As you know, the inhomogeneity is divided in two parts. The particles that cross the boarder from the higher to smaller stopping power parts, have still enough energy to fly deeper in the tissue so, there is only half of a Bragg peak appearing in the high stopping power region that does not have a corresponding one on the other side.
 
+\begin{table}[t]
+\centering
+\begin{tabular}{ccccc}
+\toprule
+Case & \multicolumn{2}{c}{MatRad} & \multicolumn{2}{c}{Fine Sampling}\\
+\midrule
+ & $\gamma$-index pass rate & max $\%$ diff & $\gamma$-index pass rate & max $\%$ diff\\
+\midrule
+1 & $93.45\%$ & 1 & $98.30\%$ &1\\
+2 & $98.77\%$ & 1 & $96.30\%$ &1\\
+3 & $96.62\%$ & 1 & $99.91\%$ &1\\
+4 & $96.62\%$ & 1 & $99.91\%$ &1\\
+5 & $96.62\%$ & 1 & $99.91\%$ &1\\
+6 & $96.62\%$ & 1 & $99.91\%$ &1\\
+\bottomrule
+\end{tabular}
+\label{tab:air}
+\caption{Results for airbox phatom analysis}
+\end{table}
+
+%%% double wedge??
 
 
 \section{Interpretation}
-What we deduced from the other examples is that pencil beam methods have clear difficulties describing dose deposition in areas with steep longitudinal gradients in stopping power (e.g., the inhomogeneous phantom). 
+What we generally see from all the data obtained is that the matRad and fine sampling behave in complete opposite ways. MatRad, beacuse of its intrinsic properties, calculates the dose deposition caring only about the longitudinal variation of the stopping power of the medium, i.e., in the direction of the beam. The strenght of this method is that .....................  . Its weakness is the sharpness of the distributed dose. In case of a considerable inhomogeneity (like bone or air, for example), the resulting dose is distinctly cut in separeted parts without any smooth transiction between them. Similar is the case of a beam entering a surface with a peculiar shape (as the $45^\circ$ waterbox case or the double wedge), where the Bragg peak is strictly conditioned to assume a clearly innatural shape.
+Fine sampling on its own, tries to solve this issue and to obtain a smoother dose. This is very effective in case where the inhomogeneity is near the surface of the patient but less accurate in the case of a dose deposition in areas with steep longitudinal gradients in stopping power (e.g., the inhomogeneous phantom). The clearest example is the $\gamma$-index pass rate as function of the airbox distance from the surface (figure \ref{fig:gamcase}).
 
-What we generally see from all the data obtained is that the matRad and fine sampling behave in complete opposite ways. Sometimes in this work I proposed results 
+At the end, we can conclude that fine sampling is a method at least equivalent to matlab.......
 
 in medio stat virtus.
 
