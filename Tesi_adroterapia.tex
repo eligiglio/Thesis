@@ -1254,16 +1254,34 @@ So, fine sampling can very accurate in case where the inhomogeneity is near the 
 
 About the physical shape of the peak, we must say that none of the two methods returns very satisfing results. For reasons said before, pencil beam seems depending too much on the shape of the phantom, sometimes being a little contrived. Instead fine sampling takes too much in account the path of the central sub-beams. That means it cares less about the inhomogeneities nearby the trajectory and the Bragg peak is stiff in respect to spatial deformation. In other words, it seem it always tries to keep its natural shape.
 
-In almost all the previous examples, we saw that fine sampling obtained overall slightly better results. Although, the physical approach and variety of examples, that is not wide enough, does not allow me to say that it can be considered better than pencil beam. 
-At the end, we can conclude that pencil beam and pencil beam fine sampling are two methods with significant differences, with opposite strengths but almost equivalent one the other. In many cases,...............
+In almost all the previous examples, we saw that fine sampling obtained overall slightly better results. Although, the physical approach and variety of examples, that is not wide enough, does not allow me to say that it can be considered more accurate than pencil beam. 
 
-in medio stat virtus.
+Time consuming was not treated directly in this work but we can say that pencil beam fine sampling is slower for some reasons: \emph{i)} in order to calculate the dose for one beam, fine sampling has to repeat hundreds of times the same procedure that pencil beam has to do once; \emph{ii)} there are some new functions in fine sampling algorithm, for coordinate projection and weights calculation, they are very expensive in term of time because based on interpolation and minimization, respectively; \emph{iii)} I did not use GPU parallelization, that could increase significantly the speed.
+For the calculation of a single bixel, the time spent by pencil beam fine sampling is one order of magnitude greater than by pencil beam.
 
-An eventual further close examination should be done using full field prospect on real patients CTs.............................. 
 
 \section{Other Published Data}
 
+
+
 \chapter{Conclusions} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+This work gave us a general overview of pencil beam beam fine sampling. I showed examples of basic environments and compared them with existing methods. I try to highlight the strenghts and the weaknesses of this algorithm with the tools that I had at my disposal. 
+If one would do a further close examination, he should use full field prospect on real patients CTs for real treatment cases, that means, usign a large spectrum of energies. Only this could give a complete and exhaustive big picture on the accuracy of this method.
+
+In my opinion, what we learned about pencil beam fine sampling is that, using a method that does not consider the lateral movement of the particles, cannot give an actual robust and reliable outcome, compareble with Monte Carlo. But with some improvements, it could become a method for fast approximated predictions.
+About the time consuming, it could be significantly reduced finding an analytical solution to the problem of the weighted sum of gaussians, avoiding minimization, and using GPU parallelization. This could make the time spent to be comparable to the matRad one.
+In order to improve accuracy, one could increase the number of sub-components or could find better parameters for the sub-beams. Although, this will not give extraordinary results.
+From my point of view, there is an intrinsic limit in this method. And could be overcame only using a strong ........
+So, the next step could be to mix fine sampling with methods inclu.....................
+
+It could be interesting to try a convolutional smoothing method. %%%% find article
+This is a method that uses convolutional masks in order to smooth the dose and obtaining the effect of lateral spreading of the particles..................
+
+
+At the end, we can conclude that pencil beam and pencil beam fine sampling are two methods with significant differences, with opposite strengths but almost equivalent one the other. In my opinion fine sampling, as it was proposed in this work, does not give a 
+
+in medio stat virtus.
+
 
 %\appendix
 %\chapter{$\gamma$-index test}
