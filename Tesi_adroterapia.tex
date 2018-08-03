@@ -1258,6 +1258,46 @@ Pencil beam and pencil beam fine sampling are two methods with significant diffe
 
 
 \section{Other Published Data}
+The two main articles facing similar problems are: Schaffner (et al.) \cite{schaf:pba}; and Soukup (et al.) \cite{souk:pba}. 
+The first proposes two methods: a Modified Ray Casting Model (MRCM) that is very similar to pencil beam but takes in account also protons with lines of flight not parallel to the main beam; and a fluence-dose model that is based on the convolution between the fluence and a kernel obtained from the look-up tables.
+The MRCM is well described by Schnider (et al.) \cite{schn:pba}. It consists in dividing every bixel in sub-components that have different entering angles in respect to the direciton of the beam, calculating the dose for each one and weighting their contribution proportionally to the aforesaid angle. 
+Schaffner says about their work: \emph{They showed a good coincidence between the range spectra obtained from their analytical calculation and the Monte Carlo simulation}.
+The Fluence-Dose Model (FDM) uses a set of sub-beams, calculates the dose for each one and then does a weighted mean to obtain the total dose. In practice, this method does the same things as fine sampling but in a different order and using convolution.
+In other to test these methods, they used a phantom very similar to the airbox one but instead, using an obstacle with a stopping power larger than water (a slab). As expected, these two methods behave in way very similar to matRad and fine sampling. They obtained (figure \ref{fig:schaff}) that the accuracy of the fluence-dose model decreases as the slab is nearer the Bragg peak. Instead, it is the opposite for the MRCM where the agreement with MC is better when the Bragg peak is accross the slab.
+This result is consistent with what seen in the aribox case.
+
+
+\begin{figure}[!t]
+\centering
+{\includegraphics[width=\textwidth]{Images/schaff}} 
+\caption{Example of dose percentage difference map comparison between Monte Carlo (MC), Fluence-Dose Model (FDM) and Modified Ray Casting Model (MRCM). Gray scale goes from $-10\%$ (white) to $10\%$(black). From Schaffner (et al.) \cite{schaf:pba}.}
+\label{fig:schaff}
+\end{figure}
+
+The second proposal made by Soukup is a version of the pencil beam fine sampling but based on analytical methods and not on look-up tables. The key part is the choose of the width, number and position of the sub-components. They propose to have an odd number of sub-components, in fact they have $N=(2n+1)^2$ against $N=(2n+2)^2$ of my method, where $n$ is an integer. So, Soukup method has a central sub-component instead I choosed not to have that in order to be more robust on central longitudinal inhomogeneities. The sigma of the sub-components (what we called $\sigma_{sub}$) has been chosen fixed as in my method but with a difference: they imposed $\sigma_{sub}$ to be always smaller than the size of the voxel and called this method \emph{adaptive} fine sampling. That means for example, if the beam has a sigma of $3\,mm$ on both axis and the voxel size is $1\,mm$, they need at least 361 sub-beams to cover $3\sigma$. Soukup says about it: \emph{The higher the number of sub-spots, the better the
+shape description}. They do not describe how this sub-components were weighted.
+Some results form Soukup article are shown in figure \ref{fig:souk_graph}. My results for the same phantom are shown in figure \ref{fig:souk_fs}.
+\begin{figure}[!t]
+\centering
+{\includegraphics[width=.3\textwidth]{Images/souk_centr}} 
+{\includegraphics[width=.3\textwidth]{Images/souk_int}} 
+{\includegraphics[width=.3\textwidth]{Images/souk_prof}} 
+\caption{Dose distributions for $172\,MeV$ protons in a Soukup phantom. On the left
+side is the central axis depth dose per primary proton (mean dose of four voxels around the centre), in the middle is the integrated depth dose per primary proton and on the right side is the lateral dose profile in the depth of the first Bragg peak. Calculated with fine sampling.}
+\label{fig:souk_fs}
+\end{figure}
+Soukup otained a very good outcome with the adaptive fine sampling. In the integrated depth-dose profile, I obtained results comparable with Soukup's adaptive fine sampling. But in the other cases, my method is more similar to the case (B) with 49 sub-spots. In the profile plot of the adaptive fine sampling, they reach great results instead fine sampling has a poor aggrement on that. As you can notice, the shape of the profile is different also between the Monte Carlo simulations. Their profiles seem strangely simmetric, that could mean they chose materials with a small stopping power difference from one another. 
+
+\begin{figure}[!t]
+\centering
+{\includegraphics[width=\textwidth]{Images/souk_graph}} 
+\caption{Dose distributions for $100\,MeV$, $150\,MeV$ and $200\,MeV$ protons in a Soukup phantom. On the left
+side is the central axis depth dose per primary proton (mean dose of four voxels around the centre), in the middle is the integrated depth dose per primary proton and on the right side is the lateral dose profile in the depth of the first Bragg peak. (A) dose distribution with precision 0, (one sub-spot per original spot), (B) dose distribution with precision 3 (49 sub-spots) and (C) dose distribution with adaptive precision. From Soukup (et al.) \cite{souk:pba}.}
+\label{fig:souk_graph}
+\end{figure}
+
+
+Soukup shows a great agreement between its data and Monte Carlo. My method is not equally accurate but, in general, we can say that our results are coherent with the all the related articles. 
 
 
 
@@ -1394,6 +1434,11 @@ Journal of Radiation Research 54, i91–i96 (2013)
 Schaffner B., Pedroni E. and Lomax A. -
 \emph{Dose calculation models for proton treatment planning using a dynamic beam delivery system: an attempt to include density heterogeneity effects in the analytical dose calculation} - 
 Phys. Med. Biol. 44, 27–41 (1999)
+
+\bibitem{schn:pba}
+Schneider U.,  Schaffner B., Lomax T., Pedroni E. and Tourovsky A. -
+\emph{A technique for calculating range spectra of charged particle beams distal to thick inhomogeneities} -
+Med. Phys., 25, 457-463 (1998)
 
 \bibitem{schn:mcs}
 Schneider U., Besserer J., Pemler P. - 
