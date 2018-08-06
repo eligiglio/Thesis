@@ -948,7 +948,7 @@ The measured integral dose is $103.3\,cGy$ for matRad, $103.0\,cGy$ for fine sam
 %\caption{Profiles in water box simulation, zoomed}
 %\label{fig:WB1profz}
 %\end{figure}
-\newpage
+
 \begin{figure}[!b]
 \centering
 \subfloat[][\emph{matRad}]
@@ -992,7 +992,7 @@ The measured integral dose is $103.3\,cGy$ for matRad, $103.0\,cGy$ for fine sam
 \end{figure}
 
 This paragraph describes a beam entering the phantom at an angle of $30^\circ$ degrees. This case is fundamental to understand the major differences between matRad and the fine sampling algorithm. In figure \ref{fig:WB2}, we can see that the shape of the dose depositions obtained with the two algorithms is significantly different from the one obtained in the Monte Carlo simulation. Therefore, we can infer that the Monte Carlo simulation stays in between two extremely different interpretations.
-The reason they behave so differently from the Monte Carlo simulation lies in the evaluation of the radiation depth. Indeed, matRad as software based on \emph{Ray Casting} calculates the radiation depth for every possible particle direction and adjusts the Bragg peak pre-computed in water to the radiation depth previously calculated. Conversely, Fine sampling divides the incoming particle fluence into several sub-beams whose radiation depth is evaluated singularly and only on the central axis of the sub-sample, giving a better sensitivity to the morphology of the target but, on the other hand, a bad response to small inhomogeneities inside the tissue.
+The reason they behave so differently from the Monte Carlo simulation lies in the evaluation of the radiation depth. Indeed, matRad as software based on \emph{Ray Casting} calculates the radiation depth for every possible particle direction (parallel to the main beam) and adjusts the Bragg peak pre-computed in water to the radiation depth previously calculated. Conversely, Fine sampling divides the incoming particle fluence into several sub-beams whose radiation depth is evaluated singularly and only on the central axis of the sub-sample, giving a better sensitivity to the morphology of the target but, on the other hand, a bad response to small inhomogeneities inside the tissue.
 This is the reason for the considerable shift of the Bragg Peak in the central and lateral dose profile of the peak, shown in figure \ref{fig:WB2prof}. The shift has been calculated to be $0.4\pm0.3\,mm$ in the fine sampling algorithm and $0.7\pm0.4\,mm$ in the matRad algorithm. This can be considered an important result despite the $3mm$ resolution of the CT data.
 The total Dose deposited is $811.9$, $810.2$ and $813.2\pm8.1\,cGy$ for matRad, fine sampling and Monte Carlo, respectively.
 
@@ -1050,9 +1050,9 @@ Nevertheless, this issue does not compromise the accuracy of the fine sampling s
 \label{fig:IP}
 \end{figure}
 
-The inhomogeneous water box consists in a cube divided into two parts along the beam direction. One part of the cube is filled with water while the other one is filled with a material characterised by a slightly smaller electron density, here called \emph{gum} for simplicity. The aim of this chapter is to show how Ray Casting algorithms sees this kind of phantoms.
+The inhomogeneous water box consists in a cube divided into two parts along the beam direction. One part of the cube is filled with water while the other one is filled with a material characterised by a slightly smaller stopping power, here called \emph{gum} for simplicity. The aim of this chapter is to show how Ray Casting algorithms sees this kind of phantoms.
 
-The results for the dose calculated by Ray Casting clearly exhibit a distinct step, as shown in \ref{fig:IP}. The presence of this step is caused by the same mechanism as the one discussed in \ref{30degrees}, i.e. the way matRad evaluates the radiation depth. 
+The results for the dose calculated by Ray Casting clearly exhibit a distinct step, as shown in figure \ref{fig:IP}. The presence of this step is caused by the same mechanism as the one discussed in \ref{30degrees}, i.e., the way matRad evaluates the radiation depth. 
 From the comparison between fine sampling and Monte Carlo simulation, we can observe a much greater similarity.
 In the case of matRad, we have obtained $95.72\%$ of passing points with a [$3\%$ $3mm$] criterion, differing from the $97.68\%$ of the fine sampling under the same conditions. 
 Then, it is clear that a disadvantage of the algorithm in this experiment consists in a resulting not-smooth dose in both sides of the phantom. However, a method can be adopted in order to solve this issue, that is the use of a fine sampling model with a great number of sub-beams so as to make them narrower and with a more balanced weight. So, I have decided to set the number of beams at 324, leading to an improvement of the accuracy above matRad's accuracy, as can be seen in the dose deposition in figure \ref{fig:IP} and from comparisons in figure \ref{fig:IPgam}.
@@ -1097,51 +1097,238 @@ Then, we observe in a complete agreement on the left side of the first peak but 
 
 As regards the Integrated Depth Dose Profile, we can see that the curve between the two peaks has a sharp gradient change in both MR and FS. Monte Carlo, on its own, is obviously smoother and the overflow of the dose is compensated with a smaller maximum. As proof, we can observe that the total Dose is $116.2$, $116.0$ and $116.4\pm1.3\,cGy$ for matRad, fine sampling and Monte Carlo respectively.
 
+\newpage
 %---------------------------------------------------AIRBOX-----------------------------------
+
+\begin{figure}[!t]
+\centering
+\subfloat[][\emph{MatRad}]
+{\includegraphics[width=.25\textwidth]{Images/mR_FSBvsMC_pub_airbox/mR_FSBvsMC_pub_airbox_14}}\quad
+\subfloat[][\emph{Fine Sampling}]
+{\includegraphics[width=.25\textwidth]{Images/mR_FSBvsMC_pub_airbox/mR_FSBvsMC_pub_airbox_15}}\quad
+\subfloat[][\emph{Monte Carlo}]
+{\includegraphics[width=.25\textwidth]{Images/mR_FSBvsMC_pub_airbox/mR_FSBvsMC_pub_airbox_16}}\quad
+\caption{Dose deposition in air box (case \#2).}
+\label{fig:AB2}
+\end{figure}
+
+
+\begin{figure}[!t]
+\centering
+\subfloat[][\emph{MatRad}]
+{\includegraphics[width=.25\textwidth]{Images/mR_FSBvsMC_pub_airbox/mR_FSBvsMC_pub_airbox_66}}\quad
+\subfloat[][\emph{Fine Sampling}]
+{\includegraphics[width=.25\textwidth]{Images/mR_FSBvsMC_pub_airbox/mR_FSBvsMC_pub_airbox_67}}\quad
+\subfloat[][\emph{Monte Carlo}]
+{\includegraphics[width=.25\textwidth]{Images/mR_FSBvsMC_pub_airbox/mR_FSBvsMC_pub_airbox_68}}\quad
+\caption{Dose deposition in air box (case \#6).}
+\label{fig:AB6}
+\end{figure}
 
 \subsection{Airbox Phantom}\label{air}
 As introduced in chapter \ref{phantoms}, the airbox phantom is a water phantom with a small cubic air-pocket inside. This feature has the aim to test the behaviour of the softwares in situations similar to lungs and intestine treatment. 
 I have repeated the simulation six times and for six different air-pocket positions. It was placed as following:
 
 \begin{enumerate}
-\item Right on the surface, in figure \ref{}
-\item at $5\,mm$ from the surface, in figure \ref{}
-\item at $15\,mm$ from the surface, in figure \ref{}
-\item at $25\,mm$ from the surface, in figure \ref{}
-\item at $35\,mm$ from the surface, in figure \ref{}
-\item at $45\,mm$ from the surface, in figure \ref{}
+\item Right on the surface
+\item at $5\,mm$ from the surface, in figure \ref{fig:AB2}
+\item at $15\,mm$ from the surface
+\item at $25\,mm$ from the surface
+\item at $35\,mm$ from the surface
+\item at $45\,mm$ from the surface, in figure \ref{fig:AB6}
 \end{enumerate}
 
 % add figures
 
-In these examples, the key issue is the deposition of the dose in air. The dose deposited in a certain volume of air is lower than the dose deposited in a similar volume of water. For this reason, the Bragg peak in air is more extended in depth and this produces a smoother and lower peak. In figures \ref{fig:AB5prof_app} and \ref{fig:AB6prof_app}, one can see that there is no peak inside the air-box for MR and MC, while FS shows a clear peak. The issue is the same as the one introduced in section \ref{inhomo}. The peak on the side without air-pocket is extended laterally because of the modified Ray Casting introduced by fine sampling considering only the radiation depth (i.e the stopping power) on the central axis of the sub-component.
+In these examples, the key issue is the deposition of the dose in air. The dose deposited in a certain volume of air is lower than the dose deposited in a similar volume of water. For this reason, the Bragg peak in air is more extended in depth and this produces a smoother and lower peak. In figure \ref{fig:AB6prof_app}, one can see that there is no peak inside the air-box for MR and MC, while FS shows a clear peak. The issue is the same as the one introduced in section \ref{inhomo}. The peak on the side without air-pocket is extended laterally because of the modified Ray Casting introduced by fine sampling considering only the radiation depth (i.e the stopping power) on the central axis of the sub-component.
 matRad does not encounter this problem because of the method based on Ray Casting explained in chapter \ref{FS}. It calculates the dose deposited in air as a constant. In practice, it shifts the Bragg peak of a distance equal to the air-pocket width (particularly clear in figure \ref{fig:AB6prof_app}), still considering the divergence of the beam in air.
 None of the two approaches (MR and FS) is correct, because they create artefacts that considerably change the shape of the dose deposited compared to reality.
 
 From the lateral profiles, we can get more interesting information. The shape of the MC peaks is well interpreted by FS for the first cases, while in the last cases evolves and slowly approaches the shape of MR (especially on the side without air-pocket).
 
+\begin{figure}[!ht]
+\centering
+\subfloat[][\emph{\scriptsize Central Dose profile}]
+{\includegraphics[width=.32\textwidth]{Images/mR_FSBvsMC_pub_airbox/mR_FSBvsMC_pub_airbox_21}} 
+\subfloat[][\emph{\scriptsize Central Dose profile}]
+{\includegraphics[width=.32\textwidth]{Images/mR_FSBvsMC_pub_airbox/mR_FSBvsMC_pub_airbox_22}}
+\subfloat[][\emph{\scriptsize Integrated Depth Dose profile}]
+{\includegraphics[width=.32\textwidth]{Images/mR_FSBvsMC_pub_airbox/mR_FSBvsMC_pub_airbox_23}}\\ 
+\subfloat[][\emph{\scriptsize Entering Dose profile}]
+{\includegraphics[width=.32\textwidth]{Images/mR_FSBvsMC_pub_airbox/mR_FSBvsMC_pub_airbox_24}}
+\subfloat[][\emph{\scriptsize First peak profile}]
+{\includegraphics[width=.32\textwidth]{Images/mR_FSBvsMC_pub_airbox/mR_FSBvsMC_pub_airbox_25}}
+\subfloat[][\emph{\scriptsize Second peak profile}]
+{\includegraphics[width=.32\textwidth]{Images/mR_FSBvsMC_pub_airbox/mR_FSBvsMC_pub_airbox_26}}\\
+\caption{Profiles in air box simulation (case \#2).}
+\label{fig:AB2prof}
+\end{figure}
+
+\begin{figure}[!ht]
+\centering
+\subfloat[][\emph{\scriptsize Central Dose profile}]
+{\includegraphics[width=.32\textwidth]{Images/mR_FSBvsMC_pub_airbox/mR_FSBvsMC_pub_airbox_73}\label{fig:AB6prof_app}} 
+\subfloat[][\emph{\scriptsize Central Dose profile}]
+{\includegraphics[width=.32\textwidth]{Images/mR_FSBvsMC_pub_airbox/mR_FSBvsMC_pub_airbox_74}}
+\subfloat[][\emph{\scriptsize Integrated Depth Dose profile}]
+{\includegraphics[width=.32\textwidth]{Images/mR_FSBvsMC_pub_airbox/mR_FSBvsMC_pub_airbox_75}}\\ 
+\subfloat[][\emph{\scriptsize Entering Dose profile}]
+{\includegraphics[width=.32\textwidth]{Images/mR_FSBvsMC_pub_airbox/mR_FSBvsMC_pub_airbox_76}}
+\subfloat[][\emph{\scriptsize First peak profile}]
+{\includegraphics[width=.32\textwidth]{Images/mR_FSBvsMC_pub_airbox/mR_FSBvsMC_pub_airbox_77}}
+\subfloat[][\emph{\scriptsize Second peak profile}]
+{\includegraphics[width=.32\textwidth]{Images/mR_FSBvsMC_pub_airbox/mR_FSBvsMC_pub_airbox_78}}\\
+\caption{Profiles in air box simulation (case \#6).}
+\label{fig:AB6prof}
+\end{figure}
+
+\begin{figure}[!ht]
+\centering
+\subfloat[][\emph{Percentage\\ difference}]
+{\includegraphics[width=.25\textwidth]{Images/mR_FSBvsMC_pub_airbox/mR_FSBvsMC_pub_airbox_17}} 
+\subfloat[][\emph{$\gamma$-index \\ $93.95\%$ [$3\%$ $3mm$]}]
+{\includegraphics[width=.25\textwidth]{Images/mR_FSBvsMC_pub_airbox/mR_FSBvsMC_pub_airbox_18}}
+\subfloat[][\emph{Percentage\\ difference}]
+{\includegraphics[width=.25\textwidth]{Images/mR_FSBvsMC_pub_airbox/mR_FSBvsMC_pub_airbox_19}} 
+\subfloat[][\emph{$\gamma$-index \\ $97.83\%$ [$3\%$ $3mm$]}]
+{\includegraphics[width=.25\textwidth]{Images/mR_FSBvsMC_pub_airbox/mR_FSBvsMC_pub_airbox_20}} 
+\caption{Comparison between Fine Sampling Beam and Monte Carlo (left), MatRad and Monte Carlo (right) in air box (case \#2).}
+\label{fig:AB2gam}
+\end{figure}
+
+\begin{figure}[!ht]
+\centering
+\subfloat[][\emph{Percentage\\ difference}]
+{\includegraphics[width=.25\textwidth]{Images/mR_FSBvsMC_pub_airbox/mR_FSBvsMC_pub_airbox_69}} 
+\subfloat[][\emph{$\gamma$-index \\ $95.32\%$ [$3\%$ $3mm$]}]
+{\includegraphics[width=.25\textwidth]{Images/mR_FSBvsMC_pub_airbox/mR_FSBvsMC_pub_airbox_70}}
+\subfloat[][\emph{Percentage\\ difference}]
+{\includegraphics[width=.25\textwidth]{Images/mR_FSBvsMC_pub_airbox/mR_FSBvsMC_pub_airbox_71}} 
+\subfloat[][\emph{$\gamma$-index \\ $92.51\%$ [$3\%$ $3mm$]}]
+{\includegraphics[width=.25\textwidth]{Images/mR_FSBvsMC_pub_airbox/mR_FSBvsMC_pub_airbox_72}} 
+\caption{Comparison between Fine Sampling Beam and Monte Carlo (left), MatRad and Monte Carlo (right) in air box (case \#6).}
+\label{fig:AB6gam}
+\end{figure}
 %---------------------------------------------------SOUKUP-----------------------------------
+\newpage
 
 \subsection{Soukup Phantom}
 As explained in section \ref{sec:pha}, I replicated a phantom used by Soukup (et al.) in \cite{souk:pba}. 
 This phantom does not differ substantially from the air-box phantom because it has a low density window that cuts the beam in half. They main difference is the presence of a high-stopping-power region that can be thought as a bone. This has the aim of checking what happens in a high-gradient region, as in the inhomogeneous phantom, but restricted to a strip of determined thickness.
 
-The experiment was made with two different energies of the beam (figure \ref{}), $125\,MeV$ and $172\,MeV$. One that has the bragg peak inside the inhomogeneity and another one that crosses it and deposits the dose deeper.
+The experiment was made with two different energies of the beam (figures \ref{fig:SB1} and \ref{fig:SB2}), $125\,MeV$ and $172\,MeV$. One that has the bragg peak inside the inhomogeneity and another one that crosses it and deposits the dose deeper.
 Knowing the behaviour of the dose deposition in airbox phantom, we can state that the result of the $\gamma$-index value is not so remarkable as it may seem. When there is a dose peak in the inhomogeneity, then fine sampling shows its limits.
 Comparing the lateral profiles in the two cases on the peaks (figures \ref{}), we can see that there are no significant differences. Instead, it is clear from depth-dose profiles that FS describes a completely different behaviour, especially in the second peak where the dose maximum is almost the half of what should be. Looking at the integrated depth-dose profile, we can observe that there are small differences between the peaks, due probably to the fact that MC dose in the knee region before the peak is basically a little higher than the dose calculated by using the other methods (as we have already seen in the waterbox case) and this phenomenon is here more evident.
+\begin{figure}[!t]
+\centering
+\subfloat[][\emph{MatRad}]
+{\includegraphics[width=.25\textwidth]{Images/mR_FSBvsMC_pub_soukup/mR_FSBvsMC_pub_soukup_01}}\quad
+\subfloat[][\emph{Fine Sampling}]
+{\includegraphics[width=.25\textwidth]{Images/mR_FSBvsMC_pub_soukup/mR_FSBvsMC_pub_soukup_02}}\quad
+\subfloat[][\emph{Monte Carlo}]
+{\includegraphics[width=.25\textwidth]{Images/mR_FSBvsMC_pub_soukup/mR_FSBvsMC_pub_soukup_03}}\quad
+\caption{Dose deposition in Soukup phantom at $172\,MeV$.}
+\label{fig:SB1}
+\end{figure}
+\begin{figure}[!t]
+\centering
+\subfloat[][\emph{MatRad}]
+{\includegraphics[width=.25\textwidth]{Images/mR_FSBvsMC_pub_soukup/mR_FSBvsMC_pub_soukup_14}}\quad
+\subfloat[][\emph{Fine Sampling}]
+{\includegraphics[width=.25\textwidth]{Images/mR_FSBvsMC_pub_soukup/mR_FSBvsMC_pub_soukup_15}}\quad
+\subfloat[][\emph{Monte Carlo}]
+{\includegraphics[width=.25\textwidth]{Images/mR_FSBvsMC_pub_soukup/mR_FSBvsMC_pub_soukup_16}}\quad
+\caption{Dose deposition in Soukup phantom at $125\,MeV$.}
+\label{fig:SB2}
+\end{figure}
+\begin{figure}[!t]
+\centering
+\subfloat[][\emph{Percentage\\ difference}]
+{\includegraphics[width=.24\textwidth]{Images/mR_FSBvsMC_pub_soukup/mR_FSBvsMC_pub_soukup_04}} 
+\subfloat[][\emph{$\gamma$-index \\ $93.80\%$ [$3\%$ $3mm$]}]
+{\includegraphics[width=.24\textwidth]{Images/mR_FSBvsMC_pub_soukup/mR_FSBvsMC_pub_soukup_05}}
+\subfloat[][\emph{Percentage\\ difference}]
+{\includegraphics[width=.24\textwidth]{Images/mR_FSBvsMC_pub_soukup/mR_FSBvsMC_pub_soukup_06}} 
+\subfloat[][\emph{$\gamma$-index \\ $96.15\%$ [$3\%$ $3mm$]}]
+{\includegraphics[width=.24\textwidth]{Images/mR_FSBvsMC_pub_soukup/mR_FSBvsMC_pub_soukup_07}} 
+\caption{Comparison between Fine Sampling Beam and Monte Carlo Simulations (left), MatRad and Monte Carlo Simulations (right) in Soukup phantom at $172\,MeV$.}
+\label{fig:SB1gam}
+\end{figure}
+\begin{figure}[!t]
+\centering
+\subfloat[][\emph{Percentage\\ difference}]
+{\includegraphics[width=.24\textwidth]{Images/mR_FSBvsMC_pub_soukup/mR_FSBvsMC_pub_soukup_17}} 
+\subfloat[][\emph{$\gamma$-index \\ $94.25\%$ [$3\%$ $3mm$]}]
+{\includegraphics[width=.24\textwidth]{Images/mR_FSBvsMC_pub_soukup/mR_FSBvsMC_pub_soukup_18}}
+\subfloat[][\emph{Percentage\\ difference}]
+{\includegraphics[width=.24\textwidth]{Images/mR_FSBvsMC_pub_soukup/mR_FSBvsMC_pub_soukup_19}} 
+\subfloat[][\emph{$\gamma$-index \\ $83.77\%$ [$3\%$ $3mm$]}]
+{\includegraphics[width=.24\textwidth]{Images/mR_FSBvsMC_pub_soukup/mR_FSBvsMC_pub_soukup_20}} 
+\caption{Comparison between Fine Sampling Beam and Monte Carlo Simulations (left), MatRad and Monte Carlo Simulations (right) in Soukup phantom at $125\,MeV$.}
+\label{fig:SB2gam}
+\end{figure}
+\begin{figure}[!t]
+\centering
+\subfloat[][\emph{\scriptsize Central Dose profile}]
+{\includegraphics[width=.32\textwidth]{Images/mR_FSBvsMC_pub_soukup/mR_FSBvsMC_pub_soukup_08}} 
+\subfloat[][\emph{\scriptsize Central Dose profile}]
+{\includegraphics[width=.32\textwidth]{Images/mR_FSBvsMC_pub_soukup/mR_FSBvsMC_pub_soukup_09}}
+\subfloat[][\emph{\scriptsize Integrated Depth Dose profile}]
+{\includegraphics[width=.32\textwidth]{Images/mR_FSBvsMC_pub_soukup/mR_FSBvsMC_pub_soukup_10}}\\ 
+\subfloat[][\emph{\scriptsize Entering Dose profile}]
+{\includegraphics[width=.32\textwidth]{Images/mR_FSBvsMC_pub_soukup/mR_FSBvsMC_pub_soukup_11}}
+\subfloat[][\emph{\scriptsize Peak profile}]
+{\includegraphics[width=.32\textwidth]{Images/mR_FSBvsMC_pub_soukup/mR_FSBvsMC_pub_soukup_12}}
+\subfloat[][\emph{\scriptsize Peak profile}]
+{\includegraphics[width=.32\textwidth]{Images/mR_FSBvsMC_pub_soukup/mR_FSBvsMC_pub_soukup_13}}\\
+\caption{Profiles in Soukup phantom simulation at $172\,MeV$.}
+\label{fig:SB1prof}
+\end{figure}
+\begin{figure}[!t]
+\centering
+\subfloat[][\emph{\scriptsize Central Dose profile}]
+{\includegraphics[width=.32\textwidth]{Images/mR_FSBvsMC_pub_soukup/mR_FSBvsMC_pub_soukup_21}} 
+\subfloat[][\emph{\scriptsize Central Dose profile}]
+{\includegraphics[width=.32\textwidth]{Images/mR_FSBvsMC_pub_soukup/mR_FSBvsMC_pub_soukup_22}}
+\subfloat[][\emph{\scriptsize Integrated Depth Dose profile}]
+{\includegraphics[width=.32\textwidth]{Images/mR_FSBvsMC_pub_soukup/mR_FSBvsMC_pub_soukup_23}}\\ 
+\subfloat[][\emph{\scriptsize Entering Dose profile}]
+{\includegraphics[width=.32\textwidth]{Images/mR_FSBvsMC_pub_soukup/mR_FSBvsMC_pub_soukup_24}}
+\subfloat[][\emph{\scriptsize Peak profile}]
+{\includegraphics[width=.32\textwidth]{Images/mR_FSBvsMC_pub_soukup/mR_FSBvsMC_pub_soukup_25}}
+\subfloat[][\emph{\scriptsize Peak profile}]
+{\includegraphics[width=.32\textwidth]{Images/mR_FSBvsMC_pub_soukup/mR_FSBvsMC_pub_soukup_26}}\\
+\caption{Profiles in Soukup phantom simulation at $125\,MeV$.}
+\label{fig:SB2prof}
+\end{figure}
+
+%---------------------------------------------------DOUBLE WEDGE-----------------------------------
+
+\newpage
+\subsection{Double wedge phantom}
+%%% substitue the image witht the correct one
+\begin{figure}[!t]
+\centering
+\subfloat[][\emph{MatRad}]
+{\includegraphics[width=.25\textwidth]{Images/mR_FSBvsMC_pub_soukup/mR_FSBvsMC_pub_soukup_14}}\quad
+\subfloat[][\emph{Fine Sampling}]
+{\includegraphics[width=.25\textwidth]{Images/mR_FSBvsMC_pub_soukup/mR_FSBvsMC_pub_soukup_15}}\quad
+\subfloat[][\emph{Monte Carlo}]
+{\includegraphics[width=.25\textwidth]{Images/mR_FSBvsMC_pub_soukup/mR_FSBvsMC_pub_soukup_16}}\quad
+\caption{Dose deposition in Soukup phantom at $125\,MeV$.}
+\label{fig:SB2}
+\end{figure}
+
+The last single beam test was done on the double wedge phantom. From some aspects, it looks like the $45^\circ$ case in the water box, but inverted inside out. As in that case, the dose calculated by matRad is clearly artificial and unnatural. The shape of the Bragg peak calculated with fine sampling, is instead very accurate, reaching the $100\%$ agreement in the gamma index pass rate, in both cases. 
+This tells us that in the double wedge phantom, the central components are more relevant than the others.
+In this case, I decided to show three longitudinal profiles: the central one, where there is a good agreement between Monte Carlo and fine sampling; and two shifted of three voxel in opposite lateral directions, where there is a difference in dose in the initial part of the path (clearer in the most energetic beam in figures \ref{} and \ref{}).
+
+%The Bragg peak is bended towards right (in respect to the beam eye view) instead, it should be bent in the other direction.
 
 
 \newpage
-
-\section{Spread-Out Bragg Peak}
-
 \section{Realistic Treatment Fields}
 \subsection{Double Wedge}
-
-
-
-\subsubsection{Full Field}
-
 This section exposes the predictions made with matRad and Syngo and shows the comparison between them by using the $\gamma$-index test. The figures \ref{fig:SyngoMat} shown below are slices of a sagittal plane of the phantom passing through the isocenter of the CT-cube.
 \begin{figure}[!ht]
 \centering
@@ -1198,10 +1385,6 @@ In the following pages, I will show a series of images where there are shown a s
 \caption{Results, geometry and comparison from configuration 2}
 \label{fig:pos2}
 \end{figure}
-
-\subsection{Alderson phantom}
-
-\section{Overview} % Mean tables
 
 
 \chapter{Discussion} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1267,9 +1450,9 @@ Case & \multicolumn{2}{c}{matRad} & \multicolumn{2}{c}{fine sampling}\\
 
 
 \section{Interpretation}
-What we globally see from the results discussed in chapter \ref{res} is that matRad and fine sampling behave in complete opposite ways. Because of their intrinsic properties, Pencil beam algorithms calculate the dose deposition considering the longitudinal variation of the stopping power of the medium, i.e on the direction of the beam only. The strength of this method is that Pencil Beam is robust in the other areas of the dose deposition, even if it can overestimate the correct amount of dose in the region of the Bragg peak. On the other hand, its weakness is the sharpness of the distributed dose. In the case of a considerable inhomogeneity, such as bone or air, the resulting dose is distinctly cut in different parts with no smooth transition between them. Similar is the case for a beam entering a surface characterised by a particular shape, such as the $45^\circ$ degrees waterbox case and the double wedge case, where the Bragg peak is strictly conditioned to assume an evident unnatural shape.
+What we globally see from the results discussed in chapter \ref{res} is that matRad and fine sampling behave in complete opposite ways. Because of their intrinsic properties, Pencil beam algorithms calculate the dose deposition considering the longitudinal variation of the stopping power of the medium, i.e., on the direction of the beam only. The strength of this method is that Pencil Beam is robust in the other areas of the dose deposition, even if it can overestimate the correct amount of dose in the region of the Bragg peak. On the other hand, its weakness is the sharpness of the distributed dose. In the case of a considerable inhomogeneity, such as bone or air, the resulting dose is distinctly cut in different parts with no smooth transition between them. Similar is the case for a beam entering a surface characterised by a particular shape, such as the $45^\circ$ degrees waterbox case and the double wedge case, where the Bragg peak is strictly conditioned to assume an evident unnatural shape.
 For its part, fine sampling tries to solve this issue so as to obtain a smoother dose. This leads to a dose deposition that does not account much on the lateral gradient in the stopping power, especially around the peak.
-In conclusion, fine sampling can be very accurate in cases where the inhomogeneity is near the surface of the patient, while it is less accurate in the case of a dose deposition in areas with steep longitudinal gradients in stopping power (e.g. one of the cases of the Soukup phantom)\footnote{The clearest example is the $\gamma$-index pass rate as function of the airbox distance from the surface (figure \ref{fig:gamcase})}. Nevertheless, cases with significant inhomogeneities inside the target area, i.e. the tumor, are very rare. In fact, in the majority of the cases the target volume is homogeneous in density and it is more likely to find inhomogeneities only next to the tumor, such as in case of treatments to the basement of the head, the spine, the pelvis, the lungs, etc. In my opinion, in this cases, Pencil Beam would be more reliable in terms of the dose deposition in the surrounding tissues, while fine sampling would give a more accurate distribution of the dose inside the target.
+In conclusion, fine sampling can be very accurate in cases where the inhomogeneity is near the surface of the patient, while it is less accurate in the case of a dose deposition in areas with steep longitudinal gradients in stopping power (e.g., one of the cases of the Soukup phantom)\footnote{The clearest example is the $\gamma$-index pass rate as function of the airbox distance from the surface (figure \ref{fig:gamcase})}. Nevertheless, cases with significant inhomogeneities inside the target area (the tumor), are very rare. In fact, in the majority of the cases the target volume is homogeneous in density and it is more likely to find inhomogeneities only next to the tumor, such as in case of treatments to the basement of the head, the spine, the pelvis, the lungs, etc. In my opinion, in this cases, Pencil Beam would be more reliable in terms of the dose deposition in the surrounding tissues, while fine sampling would give a more accurate distribution of the dose inside the target.
 
 About the physical shape of the peak, we can assert that none of the two methods have yielded substantial results. For the reasons explained before, Pencil Beam has been proven to depend too much on the shape of the phantom, sometimes being a bit contrived. Moreover, fine sampling takes into account too much on the path of the central sub-beams, that means it cares less about the inhomogeneities nearby the trajectory and that the Bragg peak is stiff under spatial deformation, just as if it always tries to keep its natural shape.
 
@@ -1280,8 +1463,8 @@ Pencil beam and Pencil Beam fine sampling are two methods with significant diffe
 
 The authors of previous studies, such as Schaffner et al. \cite{schaf:pba} and Soukup et al. \cite{souk:pba}, have been dealing with problems very similar to the ones examined in this thesis.\\
 In order to solve them, Schaffner et al. \cite{schaf:pba} have proposed two methods: the Modified Ray Casting Model (MRCM), very similar to pencil beam but that takes into account also protons with lines of flight not parallel to the main beam; the Fluence-Dose Model (FDM), based on the convolution between the fluence and a kernel obtained from the look-up tables.\\
-Schnider (et al.) \cite{schn:pba} have extensively described the MRCM. First, it divides every bixel in sub-components that have different entrance angles with respect to the direction of the beam. Second, it calculates the dose for each component and as last, it weights their contribution proportionally to the entrance angle. In the same paper, the authors\cite{schn:pba} have shown a good coincidence between the range spectra got from the analytical calculation and the Monte Carlo simulation.\\
-The second method, i.e. the FDM, proceeds in a different way. First, it uses a set of sub-beams and calculates the dose for each one. At the end, it calculates a weighted mean to obtain the total dose. In practice, this method does the same things as fine sampling but in a different order and by using the convolution.\\
+Schnider (et al.) \cite{schn:pba} have extensively described the MRCM. First, it divides every bixel in sub-components that have different entrance angles with respect to the direction of the beam. Second, it calculates the dose for each component and as last, it weights their contribution proportionally to the entrance angle. Schaffner (et al.) say about their work: \emph{They showed a good coincidence between the range spectra obtained from their analytical calculation and the Monte Carlo simulation}.\\
+The second method, i.e., the FDM, proceeds in a different way. First, it uses a set of sub-beams and calculates the dose for each one. At the end, it calculates a weighted mean to obtain the total dose. In practice, this method does the same things as fine sampling but in a different order and by using the convolution.\\
 In order to test these methods, they have used a phantom very similar to the airbox phantom, but with the presence of an obstacle whose stopping power is larger than water, such as a slab. As expected, these two methods have behaved very similarly to matRad and fine sampling. They have obtained (figure \ref{fig:schaff}) that the accuracy of the fluence-dose model decreases as the slab is closer to the Bragg peak. By contrast, the MRCM have shown that the agreement with MC is better when the Bragg peak cross the slab. This result is consistent with what we have seen in the aribox case.\\
 
 %\begin{figure}[!t]
@@ -1291,7 +1474,7 @@ In order to test these methods, they have used a phantom very similar to the air
 %\label{fig:schaff}
 %\end{figure}
 
-Soukup et al. \cite{souk:pba} have proposed a different solution. It consists in a new version of pencil beam fine sampling based on analytical methods and not on look-up tables. The key point in this solution is the choice of the width, the number and the position of the sub-components. They have divided the beam by using only an odd number of sub-components as $N=(2n+1)^2$, while we have used an even number of sub-components as $N=(2n+2)^2$, where $n$ is an integer. Then, the method by Soukup et al. has a central sub-component. Conversely, we have built a method with no central sub-component in order to be more robust on central longitudinal inhomogeneities. Furthermore, the sigma of the sub-components (that we have called $\sigma_{sub}$) has been set constant as in our method, with the difference that they have imposed $\sigma_{sub}$ to be always smaller than the size of the voxel, calling this method \emph{adaptive} fine sampling. This means that if the beam has a sigma of $3\,mm$ on both axis and the voxel size is $1\,mm$, they will need at least 361 sub-beams to cover $3\sigma$. Soukup et al. have shown that if the number of sub-spots increases, then the shape description improves, but they have given no description of how this sub-components were weighted.
+Soukup (et al.) \cite{souk:pba} have proposed a different solution. It consists in a version of pencil beam fine sampling based on analytical methods and not on look-up tables. The key point in this solution is the choice of the width, the number and the position of the sub-components. They have divided the beam by using only an odd number of sub-components as $N=(2n+1)^2$, while we have used an even number of sub-components as $N=(2n+2)^2$, where $n$ is an integer. Then, the method by Soukup (et al.) has a central sub-component. Conversely, we have built a method with no central sub-component in order to be more robust on central longitudinal inhomogeneities. Furthermore, the sigma of the sub-components (that we have called $\sigma_{sub}$) has been set constant as in our method, with the difference that they have imposed $\sigma_{sub}$ to be always smaller than the size of the voxel, calling this method \emph{adaptive} fine sampling. This means that if the beam has a sigma of $3\,mm$ on both axis and the voxel size is $1\,mm$, they will need at least 361 sub-beams to cover $3\sigma$. Soukup et al. have shown that if the number of sub-spots increases, then the shape description improves, but they have given no description of how this sub-components were weighted.
 Some results from this authors are shown in figure \ref{fig:souk_graph}. Our results given for the same phantom are shown in figure \ref{fig:souk_fs}.
 
 %\begin{figure}[!t]
@@ -1304,7 +1487,7 @@ Some results from this authors are shown in figure \ref{fig:souk_graph}. Our res
 %\label{fig:souk_fs}
 %\end{figure}
 
-Soukup et al. have obtained a very good outcome by using the adaptive fine sampling. In the integrated depth-dose profile, we have obtained results comparable to their adaptive fine sampling. However, in other cases my method is more similar to the case (B) with 49 sub-spots. The profile plot of the adaptive fine sampling shows that they have reached great results, while fine sampling has been proved to have little agreement on this. As we can notice, the shape of the profile is different for the Monte Carlo simulations as well. Their profiles seem to be surprisingly symmetric, that could mean that they have chosen materials whose stopping powers differ from each other by a small amount. 
+Soukup (et al.) have obtained a very good outcome by using the adaptive fine sampling. In the integrated depth-dose profile, we have obtained results comparable to their adaptive fine sampling. However, in other cases my method is more similar to the case (B) with 49 sub-spots. The profile plot of the adaptive fine sampling shows that they have reached great results, while fine sampling has been proved to have little agreement on this. As we can notice, the shape of the profile is different for the Monte Carlo simulations as well. Their profiles seem to be surprisingly symmetric, that could mean that they have chosen materials whose stopping powers differ from each other by a small amount. 
 
 %\begin{figure}[!t]
 %\centering
@@ -1314,12 +1497,13 @@ Soukup et al. have obtained a very good outcome by using the adaptive fine sampl
 %\label{fig:souk_graph}
 %\end{figure}
 
-Soukup et al. have shown a great agreement between the data and Monte Carlo. Our method is not as accurate as their but our results are coherent with all the articles.
+%Soukup (et al.) have shown a great agreement between the data and Monte Carlo. Our method is not as accurate as their but our results are coherent with all the articles.
+In the end, we can assert that the method I implemented is coherent with these articles.
 
 
 %------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 \chapter{Conclusions} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-This thesis has shown an overview of the Pencil Beam fine sampling. In particular, we have seen some examples of basic environments and their comparison with some existing methods. I tried to highlight the strenghts and the weaknesses of this algorithm with the tools that I had at my disposal. %----cancella questa frase, è inutile! semmai ridici sommariamente quali sono le debolezze e quale invece la forza dell'algoritmo.
+This thesis has shown an overview of the Pencil Beam fine sampling. In particular, we have seen some examples of basic environments and their comparison with some existing methods. I tried to highlight the strenghts and the weaknesses of this algorithm with the tools that I had at my disposal. %----cancella questa frase, ï¿½ inutile! semmai ridici sommariamente quali sono le debolezze e quale invece la forza dell'algoritmo.
 
 If one would like to do a further close examination, he should use A full field prospect on real patients CTs for real treatment cases, that means, usign a large spectrum of energies on real treatment plans. Only this could give a complete and exhaustive big picture on the accuracy of this method.
 
