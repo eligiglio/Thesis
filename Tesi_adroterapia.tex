@@ -397,7 +397,9 @@ Scientists are working on alternative workflows where the treatment is adapted e
 A key role is played by the software used for diagnostic, planning and verification.
 The part on which this thesis is focused on is the treatment planning. In fact, I will investigate the most common methods used for the particle dose calculation and in particular, I will implement a fine sampling Beam algorithm by using an already existent software called matRad. 
 I had at my disposal a set of measurement for a single phantom and the data of the machine in order to run Monte Carlo simulations for only four different energies.
+
 Using a Monte Carlo simulated Dose and HIT full-field experimental data as reference models, I will compare my model with the already existent softwares, with the goal of overcoming the accuracy of pencil beam algorithm while keeping the computation time short.  
+
 
 
 Providing scientists and doctors with the strongest instruments to precisely plan the treatments in the shortest possible time will make Particle Radiotherapy faster, more accessible and cheaper.
@@ -1413,7 +1415,6 @@ Particular attention has to be paid to the profiles of the peaks (figure \ref{} 
 
 
 
-
 \newpage
 \section{Realistic Treatment Fields}
 \subsection{Double Wedge}
@@ -1542,6 +1543,7 @@ What we globally see from the results discussed in chapter \ref{res} is that mat
 For its part, fine sampling tries to solve this issue so as to obtain a smoother dose. This leads to a dose deposition that does not account much on the lateral gradient in the stopping power, especially around the peak.
 In conclusion, fine sampling can be very accurate in cases where the inhomogeneity is near the surface of the patient, while it is less accurate in the case of a dose deposition in areas with steep longitudinal gradients in stopping power (e.g., one of the cases of the Soukup phantom)\footnote{The clearest example is the $\gamma$-index pass rate as function of the airbox distance from the surface (figure \ref{fig:gamcase})}. Nevertheless, cases with significant inhomogeneities inside the target area (the tumor), are very rare. In fact, in the majority of the cases the target volume is homogeneous in density and it is more likely to find inhomogeneities only next to the tumor, such as in case of treatments to the basement of the head, the spine, the pelvis, the lungs, etc. In my opinion, in this cases, pencil beam would be more reliable in terms of the dose deposition in the surrounding tissues, while fine sampling would give a more accurate distribution of the dose inside the target.
 
+
 About the physical shape of the peak, we can assert that none of the two methods have yielded substantial results. For the reasons explained before, pencil beam has been proven to depend too much on the shape of the phantom, sometimes being a bit contrived. Moreover, fine sampling takes into account too much on the path of the central sub-beams, that means it cares less about the inhomogeneities nearby the trajectory and that the Bragg peak is stiff under spatial deformation, just as if it always tries to keep its natural shape.
 
 Pencil beam and pencil beam fine sampling are two methods with significant differences, with opposite strengths but almost equivalent in accuracy. We can state that \emph{in medio stat virtus}.
@@ -1591,11 +1593,13 @@ In the end, we can assert that the method I implemented is coherent with these a
 
 %------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 \chapter{Conclusions} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 This thesis has shown an overview of the pencil beam fine sampling. In particular, we have seen some examples of basic environments and their comparison with some existing methods. 
 
 Fine sampling has not been treated in this thesis as an algorithm for the purposes of substituting the generic pencil beam. It could become a fast and reliable software for approximate dose calculation only by doing important modifications and the implementation of some changes in the algorithm.
 
 In almost all the examples analysed in this thesis, we have seen that fine sampling has obtained slightly better results with respect to the pencil beam. Because of the physical approach used and the limited variety of examples discussed, I am not allowed to say that it can be considered more accurate than pencil beam. In order to improve the accuracy, one could either increase the number of sub-components or find better parameters for the sub-beams. However, this solution will not give extraordinary results.
+
 
 In my opinion, there is an intrinsic limit in this method that might not be overcame. Thus, we need to change the algorithm and mix fine sampling with other methods considering the gradient of the stopping power on the plane perpendicular to the direction of the particle. For example, It could be interesting to try a convolutional smoothing method, that uses convolutional masks in order to smooth the dose and obtain an effect of lateral spreading.
 
