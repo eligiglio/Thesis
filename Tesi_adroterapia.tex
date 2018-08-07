@@ -167,8 +167,8 @@ As already said, the major introduction at that time was the 7-m-diameter $250\,
 This was the first synchrotron applied to a hospital-based facility\footnote{Slater JM, Archambeau JO, Miller DW, Notarus MI, Preston W, Slater JD. The proton treatment center at Loma Linda University Medical Centre: rationale
 for and description of its development. Int J Radiat Oncol Biol Phys 1992;22: 383e9}.
 Another major advancement in particle therapy, which I will talk about later, was the application of scanning beams, which allows to paint the tumour target with the Bragg peak.
-The first scanning systems were developed in the research facilities at PSI (Villigen, Switzerland) for protons and GSI (Darmstadt, Germany) for carbon ions and have been used to treat patients since 1996 and 1997 respectively.
-In order to use the accelerator at its maximum possibility, every hospital centre has usually between 3 and 5 gantries (i.e. treatment rooms) so that, during the 3-5 minutes irradiation in one room, in others the procedures of alignment to prepare other patients can be started. Because each patient needs 20-30 sessions, one four-room centre can treat up to 1200-1300 patients a year. The size of the facility and the optimisation of the workflow are still debated and many studies have addressed this problem.
+The first scanning systems were developed in the research facilities at PSI (Villigen, Switzerland) for protons and GSI (Darmstadt, Germany) for carbon ions and have been used to treat patients since 1996 and 1997, respectively.
+In order to use the accelerator at its maximum possibility, every hospital centre has usually between 3 and 5 gantries (i.e., treatment rooms) so that, during the 3-5 minutes irradiation in one room, in others the procedures of alignment to prepare other patients can be started. Because each patient needs 20-30 sessions, one four-room centre can treat up to 1200-1300 patients a year. The size of the facility and the optimisation of the workflow are still debated and many studies have addressed this problem.
 
 As stated on Particle Therapy Co-Operative Group\footnote{\url{https://www.ptcog.ch/}}: \emph{At present about forty-five proton therapy centres are in operation or under construction throughout the world. The list of the centres in operation with the statistics of the number of treated patients is updated every year by the PTCOG.}
 %%%   includere tabella dei centri magari
@@ -223,7 +223,7 @@ The lateral spread is described by the Molière-Theory \cite{mol:mcs}. For small
 where the absorber material is characterized by the thickness $d$ and the radiation length $L_{rad}$. The particle has charge unit $Z_p$, momentum $p$ and velocity $\beta c$.
 A correction proposed by Schneider (et al.) and a comparison with Highland's method can be found in \cite{schn:mcs}. 
 
-In softwares using databases introduced in section \ref{sec:pen}), , i.e. algorithms that reconstruct the dose deposition considering the beam as a single object, the adopted model is usually based on a double-gaussian profile. This is obtained during an extensive fitting to Monte Carlo simulations. Most of these parametrisations are based on the work of Parodi (et al.) in \cite{par:latspr} who have fitted the lateral profile of Monte Carlo simulated beams and extracted an analytical form of it
+In softwares using databases introduced in section \ref{sec:pen}), i.e., algorithms that reconstruct the dose deposition considering the beam as a single object, the adopted model is usually based on a double-gaussian profile. This is obtained during an extensive fitting to Monte Carlo simulations. Most of these parametrisations are based on the work of Parodi (et al.) in \cite{par:latspr} who have fitted the lateral profile of Monte Carlo simulated beams and extracted an analytical form of it
 \[
 D(E,z_{eq},r) = n\cdot \bigg(  \frac{1-w}{2\pi\sigma_1^2}\,e^{r^2\,/\,2\sigma_1^2} + \frac{w}{2\pi\sigma_2^2}\,e^{r^2\,/\,2\sigma_2^2} \bigg)
 \]
@@ -392,12 +392,13 @@ The state-of-the-art dose calculation softwares should at least keep the error s
 \section{Motivation and scope of this work} 
 Nowadays, the main challenges in radiation oncology are the improvements in both accuracy and safety. 
 The current compromise is a standard workflow based on setting up a single plan before the start of the therapy. Then plan is applied to all the following sessions until the end of the treatment.
-Scientists are working on alternative workflows where the treatment is adapted everyday, or even on fly while the patient is on the couch. This method is called adaptive radiotherapy.
+Scientists are working on alternative workflows where the treatment is adapted everyday, or even on the fly while the patient is on the couch. This method is called adaptive radiotherapy.
 %Because of the long time lost in this routine, biggest world centers can treat, in average, only few hundred people per year. And poor accuracy means more risks for the patient.
 A key role is played by the software used for diagnostic, planning and verification.
 The part on which this thesis is focused on is the treatment planning. In fact, I will investigate the most common methods used for the particle dose calculation and in particular, I will implement a fine sampling Beam algorithm by using an already existent software called matRad. 
+I had at my disposal a set of measurement for a single phantom and the data of the machine in order to run Monte Carlo simulations for only four different energies.
 Using a Monte Carlo simulated Dose and HIT full-field experimental data as reference models, I will compare my model with the already existent softwares, with the goal of overcoming the accuracy of Pencil Beam algorithm while keeping the computation time short.  
-%Furthermore
+
 
 Providing scientists and doctors with the strongest instruments to precisely plan the treatments in the shortest possible time will make Particle Radiotherapy faster, more accessible and cheaper.
 
@@ -812,6 +813,7 @@ A point to focus on is that the maximum error is over the $10\%$ of the maximum 
 This seems to be a large disagreement. Instead, it is the same dose shifted only of half a millimetre, that can be considered reasonably inside our error. The result derives from the fact that we are subtracting two curves with high gradients. So, we should find a better way to account for this.
 
 \subsection{Dose Profiles}
+\label{sec:dose_prof}
 To have a better prospective on the comparison between high gradient curves,
 \begin{wrapfigure}{l}{.5\textwidth}
 \vspace{-5mm}
@@ -1306,24 +1308,110 @@ Comparing the lateral profiles in the two cases on the peaks (figures \ref{}), w
 
 \newpage
 \subsection{Double wedge phantom}
-%%% substitue the image witht the correct one
 \begin{figure}[!t]
 \centering
-\subfloat[][\emph{MatRad}]
-{\includegraphics[width=.25\textwidth]{Images/mR_FSBvsMC_pub_soukup/mR_FSBvsMC_pub_soukup_14}}\quad
-\subfloat[][\emph{Fine Sampling}]
-{\includegraphics[width=.25\textwidth]{Images/mR_FSBvsMC_pub_soukup/mR_FSBvsMC_pub_soukup_15}}\quad
+\subfloat[][\emph{matRad}]
+{\includegraphics[width=.55\textwidth]{Images/mR_FSBvsMC_pub_doublew_single/mR_FSBvsMC_pub_doublew_single_01}}\\ 
+\subfloat[][\emph{fine sampling}]
+{\includegraphics[width=.55\textwidth]{Images/mR_FSBvsMC_pub_doublew_single/mR_FSBvsMC_pub_doublew_single_02}}\\
 \subfloat[][\emph{Monte Carlo}]
-{\includegraphics[width=.25\textwidth]{Images/mR_FSBvsMC_pub_soukup/mR_FSBvsMC_pub_soukup_16}}\quad
-\caption{Dose deposition in Soukup phantom at $125\,MeV$.}
-\label{fig:SB2}
+{\includegraphics[width=.55\textwidth]{Images/mR_FSBvsMC_pub_doublew_single/mR_FSBvsMC_pub_doublew_single_03}}\\
+\caption{Dose deposition of a beam at an energy of $125\,MeV$ in double wedge phantom.}
+\label{fig:DW1}
 \end{figure}
 
 The last single beam test was done on the double wedge phantom. From some aspects, it looks like the $45^\circ$ case in the water box, but inverted inside out. As in that case, the dose calculated by matRad is clearly artificial and unnatural. The shape of the Bragg peak calculated with fine sampling, is instead very accurate, reaching the $100\%$ agreement in the gamma index pass rate, in both cases. 
 This tells us that in the double wedge phantom, the central components are more relevant than the others.
-In this case, I decided to show three longitudinal profiles: the central one, where there is a good agreement between Monte Carlo and fine sampling; and two shifted of three voxel in opposite lateral directions, where there is a difference in dose in the initial part of the path (clearer in the most energetic beam in figures \ref{} and \ref{}).
+In this case, I decided to show three longitudinal profiles: the central one, where there is a good agreement between Monte Carlo and fine sampling; and two shifted of three voxel in opposite lateral directions, where there is a difference in dose in the plateau, in the initial part of the path (clearer in the most energetic beam in figures \ref{} and \ref{}).
+The integrated depth-dose profile presents a poor accuracy from matRad. Given its shape, the peak of dose is distributed in backward direction and so we have that strange behavior at the maximum. Fine sampling is in line with the expectations. 
+\begin{figure}[!t]
+\centering
+\subfloat[][\emph{matRad}]
+{\includegraphics[width=.55\textwidth]{Images/mR_FSBvsMC_pub_doublew_single/mR_FSBvsMC_pub_doublew_single_17}}\\ 
+\subfloat[][\emph{fine sampling}]
+{\includegraphics[width=.55\textwidth]{Images/mR_FSBvsMC_pub_doublew_single/mR_FSBvsMC_pub_doublew_single_18}}\\
+\subfloat[][\emph{Monte Carlo}]
+{\includegraphics[width=.55\textwidth]{Images/mR_FSBvsMC_pub_doublew_single/mR_FSBvsMC_pub_doublew_single_19}}\\
+\caption{Dose deposition of a beam at an energy of $172\,MeV$ in double wedge phantom.}
+\label{fig:DW2}
+\end{figure}
+Beacuse of the shape of the phantom, I decided to show two types of lateral profile: the one used in the other cases, explained in section \ref{sec:dose_prof}; and a profile that follows the lines of the surface of the phantom, so that takes the first voxels crossed by the beam. The same thing was transposed on the peak obtaining the figures \ref{} and \ref{}.
+Particular attention has to be paid to the profiles of the peaks (figure \ref{} and \ref{}). It shows the weakenesses of matRad but also the ridity of fine sampling. Because of the shape of the phantom, the natural behaviour of the beam should be to become tighter but, in both cases, the profile of fine sampling is a little wider than what should be. This is always caused by the fact that fine sampling central components account more than laterals and the largest part of the peak is composed by the central beam.
 
-%The Bragg peak is bended towards right (in respect to the beam eye view) instead, it should be bent in the other direction.
+\begin{figure}[!ht]
+\centering
+\subfloat[][\emph{Percentage\\ difference}]
+{\includegraphics[width=.43\textwidth]{Images/mR_FSBvsMC_pub_doublew_single/mR_FSBvsMC_pub_doublew_single_04}} 
+\subfloat[][\emph{$\gamma$-index \\ $96.06\%$ [$3\%$ $3mm$]}]
+{\includegraphics[width=.43\textwidth]{Images/mR_FSBvsMC_pub_doublew_single/mR_FSBvsMC_pub_doublew_single_05}}\\
+\subfloat[][\emph{Percentage\\ difference}]
+{\includegraphics[width=.43\textwidth]{Images/mR_FSBvsMC_pub_doublew_single/mR_FSBvsMC_pub_doublew_single_06}} 
+\subfloat[][\emph{$\gamma$-index \\ $100\%$ [$3\%$ $3mm$]}]
+{\includegraphics[width=.43\textwidth]{Images/mR_FSBvsMC_pub_doublew_single/mR_FSBvsMC_pub_doublew_single_07}} 
+\caption{Comparison between fine sampling beam and Monte Carlo Simulations (down), matRad and Monte Carlo Simulations (up) for a beam at $125\,MeV$ in double wedge phantom.}
+\label{fig:DW1gam}
+\end{figure}
+
+\begin{figure}[!h]
+\centering
+\subfloat[][\emph{Percentage\\ difference}]
+{\includegraphics[width=.43\textwidth]{Images/mR_FSBvsMC_pub_doublew_single/mR_FSBvsMC_pub_doublew_single_20}} 
+\subfloat[][\emph{$\gamma$-index \\ $95.35\%$ [$3\%$ $3mm$]}]
+{\includegraphics[width=.43\textwidth]{Images/mR_FSBvsMC_pub_doublew_single/mR_FSBvsMC_pub_doublew_single_21}}\\
+\subfloat[][\emph{Percentage\\ difference}]
+{\includegraphics[width=.43\textwidth]{Images/mR_FSBvsMC_pub_doublew_single/mR_FSBvsMC_pub_doublew_single_22}} 
+\subfloat[][\emph{$\gamma$-index \\ $100\%$ [$3\%$ $3mm$]}]
+{\includegraphics[width=.43\textwidth]{Images/mR_FSBvsMC_pub_doublew_single/mR_FSBvsMC_pub_doublew_single_23}} 
+\caption{Comparison between fine sampling beam and Monte Carlo Simulations (down), matRad and Monte Carlo Simulations (up) for a beam at $172\,MeV$ in double wedge phantom.}
+\label{fig:DW2gam}
+\end{figure}
+
+\begin{figure}[!h]
+\centering
+\subfloat[][\emph{\scriptsize Central Dose profile}]
+{\includegraphics[width=.40\textwidth]{Images/mR_FSBvsMC_pub_doublew_single/mR_FSBvsMC_pub_doublew_single_08}} 
+\subfloat[][\emph{\scriptsize Central Dose profile}]
+{\includegraphics[width=.40\textwidth]{Images/mR_FSBvsMC_pub_doublew_single/mR_FSBvsMC_pub_doublew_single_09}}\\
+\subfloat[][\emph{\scriptsize Central Dose profile}]
+{\includegraphics[width=.40\textwidth]{Images/mR_FSBvsMC_pub_doublew_single/mR_FSBvsMC_pub_doublew_single_10}}
+\subfloat[][\emph{\scriptsize Integrated Depth Dose profile}]
+{\includegraphics[width=.40\textwidth]{Images/mR_FSBvsMC_pub_doublew_single/mR_FSBvsMC_pub_doublew_single_11}}\\
+\subfloat[][\emph{\scriptsize Entering profile}]
+{\includegraphics[width=.40\textwidth]{Images/mR_FSBvsMC_pub_doublew_single/mR_FSBvsMC_pub_doublew_single_12}}
+\subfloat[][\emph{\scriptsize Peak profile}]
+{\includegraphics[width=.40\textwidth]{Images/mR_FSBvsMC_pub_doublew_single/mR_FSBvsMC_pub_doublew_single_13}}\\
+\subfloat[][\emph{\scriptsize Surface entering profile}]
+{\includegraphics[width=.40\textwidth]{Images/mR_FSBvsMC_pub_doublew_single/mR_FSBvsMC_pub_doublew_single_14}}
+\subfloat[][\emph{\scriptsize Surface peak profile}]
+{\includegraphics[width=.40\textwidth]{Images/mR_FSBvsMC_pub_doublew_single/mR_FSBvsMC_pub_doublew_single_15}}\\
+\caption{Profiles in double wedge phantom simulation for a beam at $125\,MeV$.}
+\label{fig:DW1prof}
+\end{figure}
+
+\begin{figure}[!ht]
+\centering
+\subfloat[][\emph{\scriptsize Central Dose profile}]
+{\includegraphics[width=.42\textwidth]{Images/mR_FSBvsMC_pub_doublew_single/mR_FSBvsMC_pub_doublew_single_24}} 
+\subfloat[][\emph{\scriptsize Central Dose profile}]
+{\includegraphics[width=.42\textwidth]{Images/mR_FSBvsMC_pub_doublew_single/mR_FSBvsMC_pub_doublew_single_25}}\\
+\subfloat[][\emph{\scriptsize Central Dose profile}]
+{\includegraphics[width=.42\textwidth]{Images/mR_FSBvsMC_pub_doublew_single/mR_FSBvsMC_pub_doublew_single_26}}
+\subfloat[][\emph{\scriptsize Integrated Depth Dose profile}]
+{\includegraphics[width=.42\textwidth]{Images/mR_FSBvsMC_pub_doublew_single/mR_FSBvsMC_pub_doublew_single_27}}\\
+\subfloat[][\emph{\scriptsize Entering profile}]
+{\includegraphics[width=.42\textwidth]{Images/mR_FSBvsMC_pub_doublew_single/mR_FSBvsMC_pub_doublew_single_28}}
+\subfloat[][\emph{\scriptsize Peak profile}]
+{\includegraphics[width=.42\textwidth]{Images/mR_FSBvsMC_pub_doublew_single/mR_FSBvsMC_pub_doublew_single_29}}\\
+\subfloat[][\emph{\scriptsize Surface entering profile}]
+{\includegraphics[width=.42\textwidth]{Images/mR_FSBvsMC_pub_doublew_single/mR_FSBvsMC_pub_doublew_single_30}}
+\subfloat[][\emph{\scriptsize Surface peak profile}]
+{\includegraphics[width=.42\textwidth]{Images/mR_FSBvsMC_pub_doublew_single/mR_FSBvsMC_pub_doublew_single_31}}\\
+\caption{Profiles in double wedge phantom simulation for a beam at $172\,MeV$.}
+\label{fig:DW2prof}
+\end{figure}
+
+
+
 
 
 \newpage
@@ -1446,7 +1534,7 @@ Case & \multicolumn{2}{c}{matRad} & \multicolumn{2}{c}{fine sampling}\\
 \caption{Results for airbox phatom analysis}
 \end{table}
 
-%%% double wedge??
+Double wedge is the example that gave us the best results, with $100\%$ agreement with Monte Carlo. Unfortunately it is just a lucky case. The outcome is so accurate because of the favourable geometry of the case. 
 
 
 \section{Interpretation}
